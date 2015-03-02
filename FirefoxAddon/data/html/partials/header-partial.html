@@ -1,0 +1,88 @@
+<table class="table">
+    <tbody>
+    <tr>
+        <td>
+            <b>Datawake Version:</b>  {{versionNumber}}
+        </td>
+        <td align="right">
+            {{user.user_name}}
+            <button class="btn btn-warning" ng-click="signOut()">Sign Out</button>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td align="right">
+            <button disabled=true  ng-show="!datawake || !datawake.team || !datawake.domain || !datawake.trail" class="btn btn-default" >Start</button>
+            <button ng-show="(!datawake.isDatawakeOn) && datawake && datawake.team && datawake.domain && datawake.trail" class="btn btn-success" ng-click="recordingChange(true)">Start</button>
+            <button ng-show="datawake.isDatawakeOn  && datawake && datawake.team && datawake.domain && datawake.trail" class="btn btn-danger" ng-click="recordingChange(false)">Stop</button>
+        </td>
+    </tr>
+    </tbody>
+
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <td>
+            <b>Team:</b>
+        </td>
+        <td style="white-space:nowrap; width: 75%">
+            <div>
+                <button  class="btn btn-primary btn-sm" data-toggle="modal" data-target="#teamModal" style="width: 5%">+</button>
+                <select id="team_select" class="form-control" ng-model="selectedTeam" ng-change="teamChanged(selectedTeam);" ng-options="team as team.name for team in teams"
+                        data-placeholder="Select a Team" style="display: inline; margin-right: 10px; width: 95%">
+                </select>
+                <img ng-show="teamSpinner" src="../img/ajax-loader.gif" alt="Loading" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Domain:</b>
+        </td>
+        <td style="white-space:nowrap;">
+            <button  ng-disabled="!(datawake && datawake.team)"  class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#domainModal" style="width: 5%">+</button>
+            <select id="domain_select" class="form-control" ng-model="selectedDomain" ng-change="domainChanged(selectedDomain);" ng-options="domain.name for domain in domains"
+                    data-placeholder="Select a Domain" style="display: inline-block; margin-right: 10px; width: 95%">
+            </select>
+            <img ng-show="domainSpinner" src="../img/ajax-loader.gif" alt="Loading" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Trail:</b>
+        </td>
+        <td style="white-space:nowrap;">
+                <button ng-disabled="!(datawake && datawake.team && datawake.domain)" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trailModal" style="width: 5%">+</button>
+                <select id="trail_select" class="form-control" ng-model="selectedTrail" ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails"
+                        placeholder="Select a previous Trail" style="display: inline-block; margin-right: 10px; width: 95%">
+                </select>
+                <img ng-show="trailSpinner" src="../img/ajax-loader.gif" alt="Loading" />
+        </td>
+    </tr>
+    <tr>
+        <td><b>URL: </b></td>
+        <td>{{current_url}}</td>
+    </tr>
+    <tr ng-show="rankingEnabled">
+        <td>
+            <b>URL Ranking:</b>
+        </td>
+        <td>
+            <div id="star_rating"></div>
+            <span id="url_rank_text">{{ranking}} / 10</span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Page Visits:</b>
+        </td>
+        <td>
+            {{pageVisits}}
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+

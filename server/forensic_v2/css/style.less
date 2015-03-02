@@ -1,0 +1,89 @@
+@import "bootstrap.css";
+
+@background-color : #fbfbfb;
+@ajax-loader-size : 100px;
+
+body {
+  font-family: "open sans";
+}
+
+.domainLabel {
+  font-weight: 400;
+  color: #787878;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+.dropdown-menu > li > input {
+  padding: 3px 20px;
+  margin : 3px 10px;
+}
+
+canvas {
+  background-color: @background-color
+}
+
+.ajax_loader_overlay {
+  position: absolute;
+  top : 0;
+  left : 0;
+  z-index: 10000;
+  background-color: #000000;
+  opacity: 0.35;
+  color : white;
+}
+
+.ajax_loader_image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -@ajax-loader-size/2;
+  margin-top: -@ajax-loader-size/2;
+}
+
+.ajax_loader_img {
+  position: absolute;;
+  left : 0px;
+  right : 0px;
+  margin : 0 auto;
+  width : @ajax-loader-size;
+  height : @ajax-loader-size;
+}
+
+.ajax_loader_text {
+  position: absolute;
+  top : -30px;
+}
+
+#legendContainer {
+  position:absolute;
+  margin : 10px;
+  right : 0px;
+  background-color: @background-color;
+}
+
+@legend-item-icon-size : 25px;
+.legend-item-icon {
+  display: inline-block;
+  margin-right: 10px;
+  width : @legend-item-icon-size;
+  height : @legend-item-icon-size;
+  border-radius: @legend-item-icon-size;
+}
+.legend-item-text {
+  top: -@legend-item-icon-size/2
+}
+
+.navbar-daterange {
+  margin-top: 12px;
+  margin-left: 12px;
+}
+
+.forensic-tooltip {
+  position: absolute;
+  background-color: rgba(230,210,65,0.7);
+  border-radius: 5px;
+  padding : 5px;
+}

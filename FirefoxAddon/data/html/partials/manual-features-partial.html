@@ -1,0 +1,28 @@
+<div class="tab-pane" id="feedback">
+    <h3>Manual Features</h3>
+
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Value
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="feature in manualFeatures">
+                <td>
+                    {{feature.type}}
+                </td>
+                <td>
+                    {{feature.value}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

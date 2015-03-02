@@ -1,0 +1,368 @@
+<html ng-app="forensicApp">
+
+<script src="js/angular.min.js"></script>
+<script src=js/jquery-1.11.0.min.js></script>
+<script src=js/jquery-ui-1.10.4.custom.min.js></script>
+<script src=js/d3.v3.min.js charset=utf-8></script>
+<script src="js/bootstrap.min.js"></script>
+<script src=js/sotera.webgraph.v1.js></script>
+<script src=js/attribute_graph.js></script>
+<script src="chosen_v1.10/chosen.jquery.min.js"></script>
+<script src="js/date_widget.js"></script>
+<script src="js/googleAuthHelper.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="js/daterangepicker.js"></script>
+<script src="js/angular-daterangepicker.min.js"></script>
+<script src="js/forensic_controller.js"></script>
+<script src=/plugin/tangelo/tangelo.js></script>
+<script src=/plugin/config/config.js></script>
+<script src=/plugin/ui/controlPanel.js></script>
+<script src=/plugin/ui/svgColorLegend.js></script>
+
+
+<link href=css/jquery-ui-1.10.4.custom.min.css rel=stylesheet>
+<link href=css/sotera.webgraph.css rel=stylesheet>
+<link href=css/bootstrap.min.css rel=stylesheet>
+<link href="chosen_v1.10/chosen.min.css" rel="stylesheet">
+<link href="css/daterangepicker-bs3.css" rel="stylesheet">
+
+
+<!-- TODO, to use authentication you must fill in your client id here  -->
+<meta name="google-signin-clientid" content=""/>
+<meta name="google-signin-scope"
+      content="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email"/>
+<meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction"/>
+<meta name="google-signin-cookiepolicy" content="single_host_origin"/>
+<meta name="google-signin-callback" content="onSignInCallback"/>
+
+<!-- add the google plus script dynamically because google says so -->
+<script type="text/javascript">
+    //Make sure you add your client id if you enable.
+    var useGoogleAuth = false;
+    (function () {
+
+        authHelper.setOnLoggedIn(function () {
+            //once a session is established on the datawake server refresh the view
+            refreshForensicView()
+        });
+
+        if (!useGoogleAuth) {
+            authHelper.onSignInCallback({'access_token': '123456'});
+        } else {
+            var po = document.createElement('script');
+            po.type = 'text/javascript';
+            po.async = true;
+            po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(po, s);
+            checkClientId();
+        }
+
+    })();
+
+    function checkClientId() {
+        var clientId = $("meta[name='google-signin-clientid']").attr('content');
+        if (clientId == "") {
+            alert("You have Google Auth Enabled, but forgot to add a client Id!");
+        }
+    }
+
+    function onSignInCallback(authResult) {
+        authHelper.onSignInCallback(authResult);
+    }
+</script>
+
+<style>
+    .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+
+    .brush .extent {
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+
+    .chart rect {
+        fill: steelblue;
+    }
+
+    .chart text {
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+    }
+
+    .axis text {
+        font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 120px;
+        overflow-y: auto;
+    }
+</style>
+
+<head>
+    <title>Data Wake Forensics</title>
+</head>
+
+<body ng-controller="ForensicController">
+
+
+<div id="info-panel" class="modal fade">
+    <div class=modal-dialog>
+        <div class=modal-content>
+            <div class=modal-header>
+                <h3>Information</h3>
+            </div>
+
+            <div class=modal-body>
+                <p>Datawake Graph Viewer
+
+                <p>Select a graph projection from the list to display it.
+                    <br>
+                    <br>
+                    Large vertices with directed edges represent the browse path (pages visited).
+                    <br>
+                    Smaller vertices are adjacent pages which were not visited, and are catagorized by their domain.
+
+            </div>
+
+            <div class=modal-footer>
+                <a class="btn btn-default" data-dismiss=modal>OK</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class=navbar-header>
+        <div class=navbar-brand>Data Wake Viewer <span id="forensic_version"></span></div>
+    </div>
+
+    <ul class="nav navbar-nav">
+        <li><a style="cursor:pointer" data-toggle="modal" data-target="#info-panel"><span
+                class="glyphicon glyphicon-info-sign"></span> Info</a>
+    </ul>
+
+    <div style="position: fixed; right: 2%; top: 1%;" id="googleAuthContainer">
+        <!-- Google Sign In -->
+        <div id="gConnect">
+            <button class="g-signin"></button>
+        </div>
+        <!-- Google Sign out / revoke token -->
+        <div id="gDisconnect" style="display:none">
+            <button onclick="authHelper.disconnectUser()">Sign Out</button>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Create a fullscreen SVG element -->
+<div id=node_graph></div>
+
+<!-- Create an SVG element to represent the legend -->
+<svg id=legend height=100% style="position:fixed; top:100px; right:0px; pointer-events:none;"></svg>
+
+<!-- Create a drawer with the control panel in it -->
+<div id=control-panel>
+    <div class=container-fluid>
+        <div class=row>
+
+            <!--Trail Select -->
+            <div class=col-md-4>
+                <div class="row">
+                    <h4>Trail Selection <span id=filter_help class="glyphicon glyphicon-question-sign"></span></h4>
+                </div>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td><b>Date Range:</b></td>
+                        <td>
+                            <input date-range-picker class="form-control date-picker" type="text" ng-model="date"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Team:</b>
+                        </td>
+                        <td style="white-space:nowrap; width: 75%">
+                            <div>
+                                <select id="team_select" class="form-control" ng-model="selectedTeam"
+                                        ng-change="teamChanged(selectedTeam);"
+                                        ng-options="team as team.name for team in teams"
+                                        data-placeholder="Select a Team">
+                                </select>
+                                <select multiple id="user_select" class="form-control"
+                                        data-placeholder="Select users"
+                                        style="display: inline-block; margin-right: 10px; width: 95%">
+                                </select>
+                                <img ng-show="teamSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Domain:</b>
+                        </td>
+                        <td style="white-space:nowrap;">
+                            <select id="domain_select" class="form-control" ng-model="selectedDomain"
+                                    ng-change="domainChanged(selectedDomain);"
+                                    ng-options="domain.name for domain in domains"
+                                    data-placeholder="Select a Domain"
+                                    style="display: inline-block; margin-right: 10px; width: 95%">
+                            </select>
+                            <img ng-show="domainSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Trail:</b>
+                        </td>
+                        <td style="white-space:nowrap;">
+                            <select id="trail_select" class="form-control" ng-model="selectedTrail"
+                                    ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails"
+                                    placeholder="Select a previous Trail"
+                                    style="display: inline-block; margin-right: 10px; width: 95%">
+                            </select>
+                            <img ng-show="trailSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
+                        </td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- View selections -->
+            <div class=col-md-4>
+
+                <div class="row">
+                    <h4>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></h4>
+                </div>
+
+
+                <div class=row>
+                    <b>Links:</b>
+                        <select id="graph_select" class="form-control" ng-model="selectedGraphView"
+                                ng-change="graphViewChanged(selectedGraphView);"
+                                ng-options="view for view in views"
+                                data-placeholder="Select a Graph View"
+                                style="display: inline-block; margin-right: 10px; width: 95%">
+                        </select>
+                        <b>Coloring:</b>
+                            <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
+                                    ng-change="graphColoringChanged(selectedGraphColoring);"
+                                    ng-options="colorOption.text for colorOption in colorOptions"
+                                    data-placeholder="Select graph coloring"
+                                    style="display: inline-block; margin-right: 10px; width: 95%">
+                            </select>
+                            <label class=checkbox>
+                                <input type=checkbox id=usetext onchange="SWG.toogleLabels(); "> Render text labels
+                            </label>
+                            <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">Draw Graph</button>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- Graph layout controls -->
+            <div class="col-md-2" style="margin-left: 50px">
+                <div class="row">
+                    <b>Layout Options:<b><br>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <table style="align-content: center ">
+                        <tr>
+                            <td>
+                                <div id="linkstrengthsllider"></div>
+                            </td>
+                            <td>
+                                <div id="forceslider"></div>
+                            </td>
+                        </tr>
+                        <tr style="font-size: 70%">
+                            <td>Link <br>Strength</td>
+                            <td>Repulsion</td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
+        <div class="row" style="margin-bottom: 10px"></div>
+
+    </div>
+</div>
+
+<div id="dialog" title="Highlighted Vertices"/>
+<div id="link-dialog" title="Vertex Details"/>
+</body>
+
+
+<script>
+
+
+    if (!useGoogleAuth)
+        $("#googleAuthContainer").hide();
+    $(function () {
+        $('#user_select').chosen({'width': "100%"});
+        // $('#userselect').change(updateTimeSlider);
+
+        //$('#trail_select').chosen({'width': "100%", height: "200px"});
+        //$('#trail_select').change(updateTimeSlider)
+
+    });
+
+
+    $(function () {
+        $("#linkstrengthsllider").slider({
+            min: 1,
+            max: 1000,
+            value: 1000,
+            orientation: "vertical",
+            change: function (event, ui) {
+                var strength = ui.value / 1000.0;
+                console.log("setting link strength to " + strength);
+                SWG.setLengthStrength(strength);
+            }
+        });
+    });
+
+    $(function () {
+        $("#forceslider").slider({
+            min: 0,
+            max: 1000,
+            value: 30,
+            orientation: "vertical",
+            change: function (event, ui) {
+                var strength = 0 - ui.value;
+                console.log("setting force to " + strength);
+                SWG.setChargeStrength(strength);
+            }
+        });
+    });
+
+</script>
+
+
+</html>

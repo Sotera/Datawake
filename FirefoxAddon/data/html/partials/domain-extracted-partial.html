@@ -1,0 +1,34 @@
+<div>
+    <h3>Features in Domain</h3>
+    <table class="table table-bordered" ng-repeat="(type, entities) in domain_extracted_entities_dict">
+        <thead>
+        <tr>
+            <th>
+                <span>{{type}}</span>
+            </th>
+            <th>
+                External Tools
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="entity in entities"  ng-hide="invalid[entity]">
+            <td >
+                <span>
+                    {{entity}}
+                </span>
+            </td>
+            <td ng-show="extracted_tools.length > 0" >
+                <table>
+                    <tr ng-repeat="tools in extracted_tools">
+                        <td><a ng-click="openExternalLink(tools.link.replace('$ATTR',type).replace('$VALUE',entity));">{{tools.display}}</a></td>
+                    </tr>
+                </table>
+            </td>
+            <td ng-show="extracted_tools.length == 0">
+                <span>No External Tools Available</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

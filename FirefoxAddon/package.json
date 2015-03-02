@@ -1,0 +1,92 @@
+{
+    "name": "datawakefirefoxaddon",
+    "fullName": "DataWake",
+    "id": "jid1-NKjAjAgAESlIAg",
+    "description": "An add-on for the Tor/Firefox Browser that enables the DataWake.",
+    "author": "",
+    "license": "MPL 2.0",
+    "lib": "base",
+    "version": "0.6-SNAPSHOT",
+    "permissions": {
+        "private-browsing": true,
+        "cross-domain-content": ["http://192.168.59.103"]
+    },
+    "preferences": [
+        {
+            "name": "datawakeDeploymentUrl",
+            "title": "Datawake Deployment Address",
+            "description": "(Required) Sets the current Datawake instance address.",
+            "type": "string",
+            "value": "http://192.168.59.103/datawake/plugin"
+        },
+        {
+            "name": "proxyHost",
+            "title": "Datawake Deployment Address IP",
+            "description": "(Required) Sets the proxy ip address for sending side requests through Tor.",
+            "type": "string",
+            "value": "192.168.59.103"
+        },
+        {
+            "name": "proxyPort",
+            "title": "Datawake Deployment Address PORT",
+            "description": "(Required) Sets the proxy port for sending side requests through Tor.",
+            "type": "integer",
+            "value": 80
+        },
+        {
+            "name": "useGoogleAuth",
+            "title": "Use Google Authentication",
+            "description": "(Optional) Tells the Add-on to use Google Auth.",
+            "type": "boolint",
+            "on": "1",
+            "off": "2",
+            "value": 2
+        },
+        {
+            "name": "googleClientId",
+            "title": "The Google Auth Client ID",
+            "description": "(Required if Google Auth is checked) Sets the client id that should be used when using Google Auth.",
+            "type": "string",
+            "value": ""
+        },
+        {
+            "name": "googleClientSecret",
+            "title": "The Google Auth Client Secret",
+            "description": "(Required if Google Auth is checked) Sets the client secret that should be used when using Google Auth.",
+            "type": "string",
+            "value": ""
+        },
+        {
+            "name":"useContextMenu",
+            "title":"Enable/Disable Context Menus",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name":"useScraper",
+            "title":"Enable/Disable Scraper",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name":"useRanking",
+            "title":"Enable/Disable Ranking",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name":"useDomainFeatures",
+            "title":"Enable/Disable Domain Features",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name":"useHighlighting",
+            "title":"Enable/Disable Highlighting",
+            "type": "bool",
+            "value": true
+        }
+    ],
+    "icon": "./data/img/waveicon38.png",
+    "dependencies": ["oauthorizer"]
+}

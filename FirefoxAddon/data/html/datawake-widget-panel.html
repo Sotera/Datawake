@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="panelApp" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
+    <link href="../css/jRating.jquery.css" rel="stylesheet">
+    <style type="text/css">
+        .vertical-center {
+            min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+            min-height: 100vh; /* These two lines are counted as one :-)       */
+
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body ng-controller="PanelCtrl">
+<div class="container">
+    <div>
+        <div ng-include="headerPartial"></div>
+        <div ng-include="createTrailPartial"></div>
+        <div ng-include="createDomainPartial"></div>
+        <div ng-include="createTeamPartial"></div>
+        <div class="row">
+            <ul class="nav nav-tabs nav-pills" role="tablist">
+                <li><a href="#/features/all">Extracted Features</a></li>
+                <li><a href="#/features/domain" ng-show="domainFeaturesEnabled">Features in Domain</a></li>
+                <li><a href="#/features/manual">Manual Features</a></li>
+            </ul>
+            <div class="tab-content">
+                <div ng-view></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../js/min/jquery-1.11.1.min.js"></script>
+<script src="../js/min/jRating.jquery.js"></script>
+<script src="../js/min/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="../js/min/angular.min.js"></script>
+<script src="../js/min/angular-route.min.js"></script>
+<script src="../js/min/bootstrap.min.js"></script>
+<script src="../js/min/bootstrap-switch.min.js"></script>
+<script src="../js/datawake/panel.js"></script>
+</body>
+</html>

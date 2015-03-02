@@ -1,0 +1,21 @@
+<!-- Create Trail Modal -->
+<div class="modal fade" id="trailModal"  role="dialog" aria-labelledby="trailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="trailModalLabel">Create a Trail</h4>
+            </div>
+            <div class="modal-body">
+                <div><b>Team:</b> {{datawake.team.name}}</div>
+                <div><b>Domain:</b> {{datawake.domain.name}}</div>
+                <input id="new_trail_name"  ng-model="newTrailName" class="form-control" placeholder="Enter a new trail name." />
+                <input id="new_trail_desc"  ng-model="newTrailDesc" class="form-control" placeholder="Enter a description." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="newTrail(datawake.team,datawake.domain,newTrailName,newTrailDesc)">Create Trail</button>
+            </div>
+        </div>
+    </div>
+</div>

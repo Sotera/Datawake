@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html ng-app="newTabApp">
+<head>
+    <meta charset="utf-8"/>
+    <title>New Datawake Tab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+    <link href="../css/bootstrap-switch.min.css" rel="stylesheet" media="screen"/>
+    <link href="../css/cover.css" rel="stylesheet" media="screen"/>
+</head>
+<body ng-controller="NewTabCtrl">
+<div class="site-wrapper" ng-hide="invalidPreferences">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div class="masthead clearfix">
+                <div class="inner">
+                    <h3 class="masthead-brand">DataWake {{versionNumber}}</h3>
+
+
+                    <div class="btn-group" style="display: inline-block;">
+                        <button id="recording_on_label" ng-class="{'btn btn-success' : isDatawakeOn, 'btn btn-default': !isDatawakeOn}" ng-click="datawakeStatusChanged(true);">On
+                        </button>
+                        <button id="recording_off_label" ng-class="{'btn btn-danger' : !isDatawakeOn, 'btn btn-default': isDatawakeOn}" ng-click="datawakeStatusChanged(false);">Off
+                        </button>
+                    </div>
+                    <ul class="nav masthead-nav">
+                        <li ng-show="auth.type == 1 && !hideSignInButton">
+                            <button id="signin" ng-click="signIn()">Sign in</button>
+
+                        </li>
+                        <li ng-show="auth.type == 1 && hideSignInButton">
+                            <button id="revoke" ng-click="signOut()">Sign out</button>
+                        </li>
+                        <li>
+                            <div id="user_info">{{user.user_name}}</div>
+                        </li>
+                        <li>
+                            <img ng-show="user != null" src="../img/photo.png"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Alert Banner -->
+            <div class="inner cover">
+                <div id="alert">
+                    <div id="alert_no_domain" class="alert alert-danger" ng-model="selectedDomain" ng-hide="selectedDomain != null && selectedDomain.name != ''">
+                        <span class="lead">No Domain Selected</span>
+
+                        <p>Select a Domain
+                    </div>
+
+                    <div id="alert_selected" ng-model="selectedTrail" ng-hide="selectedTrail == null || selectedTrail.name == ''" class="alert alert-success">
+                        <span id="selected_trail" class="lead">{{selectedTrail.name}}</span>
+
+                        <p>Continue browsing or select a different trail.
+                    </div>
+                    <div id="alert_none" class="alert alert-danger" ng-model="selectedTrail" ng-hide="selectedTrail != null && selectedTrail.name != ''">
+                        <span class="lead">No Trail Selected</span>
+
+                        <p>Please select a trail before you continue.
+                    </div>
+                    <div id="alert_processing" class="alert alert-warning" ng-show="processingNewTrail">
+                        <span class="lead">Creating new Trail</span>
+
+                        <p>Your new trail is being created, please wait.</p>
+                    </div>
+                    <div id="alert_failed" class="alert alert-danger" ng-show="processingNewTrailFailed">
+                        <span class="lead">Failed to create Trail</span>
+
+                        <p>Ensure you have selected a domain and that your trail name contains alpha-numberic characters only.</p>
+                    </div>
+                    <div id="alert_not_changed" class="alert alert-warning" style="display: none">
+                        <span id="selected_trail_warn" class="lead">No Trail Selected</span>
+
+                        <p>Warning! Your trail has not yet been changed, please continue to select a new trail below.</p>
+                    </div>
+                </div>
+                <!-- End Alert Banner -->
+                <h4>Org: {{user.org}}</h4>
+                <h4>Domain: <span id="domain_label">{{selectedDomain.name}}</span></h4>
+                <select id="domain_select" class="form-control" ng-model="selectedDomain" ng-change="domainChanged(selectedDomain);" ng-options="domain.name for domain in domains"
+                        data-placeholder="Select a Domain ">
+                </select>
+
+                <div id="trail-container" class="ng-hide" ng-model="selectedDomain" ng-show="selectedDomain != null && selectedDomain.name != ''">
+                    <h4> Select an existing trail: </h4>
+                    <select id="trail_select" class="form-control" ng-model="selectedTrail" ng-change="trailChanged(selectedTrail);" ng-options="tail.name for tail in trails | orderBy:'name'"
+                            data-placeholder="Select a Trail ">
+                    </select>
+
+                    <div id="create_new_trail">
+                        <h4> Create New Trail</h4>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div id="trail-name-option-group" class="input-group">
+                                        <span class="input-group-addon">Name</span>
+                                        <input id="new_trail_name" ng-model="newTrail.name" type="text" ng-keypress="enterKeyEvent($event);" class="form-control" placeholder="Enter an alphanumeric trail name"/>
+                        <span class="input-group-btn">
+                            <button id="new_trail_create_btn" ng-click="createNewTrail();" class="btn btn-default" type="button">Create</button>
+                        </span>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Description</span>
+                                        <input id="new_trail_description" ng-model="newTrail.description" ng-keypress="enterKeyEvent($event);" type="text" class="form-control"
+                                               placeholder="Enter a description (optional)"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 20px">
+                <div class="alert alert-info" role="alert">
+                    <b>What is a Trail?</b>  Trails collect your browsing information for a specific task or investigation so its easy to explore and make use of your findings. To remain on your current trail just continue
+                    browsing.
+                    You
+                    can
+                    also create a new trail or pick an existing one. A single trail can be contributed to by multiple users.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" ng-hide="!invalidPreferences">
+    <div class="jumbotron alert alert-danger">
+        <h3>Preferences Invalid</h3>
+
+        <p>Some of your preferences are invalid or incomplete. Go to the add-on page to set the required preferences, so you can start using the Datawake.</p>
+    </div>
+</div>
+</body>
+</html>

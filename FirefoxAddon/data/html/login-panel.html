@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="LoginApp">
+<head>
+    <meta charset="utf-8"/>
+    <title>New Datawake Tab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+    <link href="../css/bootstrap-switch.min.css" rel="stylesheet" media="screen"/>
+    <link href="../css/cover.css" rel="stylesheet" media="screen"/>
+</head>
+<body ng-controller="LoginCtrl">
+<div class="site-wrapper" style="padding-top: 10px;" ng-hide="invalidPreferences">
+
+    <h2>Datawake Login</h2>
+
+    <div ng-show="!hideSignInButton">
+        <button class="btn btn-lg btn-primary" id="signin" ng-click="signIn()">Sign in</button>
+    </div>
+    <div ng-show="hideSignInButton">
+        <button id="revoke" class="btn btn-lg btn-warning" ng-click="signOut()">Sign out</button>
+    </div>
+
+
+    <div id="user_info" ng-show="user == null">
+        Sign In to get started.
+    </div>
+
+    <div id="user_info" ng-show="user != null">
+        <h3>Hello {{user.user_name}}!</h3>
+        <p >
+            You are signed in and ready to go.<br>
+            Click on the datawake button again to start.
+        </p>
+    </div>
+
+
+</div>
+
+<div ng-hide="!invalidPreferences">
+    <div class="alert alert-danger">
+        <h3>Preferences Invalid</h3>
+
+        <p>Some of your preferences are invalid or incomplete. Go to the add-on page to set the required preferences, so you can start using the Datawake.</p>
+    </div>
+</div>
+
+<script src="../js/min/jquery-1.11.1.min.js"></script>
+<script src="../js/min/jRating.jquery.js"></script>
+<script src="../js/min/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="../js/min/angular.min.js"></script>
+<script src="../js/min/angular-route.min.js"></script>
+<script src="../js/min/bootstrap.min.js"></script>
+<script src="../js/datawake/login-panel.js"></script>
+</body>
+
+</html>
