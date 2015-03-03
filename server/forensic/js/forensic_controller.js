@@ -15,10 +15,10 @@ forensicApp.controller('ForensicController', function ($scope) {
     function getOriginalColorOptions(){
         return [
             {text:'none',value:'none'},
-            {text: 'community',value:''},
-            {text: 'hits',value:''},
-            {text: 'timestamp',value:''},
-            {text: 'user',value:''}
+            {text: 'community',value:'community'},
+            {text: 'hits',value:'hits'},
+            {text: 'timestamp',value:'timestamp'},
+            {text: 'user',value:'user'}
         ];
     }
     $scope.colorOptions = getOriginalColorOptions()
@@ -250,6 +250,13 @@ forensicApp.controller('ForensicController', function ($scope) {
         });
 
     }
+
+
+
+    $scope.graphColoringChanged = function(selectedGraphColoring) {
+        change_highlight(selectedGraphColoring)
+    }
+
 
     // initial set up
     get_teams();

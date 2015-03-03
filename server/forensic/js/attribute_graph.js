@@ -169,20 +169,16 @@ SWG.node_text_func = function (d) {
  re-color the graph and show
  a dialog box listing the highlighted terms
  */
-function change_highlight() {
+function change_highlight(colorOption) {
     $("#dialog").dialog().dialog("close");
-    var sel = d3.select("#highlights").node();
-    var index = sel.selectedIndex;
-    selected_term = highlight_options[index];
 
-    //console.log("highlight options: "+JSON.stringify(highlight_options))
-    //console.log("selected index: "+index)
+
 
     // Default coloring
-    if (index == 0) {
+    if (colorOption.value == "none") {
         SWG.defaultColors();
     }
-    else if (index == 1) {  // color by community
+    else if (colorOption.value == "community") {  // color by community
         SWG.viz.selectAll("svg circle")
             .attr("r", function (d) {
                 if (d.size) return d.size;
@@ -198,7 +194,7 @@ function change_highlight() {
         })
     }
 
-    else if (index == 2) {  // color by hits
+    else if (colorOption.value == 'hits') {  // color by hits
         console.log("color by hits min: " + min_hits + " max: " + max_hits);
         SWG.clear_legend();
         var color_delta = parseInt(max_hits / 3);
@@ -216,7 +212,7 @@ function change_highlight() {
         show_hits_legend();
     }
 
-    else if (index == 3) { // color by timestamps
+    else if (colorOption.value == 'timestamp') { // color by timestamps
         SWG.clear_legend();
         var gradient_color = d3.scale.linear()
             .domain([min_timestamp, max_timestamp])
@@ -232,7 +228,7 @@ function change_highlight() {
         show_timestamp_legend();
     }
 
-    else if (index == 4) { // color by user
+    else if (colorOption.value == 'user') { // color by user
         SWG.clear_legend();
 
         d3.selectAll("svg circle")
@@ -249,123 +245,11 @@ function change_highlight() {
 
     }
 
-    else if (index == 5) { // shared entites
-        SWG.clear_legend();
-
-        var max = 0;
-        d3.selectAll("svg circle").each(function (d) {
-            if (d.entity_matches && d.entity_matches.length > max) {
-                max = d.entity_matches.length;
-            }
-        });
-
-        console.log("MAX: " + max);
-        var delta = parseInt((max - 1) / 3);
-        if (delta < 1) delta = 1;
-        var domain = [1, 1 + delta * 1, 1 + delta * 2, 1 + delta * 3];
-        var gradient_color = d3.scale.linear()
-            .domain(domain)
-            .range(["green", "#ffd700", "orange", "red"]);
-
-
-        d3.selectAll("svg circle")
-            .style("fill", function (d) {
-                if (d.entity_matches != undefined) {
-                    if (d.entity_matches.length == 0) {
-                        return "#000000";
-                    }
-                    else
-                        return gradient_color(d.entity_matches.length);
-                }
-                else {
-                    return "steelblue";
-                }
-
-            });
-
-
-        SWG.show_legend(domain, function (d) {
-            return gradient_color(d);
-        });
-
-    }
-
-    else if (index == 6) { // domain entities
-
-        SWG.clear_legend();
-
-        var max = 0;
-        d3.selectAll("svg circle").each(function (d) {
-            if (d.domain_entity_matches && d.domain_entity_matches.length > max) {
-                max = d.domain_entity_matches.length;
-            }
-        });
-        console.log("MAX: " + max);
-        var delta = parseInt((max - 1) / 3);
-        if (delta < 1) delta = 1;
-        var domain = [1, 1 + delta * 1, 1 + delta * 2, 1 + delta * 3];
-        var gradient_color = d3.scale.linear()
-            .domain(domain)
-            .range(["green", "#ffd700", "orange", "red"]);
-
-
-        d3.selectAll("svg circle")
-            .style("fill", function (d) {
-                if (d.domain_entity_matches != undefined) {
-                    if (d.domain_entity_matches.length == 0) {
-                        return "#000000";
-                    }
-                    else return gradient_color(d.domain_entity_matches.length)
-                }
-                else {
-                    return "steelblue";
-                }
-
-            });
-
-
-        SWG.show_legend(domain, function (d) {
-            return gradient_color(d);
-        });
-
-    }
-
-    else if (index == 7) { // color by trail
-        SWG.clear_legend();
-
-        var trailMap = {};
-        var i = 0;
-
-        d3.selectAll("svg circle").each(function (d) {
-            if (d.trails && d.trails.length > 0) {
-                var trail = d.trails[d.trails.length - 1];
-                if (!(trail in trailMap)) {
-                    trailMap[trail] = i;
-                    i = i + 1;
-                }
-            }
-        });
-
-
-        d3.selectAll("svg circle")
-            .style("fill", function (d) {
-                if (d.trails && d.trails.length > 0) {
-                    var trail = d.trails[d.trails.length - 1];
-                    return SWG.color(trailMap[trail]);
-                }
-                return "black"
-            });
-
-        SWG.show_legend(Object.keys(trailMap), function (d) {
-            return SWG.color(trailMap[d])
-        })
-
-    }
-
-    else { // highlight node type
-        SWG.hightlightType(selected_term);
-        SWG.showTypeDialog(selected_term);
-    }
+    // TODO restore coloring by type
+    //else { // highlight node type
+    //    SWG.hightlightType(selected_term);
+    //    SWG.showTypeDialog(selected_term);
+   // }
 
 }
 
