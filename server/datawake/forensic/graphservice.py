@@ -49,6 +49,7 @@ def listGraphs():
                                    'browse path - with adjacent urls min degree 2',
                                    'browse path - with adjacent phone #\'s',
                                    'browse path - with adjacent email #\'s',
+                                   'browse path - with phone and email #\'s',
                                    'browse path - with text selections',
                                    'browse path - with adjacent info',]))
 
@@ -106,8 +107,12 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
         graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
-    if view == 'browse path - with text selections':
-        graph = graph_helper.getBrowsePathWithTextSelections(trail_id, startdate, enddate, users)
+    if view == 'browse path - with adjacent email #\'s':
+        graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
+        return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
+
+    if view ==  'browse path - with phone and email #\'s':
+        graph = graph_helper.getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['email','phone'],1,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
 
