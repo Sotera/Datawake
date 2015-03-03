@@ -83,15 +83,15 @@ def getBrowsePathEdges(trail_id,startdate,enddate,userlist=[]):
     return {'nodes':nodes,'edges':edges}
 
 
-def getBrowsePathAndAdjacentEdgesWithLimit(org,startdate,enddate,adjTypes,limit,userlist=[],trail='*',domain=''):
+def getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,adjTypes,limit,userlist=[]):
     entityDataConnector.close()
 
-    browsePathGraph = getBrowsePathEdges(org,startdate,enddate,userlist,trail,domain)
+    browsePathGraph = getBrowsePathEdges(trail_id,startdate,enddate,userlist)
     urls = browsePathGraph['nodes'].keys()
 
 
     # for every url in the browse path get all extracted entities
-    results = entityDataConnector.get_extracted_entities_with_domain_check(urls,adjTypes,domain=domain)
+    results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id,urls,adjTypes)
 
 
     nodes = browsePathGraph['nodes']
@@ -136,15 +136,19 @@ def getBrowsePathAndAdjacentEdgesWithLimit(org,startdate,enddate,adjTypes,limit,
     entityDataConnector.close()
     return {'nodes':nodes,'edges':edges}
 
-def getBrowsePathAndAdjacentWebsiteEdgesWithLimit(org,startdate,enddate,limit,userlist=[],trail='*',domain=''):
-    return getBrowsePathAndAdjacentEdgesWithLimit(org,startdate,enddate,['website'],limit,userlist,trail,domain)
+def getBrowsePathAndAdjacentWebsiteEdgesWithLimit(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
+    return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['website'],limit,userlist)
 
 
-def getBrowsePathAndAdjacentPhoneEdgesWithLimit(org,startdate,enddate,limit,userlist=[],trail='*',domain=''):
-    return getBrowsePathAndAdjacentEdgesWithLimit(org,startdate,enddate,['phone'],limit,userlist,trail,domain)
+def getBrowsePathAndAdjacentPhoneEdgesWithLimit(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
+    return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['phone'],limit,userlist)
 
-def getBrowsePathAndAdjacentEmailEdgesWithLimit(org,startdate,enddate,limit,userlist=[],trail='*',domain=''):
-    return getBrowsePathAndAdjacentEdgesWithLimit(org,startdate,enddate,['email'],limit,userlist,trail,domain)
+def getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
+    return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['email'],limit,userlist)
+
+def getBrowsePathAndAdjacentInfoEdges(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
+    return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['PERSON','ORGANIZATION','MISC'],limit,userlist)
+
 
 def getOculusForensicGraph(org,startdate,enddate,userlist=[],trail='*',domain=''):
     startMillis = int(round(time.time() * 1000))
@@ -279,13 +283,12 @@ def getOculusForensicGraph(org,startdate,enddate,userlist=[],trail='*',domain=''
         'domainLookaheadFeatures':domainLookaheadFeatures
     }
 
-def getBrowsePathAndAdjacentInfoEdges(org,startdate,enddate,limit,userlist=[],trail='*',domain=''):
-    return getBrowsePathAndAdjacentEdgesWithLimit(org,startdate,enddate,['info'],limit,userlist,trail,domain)
 
 
-def getBrowsePathWithTextSelections(org,startdate,enddate,userlist=[],trail='*',domain=''):
+
+def getBrowsePathWithTextSelections(trail_id,startdate,enddate,userlist=[]):
     # first get the browse path
-    graph = getBrowsePathEdges(org,startdate,enddate,userlist,trail,domain)
+    graph = getBrowsePathEdges(trail_id,startdate,enddate,userlist)
     nodes = graph['nodes']
     edges = graph['edges']
 
@@ -293,41 +296,28 @@ def getBrowsePathWithTextSelections(org,startdate,enddate,userlist=[],trail='*',
     try:
         # for each node in the browse path pull any related notes:
         for key,node in nodes.iteritems():
-            postIds = node['postIds']
-            if len(postIds) > 0:
-                params = ','.join(['%s' for i in range(len(postIds))])
-                sql =  """
-                   SELECT posts.id,  selections.id, unix_timestamp(posts.ts),posts.url,posts.userId,posts.userName,selections.selection
-                   FROM datawake_data posts, datawake_selections selections
-                   WHERE posts.id = selections.postId and posts.id  in ("""+params+")"
-
-                rows = datawake_mysql.dbGetRows(sql,postIds)
-                for row in rows:
-                    postid = row[0]
-                    selectionId = row[1]
-                    ts = row[2]
-                    url = row[3]
-                    userId = row[4]
-                    userName = row[5].encode()
-                    selection = row[6]
-
-                    id = 'selection_'+str(postid)+'_'+str(selectionId)+'_'+'_'+url
-                    node = {'id':id,
-                            'type':'selection',
-                            'size':5,
-                            'groupName':'',
-                            'timestamps':[ts],
-                            'userNames':[userName],
-                            'userIds':[userId],
-                            'data':selection
-                    }
-                    newnodes[id] = node
-                    edges.append((key,id))
+            selections = datawake_mysql.getSelections(trail_id, key)
+            for selection in selections:
+                ts = selection['ts']
+                user = selection['userEmail']
+                text = selection['selection']
+                id = 'selection_'+str(user)+'_'+str(ts)
+                node = {
+                    'id':id,
+                    'type':'selection',
+                    'size':5,
+                    'groupName':user,
+                    'timestamps':[ts],
+                    'userNames':[user],
+                    'data':text
+                }
+                newnodes[id] = node
+                edges.append((key,id))
 
         nodes.update(newnodes)
 
-        if len(userlist) == 1 and trail != '*':
-            nodes = addUrlRankstoNodes(org,nodes,userlist[0],trail,domain=domain)
+        #if len(userlist) == 1:
+        #    nodes = addUrlRankstoNodes(org,nodes,userlist[0],trail,domain=domain)
 
 
         return {'nodes':nodes,'edges':edges}

@@ -194,7 +194,7 @@ class MySqlEntityDataConnector(DataConnector):
             raise
 
 
-    def get_extracted_entities_with_domain_check(self, urls, types=[], domain='default'):
+    def get_extracted_entities_with_domain_check(self, domain_id,urls, types=[]):
         """
         Return all entities extracted from a given set of urls, indication which entities were found in the domain
         :param urls:  list of urls to look up
@@ -229,9 +229,9 @@ class MySqlEntityDataConnector(DataConnector):
                     allEntities[url][attr] = {}
                 allEntities[url][attr][value] = 'n'
 
-            params = [domain]
+            params = [domain_id]
             params.extend(urls)
-            sql = "select url,feature_type,feature_value from domain_extractor_web_index where  domain = %s and url in " + urls_in
+            sql = "select url,feature_type,feature_value from domain_extractor_web_index where  domain_id = %s and url in " + urls_in
             if len(types) > 0:
                 params.extend(types)
                 types_in = "(" + ( ','.join(['%s' for i in range(len(types))]) ) + ")"

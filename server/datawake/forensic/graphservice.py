@@ -50,7 +50,6 @@ def listGraphs():
                                    'browse path - with adjacent phone #\'s',
                                    'browse path - with adjacent email #\'s',
                                    'browse path - with text selections',
-                                   'browse path- with look ahead',
                                    'browse path - with adjacent info',]))
 
 
@@ -92,31 +91,28 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'browse path - with adjacent urls':
-        graph = graph_helper.getBrowsePathAndAdjacentWebsiteEdgesWithLimit(org, startdate, enddate, 1, userlist, trail, domain)
+        graph = graph_helper.getBrowsePathAndAdjacentWebsiteEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'browse path - with adjacent urls min degree 2':
-        graph = graph_helper.getBrowsePathAndAdjacentWebsiteEdgesWithLimit(org, startdate, enddate, 2, userlist, trail, domain)
+        graph = graph_helper.getBrowsePathAndAdjacentWebsiteEdgesWithLimit(domain_id,trail_id, startdate, enddate, 2, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'browse path - with adjacent phone #\'s':
-        graph = graph_helper.getBrowsePathAndAdjacentPhoneEdgesWithLimit(org, startdate, enddate, 1, userlist, trail, domain)
+        graph = graph_helper.getBrowsePathAndAdjacentPhoneEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'browse path - with adjacent email #\'s':
-        graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(org, startdate, enddate, 1, userlist, trail, domain)
+        graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'browse path - with text selections':
-        graph = graph_helper.getBrowsePathWithTextSelections(org, startdate, enddate, userlist, trail, domain)
+        graph = graph_helper.getBrowsePathWithTextSelections(trail_id, startdate, enddate, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
-    if view == 'browse path- with look ahead':
-        graph = graph_helper.getBrowsePathWithLookAhead(org, startdate, enddate, userlist, trail, domain)
-        return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'browse path - with adjacent info':
-        graph = graph_helper.getBrowsePathAndAdjacentInfoEdges(org, startdate, enddate,1,userlist, trail, domain)
+        graph = graph_helper.getBrowsePathAndAdjacentInfoEdges(domain_id,trail_id, startdate, enddate,1,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'OculusForensicRequest':
