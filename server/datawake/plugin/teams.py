@@ -17,6 +17,7 @@ import tangelo
 
 from datawake.util.db import datawake_mysql as db
 from datawake.util.session.helper import is_in_session
+from datawake.util.session.helper import has_team
 from datawake.util.session import helper
 
 @tangelo.restful
@@ -40,8 +41,27 @@ def add_team(name,description=''):
     return json.dumps(team)
 
 
+
+@is_in_session
+@has_team
+def add_team_member(team_id,email):
+    db.addTeamMember(team_id,email)
+    members = db.getTeamMembers(team_id)
+    return json.dumps(members)
+
+
+@is_in_session
+@has_team
+def remove_team_member(team_id,email):
+    db.removeTeamMember(team_id,email)
+    members = db.getTeamMembers(team_id)
+    return json.dumps(members)
+
+
 post_actions = {
-    'create': add_team
+    'create': add_team,
+    'add-member': add_team_member,
+    'remove-member': remove_team_member
 }
 
 

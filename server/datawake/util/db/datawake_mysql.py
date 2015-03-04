@@ -265,6 +265,15 @@ def getTeamMembers(team_id):
     rows = dbGetRows(sql,[team_id])
     return map(lambda x: dict(email=x[0]),rows)
 
+def removeTeamMember(team_id,email):
+    sql = "DELETE FROM datawake_team_users where team_id = %s and email = %s"
+    dbCommitSQL(sql,[team_id,email])
+
+
+def addTeamMember(team_id,email):
+    sql = "INSERT INTO datawake_team_users (team_id,email) VALUES(%s,%s)"
+    dbCommitSQL(sql,[team_id,email])
+
 
 #
 # Create a new team

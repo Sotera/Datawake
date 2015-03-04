@@ -99,6 +99,23 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
         $scope.$apply()
     })
 
+    $scope.addTeamMemeber = function(team,email){
+        console.log("adding team member")
+        console.log(team)
+        console.log(email)
+        var data = {team_id:team.id,email:email}
+        addon.port.emit("addTeamMember",data)
+
+    }
+
+    $scope.removeTeamMember = function(team,email){
+        console.log("removing team member")
+        console.log(team)
+        console.log(email)
+        var data = {team_id:team.id,email:email}
+        addon.port.emit("removeTeamMember",data)
+    }
+
 
     // DOMAINS
     if (! $scope.datawake.team) $scope.domainSpinner = false;

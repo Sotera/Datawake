@@ -12,6 +12,8 @@ exports.getTrails = getTrails;
 exports.createTrail = createTrail;
 exports.getTeamMembers = getTeamMembers;
 exports.createTeam = createTeam;
+exports.removeTeamMember = removeTeamMember;
+exports.addTeamMemeber = addTeamMember;
 
 
 /**
@@ -56,6 +58,22 @@ function createTeam(name,description,callback){
         name: name,
         description: description
     });
+    requestHelper.post(url, post_data, function (response) {
+        callback(response);
+    });
+}
+
+function addTeamMember(data,callback){
+    var url = addOnPrefs.datawakeDeploymentUrl + "/teams/add-member";
+    var post_data = JSON.stringify(data)
+    requestHelper.post(url, post_data, function (response) {
+        callback(response);
+    });
+}
+
+function removeTeamMember(data,callback){
+    var url = addOnPrefs.datawakeDeploymentUrl + "/teams/remove-member";
+    var post_data = JSON.stringify(data)
     requestHelper.post(url, post_data, function (response) {
         callback(response);
     });

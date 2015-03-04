@@ -232,6 +232,31 @@ function launchDatawakePanel(){
         service.createTeam(data.name,data.description,callback);
     });
 
+    mainPanel.port.on("addTeamMember",function(data){
+        var callback = function(response){
+            if (response.status != 200){
+                if (response.body) notifyError(response.body)
+            }
+            else{
+                mainPanel.port.emit("gotTeamMembers",response.json);
+            }
+        }
+        service.addTeamMemeber(data,callback);
+    });
+
+    mainPanel.port.on("removeTeamMember",function(data){
+        var callback = function(response){
+            if (response.status != 200){
+                if (response.body) notifyError(response.body)
+            }
+            else{
+                mainPanel.port.emit("gotTeamMembers",response.json);
+            }
+        }
+        service.removeTeamMember(data,callback);
+    });
+
+
 
     mainPanel.port.on("signOut", function () {
         authHelper.signOut(function (response) {
