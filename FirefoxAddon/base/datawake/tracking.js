@@ -74,9 +74,9 @@ function trackTab(tab){
 
     var datawakeInfoForTab = storage.getDatawakeInfo(tab.id);
     if (!datawakeInfoForTab.isDatawakeOn) {
-        if (datawakeInfoForTab.team && datawakeInfoForTab.domain && datawakeInfoForTab.trail){
-            notify("Attention:  Datawake is setup but has not been started.")
-        }
+       // if (datawakeInfoForTab.team && datawakeInfoForTab.domain && datawakeInfoForTab.trail){
+       //     notify("Attention:  Datawake is setup but has not been started.")
+       // }
         return;
     }
 
@@ -125,7 +125,7 @@ function trackTab(tab){
                     return;
                 }
 
-                notify("Success: Page recorded.")
+               // notify("Success: Page recorded.")
                 controller.getFeaturesForPanel(datawakeInfoForTab);  // re-fetch features for the panel
 
 
