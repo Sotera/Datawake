@@ -7,8 +7,36 @@
                 <h4 class="modal-title" id="teamModalLabel">Manage Teams</h4>
             </div>
             <div class="modal-body">
-                <h3>Under Construction</h3>
-                <b>This should load the new team manager interface.</b>
+
+                <h4>Create a team</h4>
+                <input id="new_team_name"  ng-model="newTeamName" class="form-control" placeholder="Enter a new team name." />
+                <input id="new_team_desc"  ng-model="newTeamDesc" class="form-control" placeholder="Enter a description." />
+                <button type="button" class="btn btn-primary" ng-disabled="newTeamDisabled" ng-click="createTeam(newTeamName,newTeamDesc); newTeamName=null; newTeamDesc=null;">Create Team</button>
+
+
+
+                <hr>
+                <h4>Manage Team Members (UNDER CONSTRUCTION)</h4>
+                <h5>Select a team</h5>
+                <select id="team_select" class="form-control" ng-model="selectedTeamFromModal" ng-change="teamChangedOnTeamModal(selectedTeamFromModal);" ng-options="team as team.name for team in teams"
+                        data-placeholder="Select a Team">
+                </select>
+                <table>
+                    <tr ng-hide="!selectedTeamFromModal">
+                        <td>
+                            <input id="new_team_memeber"  ng-model="newTeamMember" class="form-control" placeholder="email address" />
+                        </td>
+                        <td style="padding: 10px">
+                            <button type="button" class="btn btn-sm btn-primary" >+</button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="member in teamMembers track by $index">
+                        <td>{{member.email}}</td>
+                        <td style="padding: 10px">
+                            <button type="button" class="btn btn-sm btn-danger" >-</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

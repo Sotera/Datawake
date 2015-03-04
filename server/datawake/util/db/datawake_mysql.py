@@ -236,6 +236,18 @@ def getTeams(email):
     return map(lambda x: dict(id= x[0], name =x[1]),rows)
 
 
+
+def addTeam(name,description,userEmail):
+
+    sql = """INSERT INTO datawake_teams (name,description) VALUES (%s,%s)"""
+    id = dbCommitSQL(sql,[name,description])
+    team = dict(id=id,name=name,description=description)
+
+    sql = "INSERT INTO datawake_team_users (team_id,email) VALUES (%s,%s)"
+    dbCommitSQL(sql,[id,userEmail])
+    return team
+
+
 def hasTeamAccess(email,team_id):
     teams = getTeams(email)
     sql = """

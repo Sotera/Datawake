@@ -186,6 +186,18 @@ function launchDatawakePanel(){
        mainPanel.port.emit("infosaved",info)
     })
 
+    mainPanel.port.on("getTeamMembers",function(team){
+        var callback = function(response){
+            if (response.status != 200){
+                notifyError("Error getting team members")
+            }
+            else{
+                mainPanel.port.emit("gotTeamMembers",response.json);
+            }
+        }
+        service.getTeamMembers(team.id,callback);
+    })
+
     mainPanel.port.on("changeDomain",function(infoObj){
         var callback = function(teams){
             mainPanel.port.emit("trails",teams);
@@ -206,6 +218,20 @@ function launchDatawakePanel(){
        }
        service.createTrail(data.team_id,data.domain_id,data.name,data.description,callback);
     });
+
+
+    mainPanel.port.on("createTeam",function(data){
+        var callback = function(response){
+            if (response.status != 200){
+                if (response.body) notifyError(response.body)
+            }
+            else{
+                mainPanel.port.emit("teamCreated",response.json);
+            }
+        }
+        service.createTeam(data.name,data.description,callback);
+    });
+
 
     mainPanel.port.on("signOut", function () {
         authHelper.signOut(function (response) {

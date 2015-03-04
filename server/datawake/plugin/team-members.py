@@ -17,40 +17,18 @@ import tangelo
 
 from datawake.util.db import datawake_mysql as db
 from datawake.util.session.helper import is_in_session
+from datawake.util.session.helper import has_team
 from datawake.util.session import helper
 
 @tangelo.restful
 @is_in_session
-def get():
+@has_team
+@tangelo.types(team_id=int)
+def get(team_id):
     """
-    Return valid teams for the current user.
+    Return all members of this team
    [{id: team_id, name:team_name},..]
     """
-    user = helper.get_user()
-    teams = db.getTeams(user.get_email())
-    return json.dumps(teams)
+    return json.dumps(db.getTeamMembers(team_id))
 
 
-
-
-@is_in_session
-def add_team(name,description=''):
-    user = helper.get_user()
-    team = db.addTeam(name,description,user.get_email())
-    return json.dumps(team)
-
-
-post_actions = {
-    'create': add_team
-}
-
-
-@tangelo.restful
-def post(action, *args, **kwargs):
-    body = tangelo.request_body().read()
-    post_data = json.loads(body, strict=False)
-
-    def unknown(**kwargs):
-        return tangelo.HTTPStatusCode(404, "unknown service call")
-
-    return post_actions.get(action, unknown)(**post_data)

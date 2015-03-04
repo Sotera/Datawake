@@ -27,6 +27,7 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
     $scope.createDomainPartial = "partials/domain-modal-partial.html";
     $scope.createTeamPartial =  "partials/team-modal-partial.html"
     $scope.domains = addon.options.domains;
+    $scope.teamMembers = null;
     if (! $scope.domains ) $scope.domains = [];
     $scope.trails = []
 
@@ -69,6 +70,34 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
         console.log($scope.datawake)
     };
 
+    $scope.teamChangedOnTeamModal = function(team){
+        $scope.teamMembers = null;
+        addon.port.emit("getTeamMembers",team)
+    }
+
+    addon.port.on("gotTeamMembers",function(teamMembers){
+        $scope.teamMembers = teamMembers
+        console.log("got team members")
+        console.log(teamMembers)
+        $scope.$apply();
+    })
+
+
+    $scope.createTeam = function(name,description){
+        console.log("create team: ("+name+","+description+")")
+        var data = {name:name,description:description}
+        $scope.newTeamDisabled = true;
+        addon.port.emit("createTeam",data)
+    }
+
+    addon.port.on("teamCreated",function(team){
+        console.log("teamCreated")
+        console.log(team)
+        $scope.newTeamDisabled = false;
+        $scope.datawake.team = team;
+        $scope.teams.push(team)
+        $scope.$apply()
+    })
 
 
     // DOMAINS

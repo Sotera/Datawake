@@ -10,6 +10,8 @@ exports.getDomains = getDomains;
 exports.getTeams = getTeams;
 exports.getTrails = getTrails;
 exports.createTrail = createTrail;
+exports.getTeamMembers = getTeamMembers;
+exports.createTeam = createTeam;
 
 
 /**
@@ -48,6 +50,29 @@ function getTeams(callback) {
     requestHelper.get(url,callback);
 }
 
+function createTeam(name,description,callback){
+    var url = addOnPrefs.datawakeDeploymentUrl + "/teams/create";
+    var post_data = JSON.stringify({
+        name: name,
+        description: description
+    });
+    requestHelper.post(url, post_data, function (response) {
+        callback(response);
+    });
+}
+
+
+
+/**
+ * Gets the list of all team members for a given team
+ * @param team_id
+ * @param callback
+ */
+function getTeamMembers(team_id,callback) {
+    var url = addOnPrefs.datawakeDeploymentUrl + "/team-members";
+    var data = {team_id:team_id}
+    requestHelper.get(url,callback,data);
+}
 
 /**
  * Gets the domains from the server.
