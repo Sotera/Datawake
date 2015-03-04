@@ -18,10 +18,10 @@ INSERT INTO datawake_trails (name,team_id,domain_id) VALUES ("memex program deta
 INSERT INTO datawake_trails (name,team_id,domain_id) VALUES ("trail2",1,3);
 INSERT INTO datawake_trails (name,team_id,domain_id) VALUES ("trail3",1,3);
 
-INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"website",""http://www.darpa.mil/NewsEvents/Releases/2014/02/09.aspx");
-INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"website",""http://www.darpa.mil/Our_Work/I2O/Programs/Memex.aspx");
+INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"website","http://www.darpa.mil/NewsEvents/Releases/2014/02/09.aspx");
+INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"website","http://www.darpa.mil/Our_Work/I2O/Programs/Memex.aspx");
 INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"email","memex@darpa.mil");
-INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"email",christopher.white@darpa.mil);
+INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"email","christopher.white@darpa.mil");
 INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"PERSON","Christopher White");
 INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"PERSON","Vannevar Bush");
 INSERT INTO datawake_domain_entities(domain_id,feature_type,feature_value) VALUES(1,"ORGANIZATION","DARPA");
