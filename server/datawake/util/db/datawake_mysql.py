@@ -94,6 +94,11 @@ def addBrowsePathData(team_id,domain_id,trail_id,url, userEmail):
     return lastId
 
 
+def getBrowsePathUrls(trail_id):
+    sql = "SELECT url,count(1) from datawake_data where trail_id = %s GROUP BY url"
+    rows = dbGetRows(sql,[trail_id])
+    return map(lambda x: dict(url=x[0],count=x[1]), rows)
+
 def getVisitedUrlsInTrailForTimeRange(trail_id,startdate,enddate,userEmails=[]):
 
     command = """SELECT unix_timestamp(t1.ts) as ts, t1.url,t2.hits,t1.userEmail
@@ -312,6 +317,14 @@ def addTrail(team_id,domain_id,name, description, userEmail):
     sql = "INSERT INTO datawake_trails (team_id,domain_id,name,description,created_by) values (%s,%s,%s,%s,%s)"
     return dbCommitSQL(sql, [team_id,domain_id, name, description, userEmail])
 
+def getTrailData(trail_id):
+    sql = "select id,name,description from datawake_trails where id = %s"
+    rows = dbGetRows(sql, [trail_id])
+    if len(rows) < 1:
+        return {}
+    else:
+        x = rows[0]
+        return dict(id=x[0], name= x[1], description= x[2])
 
 #
 # Get a list of all trails name and description
@@ -443,13 +456,12 @@ def getUserUrlRanks(org, userId, trail, domain='default'):
 
 
 #
-# return a dict of url->rank for a single user within a trail and org
+# return a list of  (url,rank) for a single user within a trail and org
 #
-def getRankedUrls(org, trail, domain='default'):
-    sql = "SELECT url,rank from datawake_url_rank where org = %s AND domain =%s AND trailname= %s AND rank > 0"
-    params = [org.upper(), domain, trail]
-    rows = dbGetRows(sql, params)
-    return rows
+def getRankedUrls(trail_id):
+    sql = " select url,MIN(rank),MAX(rank),AVG(rank),COUNT(1) from datawake_url_rank  where trail_id = %s GROUP BY url;"
+    rows = dbGetRows(sql, [trail_id])
+    return map(lambda x: dict(url=x[0],min=round(x[1],1),max=round(x[2],1),avg=round(x[3],1),count=x[4]),rows)
 
 
 ####  URL Counts ####

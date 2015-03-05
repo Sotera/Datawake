@@ -18,59 +18,105 @@ import json
 import tangelo
 import datawake.util.db.datawake_mysql as db
 from datawake.util.session.helper import is_in_session
-from datawake.util.validate.parameters import required_parameters
-from datawake.util.session import helper
+from datawake.util.session.helper import has_team
+from datawake.util.session.helper import has_trail
 import datawake.util.dataconnector.factory as factory
 
 """
- List / Create Trails
 
-    primarily used on the plugin newTab.
+Provide a JSON document that details all data in a trail.
 
 """
+
 
 #
 # Perform a starts-with search for trails
 #
 @tangelo.restful
 @is_in_session
-@required_parameters(['domain','trail'])
-def get(domain,trail):
-    org = helper.get_org()
+@has_team
+@has_trail
+@tangelo.types(stars=int)
+def get(team_id,domain_id,trail_id,stars,extracted_features):
 
+    """
+
+    :param team_id:  id of the team
+    :param domain_id: id of domain
+    :param trail_id: id of the trail
+    :param stars: minimum avg star ranking to allow in report
+    :param extracted_features: y or n (include auto extracted features in report)
+    :return:
+        {
+            trail: {id:..,name:...,description:.., url-count}
+            urls: [
+                {
+                    url: ..,
+                    url-visit-count: ..
+                    rank: {min: ?, max: ?, avg: ?, count: ?}, # rounded to nearest tenth
+                    auto_features: { type: [value,..],..},
+                    manual_feature: { type: [value,..],..},
+                    selections: {ts: "2015-02-25 16:24:41", selection: "selected text"}
+                },..
+            ]
+        }
+
+    """
+
+
+    trailData = db.getTrailData(trail_id)
     trail_report = {}
 
-    # get all stared urls for the trail
-    for (url,rank) in db.getRankedUrls(org,trail,domain):
-        trail_report[url] = {'rank':rank, }
+
+    # get ranked urls
+    for rankObject in db.getRankedUrls(trail_id):
+        if  rankObject['avg'] >= stars:
+            url = rankObject['url']
+            del rankObject['url']
+            trail_report[url] = {'url': url, 'rank':rankObject}
+
+    # get url hit counts and un ranked urls
+    for urlObj in db.getBrowsePathUrls(trail_id):
+        url = urlObj['url']
+        if url in trail_report or stars < 1:
+            if url not in trail_report:
+                trail_report[url] = {'url': url, 'rank':{'min':0,'max':0,'avg':0,'count':0} }
+            trail_report[url]['url-visit-count'] = urlObj['count']
+
+
+
+    trailData['url-count'] = len(trail_report.keys())
 
     # get the list of invalid entities for the domain
-    markedEntities = set([])
-    for (type,value) in db.get_marked_entities_for_domain(org, domain):
-        markedEntities.add(value)
+    if extracted_features != 'n':
+        markedEntities = set([])
+        for featureObj in db.get_marked_features(trail_id):
+            key = featureObj['type']+':'+featureObj['value']
+            markedEntities.add(key)
 
 
-    # for each url get all extracted entities
-    entity_data_connector = factory.get_entity_data_connector()
-    all_entities = entity_data_connector.get_extracted_entities_from_urls(trail_report.keys())
-    for url,featureDict in all_entities.iteritems():
-        for type,values in featureDict.iteritems():
-            filtered_values = []
-            for value in values:
-                if value not in markedEntities:
-                    filtered_values.append(value)
-            if len(filtered_values) > 0:
-                try:
-                    if 'auto_features' not in trail_report[url]: trail_report[url]['auto_features'] = {}
-                    trail_report[url]['auto_features'][type] = filtered_values
-                except:
-                    tangelo.log("report generation error. skipping url.")
-                    continue
+        # for each url get all extracted entities
+        entity_data_connector = factory.get_entity_data_connector()
+        all_entities = entity_data_connector.get_extracted_entities_from_urls(trail_report.keys())
+        for url,featureDict in all_entities.iteritems():
+            for type,values in featureDict.iteritems():
+                filtered_values = []
+                for value in values:
+                    key = type+':'+value
+                    if key not in markedEntities:
+                        filtered_values.append(value)
+                if len(filtered_values) > 0:
+                    try:
+                        if 'auto_features' not in trail_report[url]: trail_report[url]['auto_features'] = {}
+                        trail_report[url]['auto_features'][type] = filtered_values
+                    except:
+                        tangelo.log("report generation error. skipping url.")
+                        continue
 
 
     # for each url get any manually extracted entities
     for url in trail_report.keys():
-        for featureObj in db.get_feedback_entities(org, domain, url):
+        for featureObj in db.get_manual_features(trail_id,url):
             if 'manual_features' not in trail_report[url]:
                 trail_report[url]['manual_features'] = {}
             if featureObj['type'] not in trail_report[url]['manual_features']:
@@ -80,13 +126,16 @@ def get(domain,trail):
 
     # for each url get any highlighted text
     for url in trail_report.keys():
-        selections = db.getSelections(domain, trail, url, org)
+        selections = db.getSelections(trail_id, url)
+
+        # lets keep user names out of reports for now
         if len(selections) > 0:
+            for sel in selections:
+                del sel['userEmail']
             trail_report[url]['selections'] = selections
 
 
-
-    result = {'trail':trail,'urls':trail_report}
+    result = {'trail': trailData,'urls':trail_report.values()}
     return json.dumps(result,sort_keys=True,indent=4,separators=(',',':'))
 
 
