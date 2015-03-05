@@ -28,6 +28,16 @@ var signedIn = false;
 var userInfo = null;
 
 
+// set up a new tab listener to start tracking tabs when the datawake is on
+tabs.on("open", function (tab) {
+    var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
+    storage.setDatawakeInfo(tab.id,datawakeInfo)
+    if (datawakeInfo != null) {
+        trackingHelper.trackTab(tab);
+    }
+});
+
+
 /**
  * Load and start datawake components
  */

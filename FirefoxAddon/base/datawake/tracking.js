@@ -180,7 +180,7 @@ function getDomainExtractedEntities() {
                 }
                 var entitiesInDomain = response.json;
                 highlightExtractedLinks(entitiesInDomain);
-                if (Object.keys(entitiesInDomain).length > 0) {
+                if (entitiesInDomain && Object.keys(entitiesInDomain).length > 0) {
                     console.debug("Domain matches found on url: " + tabUrl + " setting badge RED");
                     //TODO: When badges get added, change the color here.
                 } else {
