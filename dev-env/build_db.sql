@@ -2,18 +2,23 @@
 CREATE DATABASE IF NOT EXISTS memex_sotera;
 USE memex_sotera;
 
-DROP TABLE IF EXISTS datawake_team_users;
-DROP TABLE IF EXISTS datawake_domains;
-DROP TABLE IF EXISTS datawake_domain_entities;
-DROP TABLE IF EXISTS datawake_trails;
-DROP TABLE IF EXISTS datawake_selections;
-DROP TABLE IF EXISTS datawake_data;
+
+
+DROP TABLE IF EXISTS manual_extractor_markup_removals;
+DROP TABLE IF EXISTS manual_extractor_markup_additions;
 DROP TABLE IF EXISTS datawake_url_rank;
+DROP TABLE IF EXISTS datawake_selections;
+DROP TABLE IF EXISTS datawake_team_users;
+DROP TABLE IF EXISTS datawake_domain_entities;
+DROP TABLE IF EXISTS datawake_data;
 DROP TABLE IF EXISTS general_extractor_web_index;
 DROP TABLE IF EXISTS domain_extractor_web_index;
 DROP TABLE IF EXISTS scraping_feedback;
 DROP TABLE IF EXISTS invalid_extracted_entity;
+DROP TABLE IF EXISTS datawake_trails;
+DROP TABLE IF EXISTS datawake_domains;
 DROP TABLE IF EXISTS datawake_teams;
+
 
 CREATE TABLE datawake_teams (
   id INT NOT NULL AUTO_INCREMENT,
@@ -106,6 +111,7 @@ CREATE TABLE datawake_selections (
   url TEXT,
   selection TEXT,
   PRIMARY KEY(id),
+  FOREIGN KEY (trail_id) REFERENCES datawake_trails(id) ON DELETE CASCADE,
   INDEX(trail_id,url(60))
 );
 
