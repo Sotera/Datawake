@@ -38,6 +38,7 @@ def get():
 def add_team(name,description=''):
     user = helper.get_user()
     team = db.addTeam(name,description,user.get_email())
+    db.add_new_domain(team['id'],"Empty", "An empty domain. Created by default for each team.")
     return json.dumps(team)
 
 

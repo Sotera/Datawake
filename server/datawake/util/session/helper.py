@@ -122,11 +122,21 @@ def expire_user():
     return True
 
 
+
 def set_user(user):
+    """
+    Set the user object.
+    If this user is loging in for the first time automatically create a private team and a blank domain
+    :param user:
+    :return:
+    """
     teams = datawake_mysql.getTeams(email=user.get_email())
     if len(teams) == 0:
-        # create a team with just this user
-        teams = [ datawake_mysql.createTeam(user.get_email(),'Auto generated private team.',emails=[user.get_email()]) ]
+        # create a team for the new user.
+        (team_id,team_name) = datawake_mysql.createTeam(user.get_email(),'Auto generated private team.',emails=[user.get_email()])
+
+        teams = [ (team_id,team_name) ]
+        datawake_mysql.add_new_domain(team_id,"Empty", "An empty domain. Created by default for each team.")
     user.set_teams(teams)
     cherrypy.session['user'] = user
     return True
