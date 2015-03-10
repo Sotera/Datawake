@@ -14,6 +14,9 @@ exports.getTeamMembers = getTeamMembers;
 exports.createTeam = createTeam;
 exports.removeTeamMember = removeTeamMember;
 exports.addTeamMemeber = addTeamMember;
+exports.getDomainPreview = getDomainPreview;
+exports.uploadDomain = uploadDomain;
+exports.removeDomain = removeDomain;
 
 
 /**
@@ -99,6 +102,30 @@ function getTeamMembers(team_id,callback) {
 function getDomains(team_id,callback) {
     var url = addOnPrefs.datawakeDeploymentUrl + "/domains";
     var params = {team_id:team_id}
+    requestHelper.get(url,callback,params);
+}
+
+
+function uploadDomain(data,callback){
+    var url = addOnPrefs.datawakeDeploymentUrl + "/domainupload/upload";
+    var post_data = JSON.stringify(data);
+    requestHelper.post(url,post_data,function(response){
+        callback(response);
+    })
+}
+
+function removeDomain(data,callback){
+    var url = addOnPrefs.datawakeDeploymentUrl + "/domainupload/delete";
+    var post_data = JSON.stringify(data);
+    requestHelper.post(url,post_data,function(response){
+        callback(response);
+    })
+}
+
+
+function getDomainPreview(team_id,domain_id,callback){
+    var url = addOnPrefs.datawakeDeploymentUrl + "/domainpreview";
+    var params = {team_id:team_id,domain_id:domain_id,limit: 25}
     requestHelper.get(url,callback,params);
 }
 

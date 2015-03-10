@@ -40,7 +40,7 @@
             <b>Domain:</b>
         </td>
         <td style="white-space:nowrap;">
-            <button  ng-disabled="!(datawake && datawake.team)"  class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#domainModal" style="width: 5%">+</button>
+            <button   class="btn btn-primary btn-sm" ng-click="loadDomainManager()" style="width: 5%">+</button>
             <select id="domain_select" class="form-control" ng-model="selectedDomain" ng-change="domainChanged(selectedDomain);" ng-options="domain.name for domain in domains"
                     data-placeholder="Select a Domain" style="display: inline-block; margin-right: 10px; width: 95%">
             </select>

@@ -55,15 +55,15 @@ class DataConnector:
         raise NotImplementedError("Implement getEntityMatches()")
 
 
-    def get_domain_items(self, name, limit):
+    def get_domain_items(self, domain_id, limit):
         raise NotImplementedError("Implement get_domain_items()")
 
 
-    def delete_domain_items(self, domain_name):
+    def delete_domain_items(self, domain_id):
         raise NotImplementedError("Implement delete_domain_items()")
 
 
-    def add_new_domain_items(self, domain_items):
+    def add_new_domain_items(self, domain_id,features):
         raise NotImplementedError("Implement add_new_domain_items()")
 
 

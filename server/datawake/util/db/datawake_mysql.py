@@ -505,7 +505,7 @@ def hasDomains(team_id,domain_id):
 def add_new_domain(team_id,name, description):
     sql = "INSERT INTO datawake_domains (name,description,team_id) values (%s,%s,%s)"
     params = [name, description, team_id]
-    dbCommitSQL(sql, params)
+    return dbCommitSQL(sql, params)
 
 
 def remove_domain(domain_id):

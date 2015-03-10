@@ -283,48 +283,44 @@ class MySqlEntityDataConnector(DataConnector):
             raise
 
 
-    def get_domain_items(self, name, limit):
+    def get_domain_items(self, domain_id, limit):
         self._check_conn()
         cursor = self.cnx.cursor()
-        sql = "select rowkey from datawake_domain_entities where rowkey >= %s and rowkey <= %s limit %s"
-        params = [name + '\0', name + "~", limit]
+        sql = "select feature_type,feature_value from datawake_domain_entities where domain_id = %s limit %s"
+        params = [domain_id,limit]
         try:
             cursor.execute(sql, params)
             rows = cursor.fetchall()
         except:
             self.close()
             raise
-        return map(lambda x: x[0], rows)
+        return map(lambda x: dict(type=x[0],value=x[1]), rows)
 
 
-    def delete_domain_items(self, domain_name):
+    def delete_domain_items(self, domain_id):
         self._check_conn()
         cursor = self.cnx.cursor()
-        full_name = domain_name + '\0'
-        sql = "delete from datawake_domain_entities where INSTR(rowkey, %s)"
-        params = [full_name]
+        sql = "delete from datawake_domain_entities where domain_id = %s"
         try:
-            cursor.execute(sql, params)
+            cursor.execute(sql, [domain_id])
             self.cnx.commit()
         except:
             self.close()
             raise
 
-    def add_new_domain_items(self, domain_items):
+    def add_new_domain_items(self, domain_id,features):
         self._check_conn()
         cursor = self.cnx.cursor()
-        params = []
-        # item_list = ','.join(map(lambda x: "('%s','')" % x, domain_items))
         try:
-            for item in domain_items:
-                sql = "insert into datawake_domain_entities (rowkey) value (%s)"
-                cursor.execute(sql, [item])
+            for feature in features:
+                sql = "insert into datawake_domain_entities (domain_id,feature_type,feature_value) VALUES (%s,%s,%s)"
+                cursor.execute(sql, [ domain_id,feature['type'],feature['value'] ])
             self.cnx.commit()
             cursor.close()
             return True
         except:
             self.close()
-            return False
+            raise
 
 
 

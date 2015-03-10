@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html ng-app="domainLoaderApp">
+<head lang="en">
+    <title>Datawake Domain Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+    <link href="../css/bootstrap-switch.min.css" rel="stylesheet" media="screen"/>
+    <style>
+        hr {
+            border: 0;
+            height: 2px;
+            background: #333;
+        }
+    </style>
+</head>
+<body ng-controller="DomainLoaderCtrl">
+<div class="container">
+
+    <div style="margin-left: auto;margin-right:auto;text-align: center;">
+        <h1>Domain Manager</h1>
+    </div>
+
+
+    <h2>Select A Team</h2>
+
+    <select id="team_select" class="form-control" ng-model="selectedTeam" ng-change="teamChanged(selectedTeam);" ng-options="team as team.name for team in teams"
+            data-placeholder="Select a Team" >
+    </select>
+    <hr>
+
+
+    <h2>Create a Domain</h2>
+
+    <input id="domain_name" ng-model="domain.name"  class="form-control" placeholder="Domain Name"/>
+    <input id="domain_description" ng-model="domain.description"   class="form-control" placeholder="Domain Description"/>
+
+    <h4>Upload a CSV file with feature type,value</h4>
+    <span class="btn btn-default btn-file">
+        Select File
+        <input id="file_upload" file-model="myFile" type="file" />
+    </span>
+    <button class="btn btn-primary" ng-disabled="!selectedTeam.id || !domain.name || !domain.description || !fileObj" ng-click="addDomainViaFile()" >Submit</button>
+
+
+
+    <hr>
+
+    <h2>Manage Domains</h2>
+
+    <table id="domain_list" class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>
+                Domain Name
+            </th>
+            <th>
+                Domain Description
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="domainrow in domains">
+            <td>
+                {{domainrow.name}}
+            </td>
+            <td>
+                {{domainrow.description}}
+            </td>
+            <td>
+                <button class="btn-info" data-toggle="modal" data-target="#previewModal" ng-click="getDomainPreview(domainrow)">View Sample</button>
+                <button ng-click="removeDomain(domainrow)" class="btn-danger">Remove</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+
+
+
+<!-- domain preview modal -->
+<div class="modal fade" id="previewModal" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="previewModalLabel">{{previewDomain.name}} Sample</h4>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Value</th>
+                        </tr>
+                        <tr ng-repeat="feature in domainPreviewFeatures">
+                            <td>{{feature.type}}</td>
+                            <td>{{feature.value}}</td>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

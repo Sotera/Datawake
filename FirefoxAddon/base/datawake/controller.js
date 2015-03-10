@@ -13,6 +13,7 @@ var panel = require("sdk/panel");
 var notifications = require("sdk/notifications");
 var trackingHelper = require("./tracking");
 
+
 exports.loadDatawake = loadDatawake;
 exports.resetIcon = resetIcon;
 exports.activeIcon = activeIcon;
@@ -36,6 +37,65 @@ tabs.on("open", function (tab) {
         trackingHelper.trackTab(tab);
     }
 });
+
+
+/**
+ * Open the domain loader in a new tab and setup a worker to communicate with
+ * content scripts.
+ */
+function loadDomainManagerInTab(){
+    tabs.open({
+        url: data.url("html/domain-manager.html"),
+        onReady: function onReady(tab) {
+            console.log(tab.title);
+            if (mainPanel) mainPanel.hide()
+            var worker = tab.attach({
+                contentScriptFile: [
+                    data.url("js/min/jquery-1.11.1.min.js"),
+                    data.url("js/min/angular.min.js"),
+                    data.url("js/datawake/domain-manager.js"),
+                    data.url("js/min/bootstrap.min.js")
+                ]
+            });
+            // initialize the page when its ready
+            worker.port.on("init",function(){
+                getTeamsForWorker(worker)
+            });
+            worker.port.on("domains",function(team_id){
+                getDomainsForWorker(worker,team_id)
+            });
+            worker.port.on("domainpreview",function(data){
+                getDomainPreviewForWorker(worker,data.team_id,data.domain_id)
+            });
+            worker.port.on("createDomainFromFile",function(data){
+                var callback = function(response){
+                    if (response.status != 200){
+                        notifyError("Error uploading domain to server.")
+                        console.error(response)
+                    }
+                    else{
+                        notifySuccess("Your domain has been uploaded and is ready for use.")
+                        worker.port.emit("createdDomain",response.json)
+                    }
+                }
+                service.uploadDomain(data,callback);
+
+            });
+            worker.port.on("removeDomain",function(data){
+               var callback = function(response){
+                   if (response.status != 200) {
+                    notifyError("An error occured while deleting the domain.")
+                   }
+                   else{
+                    notifySuccess("Domain successfully deleted.")
+                   }
+               }
+                service.removeDomain(data,callback)
+            });
+
+        }
+    });
+}
 
 
 /**
@@ -189,10 +249,7 @@ function launchDatawakePanel(){
     })
 
     mainPanel.port.on("changeTeam",function(infoObj){
-       var callback = function(domains){
-            mainPanel.port.emit("domains",domains);
-       }
-       var info = changeTeam(infoObj.tabId,infoObj.team,callback)
+       var info = changeTeam(infoObj.tabId,infoObj.team,mainPanel)
        mainPanel.port.emit("infosaved",info)
     })
 
@@ -274,34 +331,17 @@ function launchDatawakePanel(){
         });
     });
 
+    mainPanel.port.on("domain-manager", loadDomainManagerInTab)
 
     mainPanel.port.on("init", function () {
         console.debug("Valid Tab");
 
         // get the current teams and load them into the main pannel
-        service.getTeams(function(response) {
-            if (response.status == 200){
-                var teams = response.json;
-                mainPanel.port.emit("teams",teams)
-            }
-            else{
-                console.error("Error getting teams from server.")
-                console.error(response)
-            }
-        });
+        getTeamsForWorker(mainPanel)
 
         // get the domains for the current team
         if (datawakeInfo.team){
-            service.getDomains(datawakeInfo.team.id,function(response){
-                if (response.status == 200){
-                    var domains = response.json;
-                    mainPanel.port.emit("domains",domains);
-                }
-                else{
-                    console.error("ERROR GETTING DOMAINS ");
-                    console.error(response);
-                }
-            })
+            getDomainsForWorker(mainPanel,datawakeInfo.team.id);
         }
 
         // get current trails if there is a team and domain
@@ -380,7 +420,7 @@ function getFeaturesForPanel(datawakeinfo){
  * @param callback, function handles response for /domains call to the server.
  * @returns The altered datawakeinfo object
  */
-function changeTeam(tabId,newteam,callback){
+function changeTeam(tabId,newteam,worker){
     var info = storage.getDatawakeInfo(tabId)
     if (!info.team || info.team.id != newteam.id){
         info.team = newteam
@@ -388,18 +428,7 @@ function changeTeam(tabId,newteam,callback){
         info.trail = null;
         info.isDatawakeOn = false;
         storage.setDatawakeInfo(tabId,info)
-
-        service.getDomains(info.team.id,function(response){
-          if (response.status == 200){
-            var domains = response.json;
-            callback(domains);
-          }
-          else {
-              //TODO handle the error
-              console.error("ERROR GETTING DOMAINS ");
-              console.error(response);
-          }
-        })
+        getDomainsForWorker(worker,info.team.id)
     }
     return info;
 }
@@ -524,6 +553,45 @@ function setUrlRank(rank_data) {
 }
 
 
+function getTeamsForWorker(worker){
+    service.getTeams(function(response) {
+        if (response.status == 200){
+            var teams = response.json;
+            worker.port.emit("teams",teams)
+        }
+        else{
+            console.error("Error getting teams from server.")
+            console.error(response)
+        }
+    });
+}
+
+function getDomainsForWorker(worker,team_id){
+    service.getDomains(team_id,function(response) {
+        if (response.status == 200){
+            var teams = response.json;
+            worker.port.emit("domains",teams)
+        }
+        else{
+            console.error("Error getting domains from server.")
+            console.error(response)
+        }
+    });
+}
+
+function getDomainPreviewForWorker(worker,team_id,domain_id){
+    service.getDomainPreview(team_id,domain_id,function(response) {
+        if (response.status == 200){
+            var teams = response.json;
+            worker.port.emit("domainpreview",teams)
+        }
+        else{
+            console.error("Error getting domains from server.")
+            console.error(response)
+        }
+    });
+}
+
 
 
 
@@ -543,7 +611,15 @@ function notifyError(message){
     notifications.notify({
         title: "Datawake Error",
         text: message,
-        iconURL: self.data.url("img/waveicon38.png"),
+        iconURL: self.data.url("img/waveicon38.png")
+    });
+}
+
+function notifySuccess(message){
+    notifications.notify({
+        title: "Datawake Success",
+        text: message,
+        iconURL: self.data.url("img/waveicon38.png")
     });
 }
 

@@ -340,14 +340,14 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
         addon.port.emit("setUrlRank", rank_data);
     }
 
-
+    $scope.loadDomainManager = function(){
+        addon.port.emit("domain-manager")
+    }
 
 
     addon.port.emit("init");
 
 });
-
-
 
 
 
