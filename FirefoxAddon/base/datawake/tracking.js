@@ -107,7 +107,7 @@ function trackTab(tab){
 
         var currentTrackingTabWorker = trackingTabWorkers[tab.id];
         var datawakeInfoForTab = storage.getDatawakeInfo(tab.id);
-        if (addOnPrefs.useScraper && datawakeInfoForTab && datawakeInfoForTab.isDatawakeOn) {
+        if (addOnPrefs.useScraper && datawakeInfoForTab && datawakeInfoForTab.isDatawakeOn && pageContents.html != "") {
 
 
             console.debug("Scraping Page");
