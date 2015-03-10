@@ -345,6 +345,10 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
     }
 
 
+    $scope.openForensicView = function(){
+        addon.port.emit("forensic-view")
+    }
+
     addon.port.emit("init");
 
 });

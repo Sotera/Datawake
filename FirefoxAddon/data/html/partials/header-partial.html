@@ -3,6 +3,7 @@
     <tr>
         <td>
             <b>Datawake Version:</b>  {{versionNumber}}
+            <div><a ng-click="openForensicView()">click for forensic trail viewer</a></div>
         </td>
         <td align="right">
             {{user.user_name}}
@@ -19,7 +20,7 @@
     </tr>
     </tbody>
 
-<table class="table table-bordered">
+<table class="table table-bordered" style="table-layout: fixed">
     <tbody>
     <tr>
         <td>
@@ -61,7 +62,7 @@
     </tr>
     <tr>
         <td><b>URL: </b></td>
-        <td>{{current_url}}</td>
+        <td style="word-wrap: break-word">{{current_url}}</td>
     </tr>
     <tr ng-show="rankingEnabled">
         <td>

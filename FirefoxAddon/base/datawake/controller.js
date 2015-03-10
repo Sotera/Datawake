@@ -28,10 +28,18 @@ var authHelper = require("./auth-helper");
 var signedIn = false;
 var userInfo = null;
 
+var forensic_url = addOnPrefs.forensicDeploymentUrl;
+var domain_loader_url = data.url("html/domain-manager.html")
+
+
 
 // set up a new tab listener to start tracking tabs when the datawake is on
-tabs.on("open", function (tab) {
+tabs.on("ready", function (tab) {
     var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
+    if (tab.url == forensic_url || tab.url == domain_loader_url){
+        datawakeInfo.isDatawakeOn = false;
+        resetIcon();
+    }
     storage.setDatawakeInfo(tab.id,datawakeInfo)
     if (datawakeInfo != null) {
         trackingHelper.trackTab(tab);
@@ -40,12 +48,20 @@ tabs.on("open", function (tab) {
 
 
 /**
+ * open a new tab to the forensic view
+ */
+function loadForensicViewInTab(){
+    if (mainPanel) mainPanel.hide()
+    tabs.open({url: forensic_url});
+}
+
+/**
  * Open the domain loader in a new tab and setup a worker to communicate with
  * content scripts.
  */
 function loadDomainManagerInTab(){
     tabs.open({
-        url: data.url("html/domain-manager.html"),
+        url: domain_loader_url,
         onReady: function onReady(tab) {
             console.log(tab.title);
             if (mainPanel) mainPanel.hide()
@@ -332,6 +348,7 @@ function launchDatawakePanel(){
     });
 
     mainPanel.port.on("domain-manager", loadDomainManagerInTab)
+    mainPanel.port.on("forensic-view", loadForensicViewInTab)
 
     mainPanel.port.on("init", function () {
         console.debug("Valid Tab");

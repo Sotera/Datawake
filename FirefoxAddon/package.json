@@ -20,6 +20,13 @@
             "value": "http://192.168.59.103/datawake/plugin"
         },
         {
+            "name": "forensicDeploymentUrl",
+            "title": "Forensic View Deployment Address",
+            "description": "(Required) Sets the current Datawake instance address. NOTE should end in a /",
+            "type": "string",
+            "value": "http://192.168.59.103/forensic/"
+        },
+        {
             "name": "proxyHost",
             "title": "Datawake Deployment Address IP",
             "description": "(Required) Sets the proxy ip address for sending side requests through Tor.",
