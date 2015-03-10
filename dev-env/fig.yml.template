@@ -18,20 +18,12 @@ datawake:
     DW_DB_PASSWORD: root
     DW_DB_HOST: 192.168.59.103
     DW_DB_PORT: 3336
-    DW_KAFKA_CONN_POOL: 192.168.59.103:9092
-    DW_KAFKA_PUB_TOPIC: memex-datawake-visited
-    #DW_GOOGLE_CLIENT_IDS:
     DW_MOCK_AUTH:  1
     DW_MOCK_FORENSIC_AUTH: 1
     DW_CONN_TYPE: mysql
-    #DW_IMPALA_HOSTS:
-    #DW_HBASE_HOST:
-    #DW_EXTERNAL_LINK_NAMES:
-    #DW_EXTERNAL_LINK_VALUES:
   volumes:
-    - /Users/.../code/sotera/Datawake/server/datawake:/usr/local/share/tangelo/web/datawake
-    - /Users/.../code/sotera/Datawake/server/domain:/usr/local/share/tangelo/web/domain
-    - /Users/.../code/sotera/Datawake/server/forensic:/usr/local/share/tangelo/web/forensic
+    - <full path to the web server code>/server/datawake:/usr/local/share/tangelo/web/datawake
+    - <full path to the web server code>/server/forensic:/usr/local/share/tangelo/web/forensic
 
 
 
