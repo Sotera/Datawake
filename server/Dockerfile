@@ -63,31 +63,26 @@ RUN apt-get -y install aptitude \
     && apt-get -y install unixodbc-dev \
     && pip install --allow-external pyodbc --allow-unverified pyodbc pyodbc
 
+
+# install beatiful soup
+RUN apt-get install -y python-bs4
+
 # install tangelo
-
 RUN pip install tangelo
-
-
-# setup tangelo conf and entry point for container
-
-RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
-COPY tangelo.conf /etc/tangelo.conf
-EXPOSE 80
 
 
 # copy over the web apps and conf
 
 COPY datawake /usr/local/share/tangelo/web/datawake
-COPY domain /usr/local/share/tangelo/web/domain
 COPY forensic /usr/local/share/tangelo/web/forensic
-COPY forensic_v2 /usr/local/share/tangelo/web/forensic_v2
 ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
 
 
 
-# install beatiful soup
-RUN apt-get install -y python-bs4
-
+# setup tangelo conf and entry point for container
 # set the default container command to run tangelo
 
+RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
+COPY tangelo.conf /etc/tangelo.conf
+EXPOSE 80
 CMD ["tangelo","-c","/etc/tangelo.conf"]
