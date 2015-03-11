@@ -33,26 +33,45 @@ var domain_loader_url = data.url("html/domain-manager.html")
 
 
 
-// set up a new tab listener to start tracking tabs when the datawake is on
-tabs.on("open", function (tab) {
 
-    // if new tab set up from most recently used.
-    if (!storage.hasDatawakeInfoForTab(tab.id)){
-        var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
-        if (tab.url == forensic_url || tab.url == domain_loader_url){
-            datawakeInfo.isDatawakeOn = false;
-            resetIcon();
-        }
-        storage.setDatawakeInfo(tab.id,datawakeInfo)
-        trackingHelper.setUpTab(tab);
+/**
+ * Get the active tab.
+ *
+ * This method is a workaround for an issue caused by using google authentication.
+ *
+ * During the auth flow a new tab is opened in a background window, when
+ * the auth flow is over the tabs.activeTab property is lost (all properties on it are undefined).
+ * To restore working behavior I manually activate the last active tab prior to things breaking.
+ *
+ * @returns {tab}
+ */
+var prev_active_tab = null;
+var active_tab = null;
+function getAcitveTab(){
+    var tab = tabs.activeTab
+    if (!tab.id){
+        console.log("there is no active tab! Activating previous tab.")
+        tab = prev_active_tab
+        if (!tab || !tab.index || tab.index < 0) tab = tabs[0]
+        tab.activate()
+        return tab;
     }
+    else{
+        return tab;
+    }
+}
 
-});
 
-
-// touch the datawake info for this tab so that it is the most recently used
-// and get set the button icon for on / off
+/**
+ * Track tab activation and set the icon for datawake on / off
+ */
 tabs.on("activate", function (tab) {
+    console.log("actived tab: "+tab.id)
+
+    // track previous active tab for work around:  see getActiveTab()
+    prev_active_tab = active_tab;
+    active_tab = tab;
+
     var datawakeInfoForTab = storage.getDatawakeInfo(tab.id);
     if (datawakeInfoForTab != null && datawakeInfoForTab.isDatawakeOn) {
         activeIcon();
@@ -62,13 +81,46 @@ tabs.on("activate", function (tab) {
 });
 
 
+
+/**
+ *  set up a new tab listener to start a worker for each tab
+ */
+tabs.on("open", function (tab) {
+    console.log("tab open: "+tab.id)
+    if (!storage.hasDatawakeInfoForTab(tab.id)){
+        var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
+        if (tab.url == forensic_url || tab.url == domain_loader_url){
+            datawakeInfo.isDatawakeOn = false;
+            resetIcon();
+        }
+        storage.setDatawakeInfo(tab.id,datawakeInfo)
+        trackingHelper.setUpTab(tab);
+    }
+});
+
+
+
+
+
 /**
  * open a new tab to the forensic view
  */
 function loadForensicViewInTab(){
     if (mainPanel) mainPanel.hide()
-    tabs.open({url: forensic_url});
+    tabs.open({
+        url: forensic_url,
+        onReady: function(tab){
+            // turn off the datawake for this tab
+            var datawakeInfo = storage.getDatawakeInfo(tab.id)
+            datawakeInfo.isDatawakeOn = false;
+            resetIcon();
+            storage.setDatawakeInfo(tab.id,datawakeInfo)
+        }
+    });
 }
+
+
+
 
 /**
  * Open the domain loader in a new tab and setup a worker to communicate with
@@ -78,8 +130,14 @@ function loadDomainManagerInTab(){
     tabs.open({
         url: domain_loader_url,
         onReady: function onReady(tab) {
-            console.log(tab.title);
             if (mainPanel) mainPanel.hide()
+
+            // turn off the datawake for this tab
+            var datawakeInfo = storage.getDatawakeInfo(tab.id)
+            datawakeInfo.isDatawakeOn = false;
+            resetIcon();
+            storage.setDatawakeInfo(tab.id,datawakeInfo)
+
             var worker = tab.attach({
                 contentScriptFile: [
                     data.url("js/min/jquery-1.11.1.min.js"),
@@ -113,14 +171,14 @@ function loadDomainManagerInTab(){
 
             });
             worker.port.on("removeDomain",function(data){
-               var callback = function(response){
-                   if (response.status != 200) {
-                    notifyError("An error occured while deleting the domain.")
-                   }
-                   else{
-                    notifySuccess("Domain successfully deleted.")
-                   }
-               }
+                var callback = function(response){
+                    if (response.status != 200) {
+                        notifyError("An error occured while deleting the domain.")
+                    }
+                    else{
+                        notifySuccess("Domain successfully deleted.")
+                    }
+                }
                 service.removeDomain(data,callback)
             });
 
@@ -138,7 +196,7 @@ function loadDatawake(){
     attachActionButton();
 
     // set up the tracker on the current / initial tab
-    trackingHelper.setUpTab(tabs.activeTab);
+    trackingHelper.setUpTab(getAcitveTab());
 
 }
 
@@ -205,7 +263,8 @@ function onToggle(state) {
 
 
 function launchDatawakePanel(){
-    var datawakeInfo = storage.getDatawakeInfo(tabs.activeTab.id);
+    var activeTab = getAcitveTab()
+    var datawakeInfo = storage.getDatawakeInfo(activeTab.id);
     if (mainPanel != null || mainPanel != undefined){
         mainPanel.destroy();
     }
@@ -216,14 +275,15 @@ function launchDatawakePanel(){
         contentURL: data.url("html/datawake-widget-panel.html"),
         onHide: handleHide,
         contentScriptOptions: {
+            starUrl: data.url("css/icons/"),
             datawakeInfo: datawakeInfo,
             useDomainFeatures: addOnPrefs.useDomainFeatures,
             useRanking: addOnPrefs.useRanking,
             versionNumber: self.version,
-            current_url: tabs.activeTab.url,
+            current_url: activeTab.url,
             pageVisits: null,
             userInfo: userInfo,
-            tabId: tabs.activeTab.id
+            tabId: activeTab.id
         }
     });
 
@@ -233,7 +293,13 @@ function launchDatawakePanel(){
     mainPanel.port.on("setUrlRank", setUrlRank);
     mainPanel.port.on("openExternalLink", openExternalTool);
     mainPanel.port.on("markInvalid", markInvalid);
+    mainPanel.port.on("signout",function(){
+        signedIn = false
+        authHelper.signOut(function(response) {
+            mainPanel.hide()
 
+        })
+    })
     mainPanel.port.on("infochanged",function(infoObj){
 
         var old = storage.getDatawakeInfo(infoObj.tabId);
@@ -247,7 +313,7 @@ function launchDatawakePanel(){
         if (isOn != wasOn){
             if (isOn){
                 activeIcon();
-                trackingHelper.trackTab(tabs.activeTab);
+                trackingHelper.trackTab(getAcitveTab());
             }
             else{
                 resetIcon()
@@ -256,8 +322,8 @@ function launchDatawakePanel(){
     })
 
     mainPanel.port.on("changeTeam",function(infoObj){
-       var info = changeTeam(infoObj.tabId,infoObj.team,mainPanel)
-       mainPanel.port.emit("infosaved",info)
+        var info = changeTeam(infoObj.tabId,infoObj.team,mainPanel)
+        mainPanel.port.emit("infosaved",info)
     })
 
     mainPanel.port.on("getTeamMembers",function(team){
@@ -282,15 +348,15 @@ function launchDatawakePanel(){
 
 
     mainPanel.port.on("createTrail",function(data){
-       var callback = function(response){
-           if (response.status != 200){
-               if (response.body) notifyError(response.body)
-           }
-           else{
-               mainPanel.port.emit("trailCreated",response.json);
-           }
-       }
-       service.createTrail(data.team_id,data.domain_id,data.name,data.description,callback);
+        var callback = function(response){
+            if (response.status != 200){
+                if (response.body) notifyError(response.body)
+            }
+            else{
+                mainPanel.port.emit("trailCreated",response.json);
+            }
+        }
+        service.createTrail(data.team_id,data.domain_id,data.name,data.description,callback);
     });
 
 
@@ -360,8 +426,8 @@ function launchDatawakePanel(){
                     mainPanel.port.emit("trails",trails);
                 }
                 else{
-                        console.error("ERROR GETTING DOMAINS ");
-                        console.error(response);
+                    console.error("ERROR GETTING DOMAINS ");
+                    console.error(response);
                 }
             });
         }
@@ -397,27 +463,29 @@ function launchDatawakePanel(){
  *
  */
 function getFeaturesForPanel(datawakeinfo){
-   if (mainPanel){
-       if (constants.isValidUrl(tabs.activeTab.url)) {
+    if (mainPanel){
+        if (constants.isValidUrl(getAcitveTab().url)) {
 
-           service.getEntities(tabs.activeTab.url, function(response){
-               if (response.status != 200) notifyError("Error getting features for this url.")
-               else mainPanel.port.emit("features", response.json);
-           });
+            var activeTab = getAcitveTab()
 
-           service.getDomainExtractedEntities(datawakeinfo.team.id,datawakeinfo.domain.id,tabs.activeTab.url,function(response){
-               if (response.status != 200) notifyError("Error getting domain features for this url.")
-               else mainPanel.port.emit("domain_features", response.json);
-           });
+            service.getEntities(activeTab.url, function(response){
+                if (response.status != 200) notifyError("Error getting features for this url.")
+                else mainPanel.port.emit("features", response.json);
+            });
 
-           // get manually labeled features
-           loadManualFeatures(datawakeinfo);
+            service.getDomainExtractedEntities(datawakeinfo.team.id,datawakeinfo.domain.id,activeTab.url,function(response){
+                if (response.status != 200) notifyError("Error getting domain features for this url.")
+                else mainPanel.port.emit("domain_features", response.json);
+            });
 
-           // get list of features marked as invalid
-           emitMarkedEntities(datawakeinfo);
+            // get manually labeled features
+            loadManualFeatures(datawakeinfo);
 
-       }
-   }
+            // get list of features marked as invalid
+            emitMarkedEntities(datawakeinfo);
+
+        }
+    }
 }
 
 /**
@@ -507,7 +575,7 @@ function loadManualFeatures(info) {
         team_id: info.team.id,
         domain_id: info.domain.id,
         trail_id: info.trail.id,
-        url: tabs.activeTab.url
+        url: getAcitveTab().url
     });
     requestHelper.post(post_url, post_data, function (response) {
         if (response.status != 200){
@@ -535,7 +603,7 @@ function emitRanks(datawakeInfo) {
         team_id: datawakeInfo.team.id,
         domain_id: datawakeInfo.domain.id,
         trail_id: datawakeInfo.trail.id,
-        url: tabs.activeTab.url
+        url: getAcitveTab().url
     });
     requestHelper.post(url, post_data, function (response) {
         var rank = response.json.rank;
@@ -550,7 +618,7 @@ function emitRanks(datawakeInfo) {
  * @param rank_data
  */
 function setUrlRank(rank_data) {
-    rank_data.url = tabs.activeTab.url;
+    rank_data.url = getAcitveTab().url;
     var url = addOnPrefs.datawakeDeploymentUrl + "/ranks/set";
     console.debug("Posting Rank..");
     requestHelper.post(url, JSON.stringify(rank_data), function (response) {
@@ -646,30 +714,36 @@ function launchLoginPanel(){
     }
 
     loginPanel  = panel.Panel({
-            contentURL: data.url("html/login-panel.html"),
-            onHide: handleHide,
-            contentScriptOptions: {
-                authType: authHelper.authType()
-            }
+        contentURL: data.url("html/login-panel.html"),
+        onHide: handleHide,
+        contentScriptOptions: {
+            authType: authHelper.authType()
+        }
     });
 
     loginPanel.port.on("signIn", function () {
-            authHelper.signIn(function (response) {
-                signedIn = true;
-                userInfo = response.json
-                //loginPanel.port.emit("sendUserInfo", response.json);
-                loginPanel.destroy()
-                loginPanel = null;
-                notifications.notify({
-                    title: "Datawake Sign On",
-                    text: "Sign On Successful.  Click the datawake button to begin.",
-                    iconURL: self.data.url("img/waveicon38.png"),
-                    onClick:  function(data) {
-                        console.log("clicked it")
-                        launchDatawakePanel()
-                    }
-                });
+        authHelper.signIn(function (response) {
+            signedIn = true;
+            userInfo = response.json
+            //loginPanel.port.emit("sendUserInfo", response.json);
+            loginPanel.destroy()
+            loginPanel = null;
+            notifications.notify({
+                title: "Datawake Sign On",
+                text: "Sign On Successful.  Click the datawake button to begin.",
+                iconURL: self.data.url("img/waveicon38.png"),
+                onClick:  function(data) {
+                    console.log("clicked it")
+                    launchDatawakePanel()
+                }
             });
+        });
+    });
+
+    loginPanel.port.on("signOut", function () {
+        authHelper.signOut(function (response) {
+            clearAllState()
+        });
     });
     loginPanel.show();
 }

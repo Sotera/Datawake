@@ -130,8 +130,8 @@ function trackTab(tab){
                     getDomainExtractedEntities();
                 }
             });
+            selectionHelper.useContextMenu(currentTrackingTabWorker.tab);
         }
-        selectionHelper.useContextMenu(currentTrackingTabWorker.tab);
     });
 
 }
