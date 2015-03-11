@@ -216,7 +216,6 @@ function launchDatawakePanel(){
         contentURL: data.url("html/datawake-widget-panel.html"),
         onHide: handleHide,
         contentScriptOptions: {
-            starUrl: data.url("css/icons/"),
             datawakeInfo: datawakeInfo,
             useDomainFeatures: addOnPrefs.useDomainFeatures,
             useRanking: addOnPrefs.useRanking,
@@ -234,13 +233,7 @@ function launchDatawakePanel(){
     mainPanel.port.on("setUrlRank", setUrlRank);
     mainPanel.port.on("openExternalLink", openExternalTool);
     mainPanel.port.on("markInvalid", markInvalid);
-    mainPanel.port.on("signout",function(){
-        signedIn = false
-        authHelper.signOut(function(response) {
-            mainPanel.hide()
 
-        })
-    })
     mainPanel.port.on("infochanged",function(infoObj){
 
         var old = storage.getDatawakeInfo(infoObj.tabId);
@@ -676,12 +669,6 @@ function launchLoginPanel(){
                         launchDatawakePanel()
                     }
                 });
-            });
-    });
-
-    loginPanel.port.on("signOut", function () {
-            authHelper.signOut(function (response) {
-                clearAllState()
             });
     });
     loginPanel.show();
