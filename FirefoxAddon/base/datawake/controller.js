@@ -34,15 +34,30 @@ var domain_loader_url = data.url("html/domain-manager.html")
 
 
 // set up a new tab listener to start tracking tabs when the datawake is on
-tabs.on("ready", function (tab) {
-    var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
-    if (tab.url == forensic_url || tab.url == domain_loader_url){
-        datawakeInfo.isDatawakeOn = false;
-        resetIcon();
+tabs.on("open", function (tab) {
+
+    // if new tab set up from most recently used.
+    if (!storage.hasDatawakeInfoForTab(tab.id)){
+        var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
+        if (tab.url == forensic_url || tab.url == domain_loader_url){
+            datawakeInfo.isDatawakeOn = false;
+            resetIcon();
+        }
+        storage.setDatawakeInfo(tab.id,datawakeInfo)
+        trackingHelper.setUpTab(tab);
     }
-    storage.setDatawakeInfo(tab.id,datawakeInfo)
-    if (datawakeInfo != null) {
-        trackingHelper.trackTab(tab);
+
+});
+
+
+// touch the datawake info for this tab so that it is the most recently used
+// and get set the button icon for on / off
+tabs.on("activate", function (tab) {
+    var datawakeInfoForTab = storage.getDatawakeInfo(tab.id);
+    if (datawakeInfoForTab != null && datawakeInfoForTab.isDatawakeOn) {
+        activeIcon();
+    } else {
+        resetIcon();
     }
 });
 
@@ -125,23 +140,6 @@ function loadDatawake(){
     // set up the tracker on the current / initial tab
     trackingHelper.setUpTab(tabs.activeTab);
 
-    // set up a new tab listener to add the tracker to each new tab
-    tabs.on("open", function (tab) {
-        var datawakeInfo = storage.getRecentlyUsedDatawakeInfo();
-        storage.setDatawakeInfo(tab.id,datawakeInfo);
-        trackingHelper.setUpTab(tab);
-    });
-
-    // touch the datawake info for this tab so that it is the most recently used
-    // and get set the button icon for on / off
-    tabs.on("activate", function (tab) {
-        var datawakeInfoForTab = storage.getDatawakeInfo(tab.id);
-        if (datawakeInfoForTab != null && datawakeInfoForTab.isDatawakeOn) {
-            activeIcon();
-        } else {
-            resetIcon();
-        }
-    });
 }
 
 

@@ -65,7 +65,8 @@ function setUpTab(tab) {
 }
 
 /**
- * If recording is on load scripts into the tab to track page contents.
+ * Start a worker for each tab. If datawake is Off for the tab we
+ * still have a worker running but contents are not sent to the server.
  * @param tab
  */
 function trackTab(tab){
@@ -73,12 +74,6 @@ function trackTab(tab){
     destoryTabWorker(tab.id);
 
     var datawakeInfoForTab = storage.getDatawakeInfo(tab.id);
-    if (!datawakeInfoForTab.isDatawakeOn) {
-       // if (datawakeInfoForTab.team && datawakeInfoForTab.domain && datawakeInfoForTab.trail){
-       //     notify("Attention:  Datawake is setup but has not been started.")
-       // }
-        return;
-    }
 
     var trackingTabWorker = tab.attach({
         contentScriptFile: [
