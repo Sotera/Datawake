@@ -11,6 +11,15 @@ forensicApp.controller('ForensicController', function ($scope) {
 
     $scope.date = {startDate: moment({hour:0,minute:0,seconds:0}).subtract(7, 'day'), endDate: moment({hour:0,minute:0,seconds:0}) };
 
+    // set defaults for elastic search / domain dive credentials
+    $scope.esConfig = {
+        url: "",
+        index: "",
+        maxResultsPerNode: 10,
+        credentials: ""
+    }
+    $scope.graphDrawn = false;
+
 
     function getOriginalColorOptions(){
         return [
@@ -243,6 +252,8 @@ forensicApp.controller('ForensicController', function ($scope) {
                 console.log("Got back the graph")
                 console.log(graph)
                 change_graph(graph)
+                $scope.graphDrawn = true;
+                $scope.$apply()
             },
             error: function (jqxhr, textStatus, reason) {
                 console.log("error " + textStatus + " " + reason);
@@ -255,6 +266,62 @@ forensicApp.controller('ForensicController', function ($scope) {
 
     $scope.graphColoringChanged = function(selectedGraphColoring) {
         change_highlight(selectedGraphColoring)
+    }
+
+
+    /**
+     * Search for features in an elastic search index
+     * @param one  a single feature to search for, if undefined all features form the graph are pulled
+     */
+    $scope.domainDive = function(one){
+       var url = $scope.esConfig.url
+       var index = $scope.esConfig.index
+       var mrpn = $scope.esConfig.maxResultsPerNode
+       var credentials = $scope.esConfig.credentials
+
+        console.log('domainDive('+url+','+index+","+mrpn+")")
+        var jsonData = {data:{url:url,index:index,mrpn:mrpn,credentials: credentials, search_terms:[]}};
+
+
+        var nodes = (one === undefined) ? SWG.graph.nodes : [one];
+        nodes.forEach(function(node) {
+                jsonData.data.search_terms.push({type: node['type'], id: node['id'], data: node['data']});
+            }
+        );
+        console.log(jsonData)
+
+        $.ajax({
+            type: 'POST',
+            url: '/datawake/forensic/domaindive/query',
+            data: JSON.stringify(jsonData),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (response) {
+                console.log("domain dive success")
+                console.log(response);
+                var nodes = SWG.updateGraph(response);
+                nodes.on('click', function (d) {
+                    selected_data = d;
+                    showLinkDialog(d);
+                    SWG.viz.selectAll(".node").style("stroke-width", function(d) {
+                        return 0;});
+                    d3.select(this).style("stroke", function(d) {
+                        return 'yellow';
+                    }).style("stroke-width", function(d) {
+                        return 4;
+                    });
+
+                });
+                change_highlight();
+            },
+            error: function (jqxhr, textStatus, reason) {
+                console.log("error " + textStatus + " " + reason)
+
+            }
+        });
+
+
+
     }
 
 

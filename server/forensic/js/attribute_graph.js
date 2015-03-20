@@ -31,8 +31,10 @@ var max_hits;
 var selected_data;
 var USERS = {all: {}, max: 1};
 var ALL_TIMESTAMPS = [];
-
+var selected_data;
 var repulsion_scale = d3.scale.linear().domain([0, 50]).range([1000, 30]);
+
+
 
 
 /*
@@ -119,6 +121,14 @@ function change_graph(graph) {
 
     SWG.viz.selectAll(".node").on('click', function (d) {
         showLinkDialog(d);
+        SWG.viz.selectAll(".node").style("stroke-width", function (d) {
+            return 0;
+        });
+        d3.select(this).style("stroke", function (d) {
+            return 'yellow';
+        }).style("stroke-width", function (d) {
+            return 4;
+        });
     });
 
     SWG.viz.selectAll(".link")
@@ -175,7 +185,7 @@ function change_highlight(colorOption) {
 
 
     // Default coloring
-    if (colorOption.value == "none") {
+    if (!colorOption || colorOption.value == "none" ) {
         SWG.defaultColors();
     }
     else if (colorOption.value == "community") {  // color by community
@@ -368,6 +378,15 @@ function showLinkDialog(data) {
 
     var id = data.id;
     var type = data.type;
+    var search_term = data.search_term;
+    var nid = data.nid;
+    var st = data.id;
+    if (type == 'selection') {
+        st = data.data;
+    }
+    console.log(data);
+
+
 
     var mainDiv = d3.select("#link-dialog").append("div");
 
@@ -390,24 +409,10 @@ function showLinkDialog(data) {
     p1.append("span").text(type);
     mainDiv.append("hr");
 
-
-    // display look ahead info
-    if (type == "lookahead") {
-        mainDiv.append("h4").text("Lookahead Details");
-        mainDiv.append("p").text("Shared Entities: " + data.entity_matches.length);
-        mainDiv.append("ul").selectAll("li").data(data.entity_matches).enter()
-            .append("li")
-            .text(function (d) {
-                return d;
-            });
-        mainDiv.append("hr");
-
-        mainDiv.append("p").text("Domain Entities: " + data.domain_entity_matches.length);
-        mainDiv.append("ul").selectAll("li").data(data.domain_entity_matches).enter()
-            .append("li")
-            .text(function (d) {
-                return d;
-            });
+    if (search_term != undefined) {
+        var p1 = mainDiv.append("p");
+        p1.text("Searched ");
+        p1.append("span").text(data.search_url + data.jindex + ' for "' + search_term + '"');
         mainDiv.append("hr");
     }
 
@@ -447,9 +452,37 @@ function showLinkDialog(data) {
         mainDiv.append("span").text("Selection Text: ");
         mainDiv.append("br");
         mainDiv.append("br");
-        mainDiv.append("p").text(data.data);
+        mainDiv.append("p").text("\"" + data.data + "\"");
         mainDiv.append("hr");
     }
+
+    if (type == 'selection' || type == 'email' || type == 'phone' || type == 'info') {
+        mainDiv.append("a")
+            .attr('id', 'dd1_btn')
+            .attr('class', "btn btn-success")
+            .text('Domain Dive')
+            .attr('search_term', data.id);
+        mainDiv.append("hr");
+        var gst = st;
+        if (type == 'info') {
+            gst = st.split('->')[1].trim();
+        }
+
+        $("#dd1_btn").click(function () {
+            angular.element(document.getElementById('forensic-body')).scope().domainDive(data)
+        });
+    }
+
+
+    // for elastic search results display the _source info
+    if (data._source){
+        console.log(data._source)
+        mainDiv.append("h3").text("Elastic Search Results")
+        mainDiv.append("div").selectAll("p").data(Object.keys(data._source)).enter()
+            .append("div")
+            .append("p").text(function(d) {return d+":\t"+data._source[d];})
+    }
+
 
     $("#link-dialog").dialog({
         height: 500,
