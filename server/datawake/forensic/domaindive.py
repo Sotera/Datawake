@@ -14,23 +14,42 @@ limitations under the License.
 import json
 from elasticsearch import Elasticsearch
 import tangelo
-
+from datawake.conf import datawakeconfig as conf
 
 
 #
 # Return the graph display options
 #
 def query(data):
+
     tangelo.log('domaindive:query')
     tangelo.log(data)
-    url = data['url']
-    max_results_per_node = int(data['mrpn'])
-    indd = data['index']
-    cred = data['credentials']
+
+    # set default es options
+    url = conf.FORENSIC_ES_URL
+    indd = conf.FORENSIC_ES_INDEX
+    max_results_per_node = conf.FORENSIC_ES_MRPN
+    cred = conf.FORENSIC_ES_CRED
+    protocol = 'https'
+
+    # override defaults if supplied with query
+    if 'protocol' in data and data['protocol'] in ['http','https']:
+        protocol = data['protocol']
+        if protocol != 'https': cred = None
+    if 'url' in data and data['url'] is not None and len(data['url']) > 0:
+        url = data['url']
+        cred = None  # if the url changed reset the credentials
+    if 'mrpn' in data and data['mrpn'] is not None: max_results_per_node = data['mrpn']
+    if 'index' in data and data['index'] is not None and len(data['index']) >0: indd = data['index']
+    if 'credentials' in data and data['credentials'] is not None and len(data['credentials']) >0: cred = data['credentials']
+
+
+    tangelo.log('using elastic serach instance: '+protocol+"://"+url)
+
     search_terms = data['search_terms']
     es = None
     if cred is not None and len(cred) > 0:
-        es = Elasticsearch(['http://' + cred + '@' + url])
+        es = Elasticsearch([protocol+'://' + cred + '@' + url])
     else:
         es = Elasticsearch([url])
 

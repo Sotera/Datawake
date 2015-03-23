@@ -16,7 +16,8 @@ forensicApp.controller('ForensicController', function ($scope) {
         url: "",
         index: "",
         maxResultsPerNode: 10,
-        credentials: ""
+        credentials: "",
+        protocol: "https"
     }
     $scope.graphDrawn = false;
 
@@ -280,7 +281,7 @@ forensicApp.controller('ForensicController', function ($scope) {
        var credentials = $scope.esConfig.credentials
 
         console.log('domainDive('+url+','+index+","+mrpn+")")
-        var jsonData = {data:{url:url,index:index,mrpn:mrpn,credentials: credentials, search_terms:[]}};
+        var jsonData = {data:{url:url,protocol: $scope.esConfig.protocol, index:index,mrpn:mrpn,credentials: credentials, search_terms:[]}};
 
 
         var nodes = (one === undefined) ? SWG.graph.nodes : [one];
