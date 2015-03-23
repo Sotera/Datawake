@@ -86,3 +86,8 @@ RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" ta
 COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
 CMD ["tangelo","-c","/etc/tangelo.conf"]
+
+
+# Install elastic search for the domain dive feature
+RUN pip install elasticsearch
+
