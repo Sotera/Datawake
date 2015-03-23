@@ -116,7 +116,7 @@
     <title>Data Wake Forensics</title>
 </head>
 
-<body ng-controller="ForensicController">
+<body id="forensic-body" ng-controller="ForensicController">
 
 
 <div id="info-panel" class="modal fade">
@@ -145,6 +145,58 @@
     </div>
 </div>
 
+
+<div id="config-panel" class="modal fade">
+    <div class=modal-dialog>
+        <div class=modal-content>
+            <div class=modal-header>
+                <h3>Configuration</h3>
+                Set configuration options to override defaults on the server.
+            </div>
+            <p>
+            <div class="input-group">
+                <div class="col-lg-12">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="e_url">protocol (http or https):</label>
+                            <input type="text" ng-model="esConfig.protocol" class="form-control" >
+                        </div>
+                        <div class="form-group">
+                            <label for="e_url">Elasticsearch URL:</label>
+                            <input type="text" ng-model="esConfig.url" class="form-control" >
+                        </div>
+                        <div class="form-group">
+                            <label for="index">Elasticsearch Index (leave blank for all):</label>
+                            <input type="text" ng-model="esConfig.index" class="form-control" >
+                        </div>
+                        <p>
+
+                        <div class="form-group">
+                            <label for="num_per_node">Max Results Per Node:</label>
+                            <input type="text" ng-model="esConfig.maxResultsPerNode" class="form-control" >
+                        </div>
+                        <p>
+
+                        <div class="form-group">
+                            <label for="num_per_node">Credentials: (u:pw)</label>
+                            <input type="text" ng-model="esConfig.credentials" class="form-control" >
+                        </div>
+                        <p>
+                    </form>
+                </div>
+            </div>
+            <p>
+
+            <div class=modal-footer>
+                <a class="btn btn-default" data-dismiss=modal>OK</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <div class="navbar navbar-default navbar-fixed-top">
     <div class=navbar-header>
         <div class=navbar-brand>Data Wake Viewer <span id="forensic_version"></span></div>
@@ -153,6 +205,9 @@
     <ul class="nav navbar-nav">
         <li><a style="cursor:pointer" data-toggle="modal" data-target="#info-panel"><span
                 class="glyphicon glyphicon-info-sign"></span> Info</a>
+    </ul>
+    <ul class="nav navbar-nav">
+        <li><a style="cursor:pointer" data-toggle="modal" data-target="#config-panel"><span class="glyphicon glyphicon-pencil"></span> Config</a>
     </ul>
 
     <div style="position: fixed; right: 2%; top: 1%;" id="googleAuthContainer">
@@ -196,7 +251,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <b>Team:</b>
+                            <b>Team / Users:</b>
                         </td>
                         <td style="white-space:nowrap; width: 75%">
                             <div>
@@ -205,11 +260,7 @@
                                         ng-options="team as team.name for team in teams"
                                         data-placeholder="Select a Team">
                                 </select>
-                                <select multiple id="user_select" class="form-control"
-                                        data-placeholder="Select users"
-                                        style="display: inline-block; margin-right: 10px; width: 95%">
-                                </select>
-                                <img ng-show="teamSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
+                                <select multiple id="user_select" data-placeholder=" " class="form-control styled-select" />
                             </div>
                         </td>
                     </tr>
@@ -273,7 +324,13 @@
                             <label class=checkbox>
                                 <input type=checkbox id=usetext onchange="SWG.toogleLabels(); "> Render text labels
                             </label>
-                            <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">Draw Graph</button>
+                            <div style="padding: 10px;">
+                                <button  ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">Draw Graph</button>
+                            </div>
+                            <div style="padding: 10px;">
+                                <button  ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive</button>
+                            </div>
+
 
                 </div>
 
