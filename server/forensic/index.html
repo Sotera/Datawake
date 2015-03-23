@@ -247,7 +247,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <b>Team:</b>
+                            <b>Team / Users:</b>
                         </td>
                         <td style="white-space:nowrap; width: 75%">
                             <div>
@@ -256,11 +256,7 @@
                                         ng-options="team as team.name for team in teams"
                                         data-placeholder="Select a Team">
                                 </select>
-                                <select multiple id="user_select" class="form-control"
-                                        data-placeholder="Select users"
-                                        style="display: inline-block; margin-right: 10px; width: 95%">
-                                </select>
-                                <img ng-show="teamSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
+                                <select multiple id="user_select" data-placeholder=" " class="form-control styled-select" />
                             </div>
                         </td>
                     </tr>
