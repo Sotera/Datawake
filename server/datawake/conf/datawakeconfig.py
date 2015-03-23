@@ -32,7 +32,10 @@ DW_EXTERNAL_LINK_NAMES: Comma separated list of links names to provide for extra
 DW_EXTERNAL_LINK_VALUES: Comma separated list of links to provide for extracted features found in the domain index.
     The link text may contain "$ATTR" and/or "$VALUE", which will be replaced with an extracted type and value such as "phone" and "5555555555"
 
-
+FORENSIC_ES_URL: url for forensic view elastic search
+FORENSIC_ES_INDEX: the index to search, defaults to none (all indexes)
+FORENSIC_ES_CRED:  username:password for elastic search
+FORENSIC_ES_MRPN: max elastic search results to return per node
 """
 
 VERSION_NUMBER="0.6-SNAPSHOT"
@@ -53,6 +56,11 @@ for param in REQUIRED_PARAMS:
 if len(not_found) > 0:
     raise ValueError("Datawake required environment variables not set: "+str(not_found))
 
+
+FORENSIC_ES_URL = os.environ['FORENSIC_ES_URL'] if 'FORENSIC_ES_URL' in os.environ else ''
+FORENSIC_ES_INDEX = os.environ['FORENSIC_ES_INDEX'] if 'FORENSIC_ES_INDEX' in os.environ else ''
+FORENSIC_ES_CRED = os.environ['FORENSIC_ES_CRED'] if 'FORENSIC_ES_CRED' in os.environ else ''
+FORENSIC_ES_MRPN = os.environ['FORENSIC_ES_MRPN'] if 'FORENSIC_ES_MRPN' in os.environ else 10
 
 
 
