@@ -147,8 +147,10 @@ CREATE TABLE manual_extractor_markup_removals (
 );
 
 CREATE VIEW vw_team_users AS
-	SELECT t.id,
-		t.name
+	SELECT t.id as teamID,
+		t.name as teamName,
+		u.team_user_id as userID,
+		u.email
 	FROM (datawake_teams t 
 			join datawake_team_users u on((t.id = u.team_id)))
 ;
