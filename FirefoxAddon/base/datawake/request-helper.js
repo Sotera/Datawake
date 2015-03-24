@@ -1,12 +1,12 @@
 var Request = require("sdk/request").Request;
 var requestWrapper = require("./request-wrapper");
 
-//exports.post = postRequest;
-//exports.get = getRequest;
+exports.post = postRequest;
+exports.get = getRequest;
 
 
-exports.post = proxyPost;
-exports.get = proxyGet;
+//exports.post = proxyPost;
+//exports.get = proxyGet;
 exports.postCode = postCode;
 exports.delete = deleteRequest;
 
