@@ -9,7 +9,7 @@
     "version": "0.6-SNAPSHOT",
     "permissions": {
         "private-browsing": true,
-        "cross-domain-content": ["http://54.175.189.11"]
+        "cross-domain-content": ["http://127.0.0.1"]
     },
     "preferences": [
         {
@@ -17,21 +17,21 @@
             "title": "Datawake Deployment Address",
             "description": "(Required) Sets the current Datawake instance address.",
             "type": "string",
-            "value": "http://54.175.189.11/datawake/plugin"
+            "value": "http://127.0.0.1/datawake/plugin"
         },
         {
             "name": "forensicDeploymentUrl",
             "title": "Forensic View Deployment Address",
             "description": "(Required) Sets the current Datawake instance address. NOTE should end in a /",
             "type": "string",
-            "value": "http://54.175.189.11/forensic/"
+            "value": "http://127.0.0.1/forensic/"
         },
         {
             "name": "proxyHost",
             "title": "Datawake Deployment Address IP",
             "description": "(Required) Sets the proxy ip address for sending side requests through Tor.",
             "type": "string",
-            "value": "54.175.189.11"
+            "value": "127.0.0.1"
         },
         {
             "name": "proxyPort",
