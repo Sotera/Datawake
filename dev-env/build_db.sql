@@ -34,9 +34,9 @@ CREATE TABLE `datawake_data` (
   KEY `domain_id` (`domain_id`),
   KEY `trail_id` (`trail_id`),
   KEY `url` (`url`(30)),
-  CONSTRAINT `datawake_data_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `datawake_data_ibfk_2` FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `datawake_data_ibfk_3` FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `datawake_domain_entities` (
@@ -46,7 +46,7 @@ CREATE TABLE `datawake_domain_entities` (
   `feature_value` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`domain_entity_id`),
   KEY `domain_id` (`domain_id`),
-  CONSTRAINT `datawake_domain_entities_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `datawake_domains` (
@@ -57,7 +57,7 @@ CREATE TABLE `datawake_domains` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`team_id`),
   KEY `team_id` (`team_id`),
-  CONSTRAINT `datawake_domains_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `datawake_selections` (
@@ -69,7 +69,7 @@ CREATE TABLE `datawake_selections` (
   `selection` text,
   PRIMARY KEY (`id`),
   KEY `trail_id` (`trail_id`,`url`(60)),
-  CONSTRAINT `datawake_selections_ibfk_1` FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `datawake_team_users` (
@@ -78,7 +78,7 @@ CREATE TABLE `datawake_team_users` (
   `email` varchar(245) DEFAULT NULL,
   PRIMARY KEY (`team_user_id`),
   KEY `fkTeamID` (`team_id`),
-  CONSTRAINT `fkTeamID` FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `datawake_teams` (
@@ -100,8 +100,8 @@ CREATE TABLE `datawake_trails` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `domain_id` (`domain_id`,`name`),
   KEY `team_id` (`team_id`),
-  CONSTRAINT `datawake_trails_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `datawake_trails_ibfk_2` FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `datawake_url_rank` (
@@ -116,9 +116,9 @@ CREATE TABLE `datawake_url_rank` (
   KEY `team_id` (`team_id`),
   KEY `domain_id` (`domain_id`),
   KEY `trail_id` (`trail_id`,`userEmail`(30),`url`(30)),
-  CONSTRAINT `datawake_url_rank_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `datawake_url_rank_ibfk_2` FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `datawake_url_rank_ibfk_3` FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `domain_extractor_web_index` (
@@ -153,7 +153,7 @@ CREATE TABLE `manual_extractor_markup_additions` (
   `feature_value` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `trail_id` (`trail_id`),
-  CONSTRAINT `manual_extractor_markup_additions_ibfk_1` FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `manual_extractor_markup_removals` (
@@ -165,7 +165,7 @@ CREATE TABLE `manual_extractor_markup_removals` (
   `feature_value` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `trail_id` (`trail_id`),
-  CONSTRAINT `manual_extractor_markup_removals_ibfk_1` FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`trail_id`) REFERENCES `datawake_trails` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE VIEW `vw_team_users` AS
