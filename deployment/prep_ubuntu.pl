@@ -75,7 +75,7 @@ print "Getting and turning up 'mysql' docker container ...\n";
 print `cd src/Datawake/dev-env; sudo fig up -d mysql;`;
 
 print "Setting up MySQL database and creating test user ...\n";
-print `cd src/Datawake/dev-env; ./init_db.sh;`;
+print `cd src/Datawake/dev-env; sudo ./init_db.sh;`;
 
 print "Turning up remaining docker containers ...\n";
 print `cd src/Datawake/dev-env; sudo fig up -d;`;
