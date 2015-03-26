@@ -9,7 +9,7 @@ forensicApp.controller('ForensicController', function ($scope) {
     //$scope.selectedUsers=[];
     $scope.colorOptions = getOriginalColorOptions()
 
-    $scope.date = {startDate: moment({hour:0,minute:0,seconds:0}).subtract(7, 'day'), endDate: moment({hour:0,minute:0,seconds:0}) };
+    $scope.date = {startDate: moment({hour:0,minute:0,seconds:0}).subtract(365, 'day'), endDate: moment({hour:0,minute:0,seconds:0}) };
 
     // set defaults for elastic search / domain dive credentials
     $scope.esConfig = {
@@ -233,6 +233,18 @@ forensicApp.controller('ForensicController', function ($scope) {
 
     $scope.drawGraph = function(){
         console.log("drawGraph()")
+
+        // check the start and end date and convert to moment if needed
+        if ( ! $scope.date.startDate. _isAMomentObject ){
+            $scope.date.startDate = moment($scope.date.startDate.toISOString())
+        }
+        if ( ! $scope.date.endDate. _isAMomentObject ){
+            $scope.date.endDate = moment($scope.date.endDate.toISOString())
+        }
+
+
+
+
         var data = {
             view: $scope.selectedGraphView,
             startdate: $scope.date.startDate.format("X"),
@@ -332,3 +344,38 @@ forensicApp.controller('ForensicController', function ($scope) {
 
 
 });
+
+
+
+
+// add a function to convert a date to an iso string
+if (typeof Date.prototype.toISOString !== 'function') {
+
+    (function () {
+
+        'use strict';
+
+        // Function which takes a 1 or 2-digit number and returns
+        // it as a two-character string, padded with
+        // an extra leading zero, if necessary.
+        function pad(number) {
+            var r = String(number);
+            if (r.length === 1) {
+                r = '0' + r;
+            }
+            return r;
+        }
+
+        Date.prototype.toISOString = function () {
+            return this.getUTCFullYear()
+                + '-' + pad(this.getUTCMonth() + 1)
+                + '-' + pad(this.getUTCDate())
+                + 'T' + pad(this.getUTCHours())
+                + ':' + pad(this.getUTCMinutes())
+                + ':' + pad(this.getUTCSeconds())
+                + '.' + String((this.getUTCMilliseconds() / 1000).toFixed(3)).slice(2, 5)
+                + 'Z';
+        };
+
+    }());
+}
