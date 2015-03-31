@@ -117,8 +117,10 @@ CREATE TABLE general_extractor_web_index (
   feature_value varchar(1024) DEFAULT NULL,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY uniqueFeature (url(300), feature_type, feature_value(100)),
   KEY url (url(300))
 ) ;
+
 
 CREATE TABLE manual_extractor_markup_additions (
   id INT NOT NULL AUTO_INCREMENT,	
