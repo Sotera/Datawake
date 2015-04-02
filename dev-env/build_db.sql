@@ -179,4 +179,4 @@ CREATE VIEW vw_domain_entities AS
 			e.feature_Value
 	FROM datawake_domains as d
 		INNER JOIN datawake_domain_entities as e on d.id = e.domain_id
-;
+; 

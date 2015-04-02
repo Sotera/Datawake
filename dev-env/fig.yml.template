@@ -4,7 +4,8 @@ mysql:
     MYSQL_ROOT_PASSWORD: root
   ports:
     - "3336:3306"
-
+  volumes:
+    - "~/src/Datawake/server/mysql:/var/lib/mysql"
 
 datawake:
   build: ../server
@@ -22,8 +23,8 @@ datawake:
     DW_MOCK_FORENSIC_AUTH: 1
     DW_CONN_TYPE: mysql
   volumes:
-    - <full path to the web server code>/server/datawake:/usr/local/share/tangelo/web/datawake
-    - <full path to the web server code>/server/forensic:/usr/local/share/tangelo/web/forensic
+    - ~/src/Datawake/server/datawake:/usr/local/share/tangelo/web/datawake
+    - ~/src/Datawake/server/forensic:/usr/local/share/tangelo/web/forensic
 
 
 
