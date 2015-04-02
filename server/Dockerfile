@@ -39,10 +39,13 @@ RUN pip install happybase
 RUN pip install httplib2
 RUN pip install tldextract
 
+# install mysql
+RUN apt-get -y install mysql-server-5.6
 
+# copy over db files
+COPY dev-env /usr/local/share/dev-env
 
 # install mysql client
-
 RUN wget http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.2.3.tar.gz \
     && tar xf mysql-connector-python-1.2.3.tar.gz \
     && cd mysql-connector-python-1.2.3/ \
@@ -85,7 +88,7 @@ ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
 RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
 COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
-CMD ["tangelo","-c","/etc/tangelo.conf"]
+CMD ["/etc/init.d/datawake"]
 
 
 # Install elastic search for the domain dive feature
