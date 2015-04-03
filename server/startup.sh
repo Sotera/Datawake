@@ -1,5 +1,5 @@
 #!/bin/bash
-
-tangelo -c /etc/tangelo.conf
-
 service mysql restart
+
+#tangelo -c /etc/tangelo.conf
+

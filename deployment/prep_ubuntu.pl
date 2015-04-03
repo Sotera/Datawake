@@ -72,7 +72,7 @@ print "Starting Docker ...\n";
 print `sudo service docker start`;
 
 print "Getting and turning up 'all-in-one' docker container ...\n";
-print `cd src/Datawake/dev-env; sudo fig up -d datawakeone;`;
+print `cd src/Datawake/dev-env; sudo fig up -d dw;`;
 
 print "Setting up MySQL database and creating test user ...\n";
 print `cd src/Datawake/dev-env; sudo ./init_db.sh;`;
@@ -93,7 +93,7 @@ sub prompt_yn {
     return lc($answer) eq 'y';
 }
 __END__
-datawakeone:
+dw:
   build: ../server
   ports:
     - "80:80"
@@ -103,7 +103,7 @@ datawakeone:
     DW_DB_USER: root
     DW_DB_PASSWORD: root
     DW_DB_HOST: localhost
-    DW_DB_PORT: 3336
+    DW_DB_PORT: 3306
     DW_MOCK_AUTH:  1
     DW_MOCK_FORENSIC_AUTH: 1
     DW_CONN_TYPE: mysql
