@@ -58,7 +58,7 @@ print "Installing FIG ...\n";
 print `sudo pip install fig`;
 
 print "Creating 'src' directory & Cloning Datawake.git ...\n";
-print `mkdir src; cd src; git clone https://github.com/Sotera/Datawake.git;`;
+print `mkdir src; cd src; git clone -b DatawakeDemo042015 https://github.com/Sotera/Datawake.git`;
 
 print "Writing fig.yml to Datawake/dev-env ...\n";
 @lines = <DATA>;
@@ -72,7 +72,7 @@ print "Starting Docker ...\n";
 print `sudo service docker start`;
 
 print "Getting and turning up 'mysql' docker container ...\n";
-print `cd src/Datawake/dev-env; sudo fig up -d mysql;`;
+print `cd src/Datawake/dev-env; sudo fig up -d datawakeone;`;
 
 print "Setting up MySQL database and creating test user ...\n";
 print `cd src/Datawake/dev-env; sudo ./init_db.sh;`;
@@ -98,22 +98,21 @@ mysql:
   environment:
     MYSQL_ROOT_PASSWORD: root
   ports:
-    - "3306:3306"
+    - "3336:3306"
   volumes:
     - ~/src/Datawake/server/mysql:/var/lib/mysql
 
-datawake:
+datawakeone:
   build: ../server
-  links:
-    - mysql:mysql
   ports:
     - "80:80"
   environment:
+    MYSQL_ROOT_PASSWORD: root
     DW_DB: memex_sotera
     DW_DB_USER: root
     DW_DB_PASSWORD: root
     DW_DB_HOST: localhost
-    DW_DB_PORT: 3306
+    DW_DB_PORT: 3336
     DW_MOCK_AUTH:  1
     DW_MOCK_FORENSIC_AUTH: 1
     DW_CONN_TYPE: mysql

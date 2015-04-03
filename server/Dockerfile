@@ -43,7 +43,7 @@ RUN pip install tldextract
 RUN apt-get -y install mysql-server-5.6
 
 # copy over db files
-COPY dev-env /usr/local/share/dev-env
+COPY ./dev-env /usr/local/share/dev-env
 
 # install mysql client
 RUN wget http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.2.3.tar.gz \
@@ -75,7 +75,6 @@ RUN pip install tangelo
 
 
 # copy over the web apps and conf
-
 COPY datawake /usr/local/share/tangelo/web/datawake
 COPY forensic /usr/local/share/tangelo/web/forensic
 ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
@@ -83,8 +82,7 @@ ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
 
 
 # setup tangelo conf and entry point for container
-# set the default container command to run tangelo
-
+# set the default container command to run startup script (tangelo, mysql)
 RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
 COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
