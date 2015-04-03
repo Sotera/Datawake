@@ -16,8 +16,6 @@ RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysq
 
 # copy over db files
 #COPY ./dev-env /usr/local/share/dev-env
-
-ADD ./startup.sh /opt/startup.sh
 	
 RUN apt-get install -y python-software-properties \
     && apt-get install -y software-properties-common \
@@ -97,7 +95,7 @@ ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
 RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
 COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
-ADD ./startup.sh /opt/startup.sh
+
 CMD ["/bin/bash", "/opt/startup.sh"]
 
 
