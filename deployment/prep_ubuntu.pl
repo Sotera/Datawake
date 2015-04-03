@@ -71,8 +71,8 @@ close(FILE);
 print "Starting Docker ...\n";
 print `sudo service docker start`;
 
-print "Getting and turning up 'mysql' docker container ...\n";
-print `cd src/Datawake/dev-env; sudo fig up -d datawakeone;`;
+print "Getting and turning up 'all-in-one' docker container ...\n";
+print `cd src/Datawake/dev-env; sudo fig up -d devenv_datawakeone;`;
 
 print "Setting up MySQL database and creating test user ...\n";
 print `cd src/Datawake/dev-env; sudo ./init_db.sh;`;

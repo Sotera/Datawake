@@ -40,10 +40,15 @@ RUN pip install httplib2
 RUN pip install tldextract
 
 # install mysql
+RUN echo "mysql-server-5.6 mysql-server/root_password password root" | debconf-set-selections
+RUN echo "mysql-server-5.6 mysql-server/root_password_again password root" | debconf-set-selections
 RUN apt-get -y install mysql-server-5.6
 
+# config mysql to have mysqld bind to available networks, not just localhost
+RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+
 # copy over db files
-COPY ./dev-env /usr/local/share/dev-env
+#COPY ./dev-env /usr/local/share/dev-env
 
 # install mysql client
 RUN wget http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.2.3.tar.gz \
@@ -86,7 +91,8 @@ ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
 RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
 COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
-CMD ["/etc/init.d/datawake"]
+ADD ./startup.sh /opt/startup.sh
+CMD ["/bin/bash", "/opt/startup.sh"]
 
 
 # Install elastic search for the domain dive feature
