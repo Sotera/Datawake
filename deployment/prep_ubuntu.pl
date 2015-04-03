@@ -41,6 +41,9 @@ print `sudo apt-get update`;
 print "Getting aptitude HTTPS support ...\n";
 print `sudo apt-get -y install apt-transport-https`;
 
+print "Getting curl ...\n";
+print `sudo apt-get curl`;
+
 print "Getting the latest Docker packages ...\n";
 print `curl -ssl https://get.docker.com/ubuntu/ |sudo sh`;
 print `source /etc/bash_completion.d/docker`;
@@ -54,11 +57,14 @@ print `sudo apt-get -y install apparmor apparmor-utils`;
 print "Installing PIP ...\n";
 print `sudo apt-get -y install python-pip`;
 
+print "Installing yaml headers ...\n";
+print `sudo apt-get install libyaml-cpp-dev`;
+
 print "Installing FIG ...\n";
 print `sudo pip install fig`;
 
 print "Creating 'src' directory & Cloning Datawake.git ...\n";
-#print `mkdir src; cd src; git clone -b DatawakeDemo042015 https://github.com/Sotera/Datawake.git`;
+print `mkdir src; cd src; git clone -b DatawakeDemo042015 https://github.com/Sotera/Datawake.git`;
 
 print "Writing fig.yml to Datawake/dev-env ...\n";
 @lines = <DATA>;
