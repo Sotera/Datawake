@@ -93,15 +93,6 @@ sub prompt_yn {
     return lc($answer) eq 'y';
 }
 __END__
-mysql:
-  image: mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: root
-  ports:
-    - "3336:3306"
-  volumes:
-    - ~/src/Datawake/server/mysql:/var/lib/mysql
-
 datawakeone:
   build: ../server
   ports:
