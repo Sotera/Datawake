@@ -1,19 +1,9 @@
-mysql:
-  image: mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: root
-  ports:
-    - "3336:3306"
-  volumes:
-    - "~/src/Datawake/server/mysql:/var/lib/mysql"
-
-datawake:
+datawakeone:
   build: ../server
-  links:
-    - mysql:mysql
   ports:
     - "80:80"
   environment:
+    MYSQL_ROOT_PASSWORD: root
     DW_DB: memex_sotera
     DW_DB_USER: root
     DW_DB_PASSWORD: root
