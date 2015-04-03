@@ -1,4 +1,4 @@
-datawakeone:
+dw:
   build: ../server
   ports:
     - "80:80"
@@ -7,15 +7,12 @@ datawakeone:
     DW_DB: memex_sotera
     DW_DB_USER: root
     DW_DB_PASSWORD: root
-    DW_DB_HOST: 192.168.59.103
-    DW_DB_PORT: 3336
+    DW_DB_HOST: localhost
+    DW_DB_PORT: 3306
     DW_MOCK_AUTH:  1
     DW_MOCK_FORENSIC_AUTH: 1
     DW_CONN_TYPE: mysql
   volumes:
     - ~/src/Datawake/server/datawake:/usr/local/share/tangelo/web/datawake
     - ~/src/Datawake/server/forensic:/usr/local/share/tangelo/web/forensic
-
-
-
 

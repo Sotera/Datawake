@@ -79,6 +79,8 @@ RUN apt-get install -y python-bs4
 # install tangelo
 RUN pip install tangelo
 
+# Install elastic search for the domain dive feature
+RUN pip install elasticsearch
 
 # copy over the web apps and conf
 COPY datawake /usr/local/share/tangelo/web/datawake
@@ -94,9 +96,9 @@ COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
 
 COPY startup.sh /opt/startup.sh
+RUN chmod 777 /opt/startup.sh
 CMD ["/bin/bash", "startup.sh"]
 
 
-# Install elastic search for the domain dive feature
-RUN pip install elasticsearch
+
 

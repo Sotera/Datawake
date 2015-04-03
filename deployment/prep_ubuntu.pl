@@ -58,7 +58,7 @@ print "Installing FIG ...\n";
 print `sudo pip install fig`;
 
 print "Creating 'src' directory & Cloning Datawake.git ...\n";
-print `mkdir src; cd src; git clone -b DatawakeDemo042015 https://github.com/Sotera/Datawake.git`;
+#print `mkdir src; cd src; git clone -b DatawakeDemo042015 https://github.com/Sotera/Datawake.git`;
 
 print "Writing fig.yml to Datawake/dev-env ...\n";
 @lines = <DATA>;
