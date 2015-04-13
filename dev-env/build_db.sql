@@ -107,6 +107,7 @@ CREATE TABLE domain_extractor_web_index (
   feature_value varchar(1024) DEFAULT NULL,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY uniqueFeature (url(300), feature_type, feature_value(100)),
   KEY domain_id (domain_id,url(300))
 ) ;
 
