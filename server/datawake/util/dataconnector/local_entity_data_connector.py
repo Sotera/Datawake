@@ -98,9 +98,20 @@ class MySqlEntityDataConnector(DataConnector):
 
 
     def get_extracted_entities_from_urls(self, urls, type=None):
-        if not datawake_mysql.UseRestAPI:
+        if datawake_mysql.UseRestAPI:
             extractedEntities = datawake_mysql.getExtractedEntitiesFromUrls(urls, type)
-            return None
+            results = {}
+            for extractedEntity in extractedEntities:
+                url = extractedEntity.url
+                attr = extractedEntity.featureType
+                value = extractedEntity.featureValue
+                if url not in results:
+                    results[url] = {}
+                if attr not in results[url]:
+                    results[url][attr] = [value]
+                else:
+                    results[url][attr].append(value)
+            return results
         else:
             """
             Returns all extracted attributs for a url
@@ -161,9 +172,20 @@ class MySqlEntityDataConnector(DataConnector):
 
 
     def get_extracted_domain_entities_from_urls(self, domain_id, urls, type=None):
-        if not datawake_mysql.UseRestAPI:
+        if datawake_mysql.UseRestAPI:
             extractedEntities = datawake_mysql.getExtractedDomainEntitiesFromUrls(domain_id, urls, type)
-            return None
+            results = {}
+            for extractedEntity in extractedEntities:
+                url = extractedEntity.url
+                attr = extractedEntity.featureType
+                value = extractedEntity.featureValue
+                if url not in results:
+                    results[url] = {}
+                if attr not in results[url]:
+                    results[url][attr] = [value]
+                else:
+                    results[url][attr].append(value)
+            return results
         else:
             """
             Returns all extracted attributs for a url
@@ -370,22 +392,25 @@ class MySqlEntityDataConnector(DataConnector):
 
 
     def insert_domain_entities(self, domain_id, url, feature_type, feature_values):
-        self._check_conn()
-        cursor = self.cnx.cursor()
-        try:
-            for feature_value in feature_values:
-                sql = "select count(1) from domain_extractor_web_index where domain_id = %s and url = %s and feature_type = %s and feature_value = %s"
-                params = [domain_id, url, feature_type, feature_value]
-                cursor.execute(sql, params)
-                count = cursor.fetchall()[0][0]
-                if count == 0:
-                    sql = "INSERT INTO domain_extractor_web_index (domain_id,url,feature_type,feature_value) VALUES (%s,%s,%s,%s)"
+        if datawake_mysql.UseRestAPI:
+            datawake_mysql.insertDomainEntities(domain_id, url, feature_type, feature_values)
+        else:
+            self._check_conn()
+            cursor = self.cnx.cursor()
+            try:
+                for feature_value in feature_values:
+                    sql = "select count(1) from domain_extractor_web_index where domain_id = %s and url = %s and feature_type = %s and feature_value = %s"
+                    params = [domain_id, url, feature_type, feature_value]
                     cursor.execute(sql, params)
-            self.cnx.commit()
-            cursor.close()
-        except:
-            self.close()
-            raise
+                    count = cursor.fetchall()[0][0]
+                    if count == 0:
+                        sql = "INSERT INTO domain_extractor_web_index (domain_id,url,feature_type,feature_value) VALUES (%s,%s,%s,%s)"
+                        cursor.execute(sql, params)
+                self.cnx.commit()
+                cursor.close()
+            except:
+                self.close()
+                raise
 
 
 

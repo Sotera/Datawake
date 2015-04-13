@@ -41,6 +41,15 @@ Interface to datawake relational database tables (mysql)
 
 # ## DATACONNECTOR REST CALLS: These replace the calls in the dataconnector classes
 
+def insertDomainEntities(domain_id, url, feature_type, feature_values):
+    addedEntities = []
+    for feature_value in feature_values:
+        addedEntities.append(restPost('DomainExtractorWebIndices',
+                                      dict(id=0, domainId=domain_id, url=url, featureType=feature_type,
+                                           featureValue=feature_value)))
+    return addedEntities
+
+
 def insertEntities(url, feature_type, feature_values):
     addedEntities = []
     for feature_value in feature_values:
@@ -60,7 +69,10 @@ def getDomainEntityMatches(domain_id, values, type):
 
     domainEntityMatchesFeatureValues = []
     for domainEntityMatch in domainEntityMatches:
-        domainEntityMatchesFeatureValues.append(domainEntityMatch)
+        try:
+            domainEntityMatchesFeatureValues.append(domainEntityMatch['featureValue'])
+        except:
+            continue
 
     return domainEntityMatchesFeatureValues
 
@@ -74,19 +86,31 @@ def getExtractedDomainEntitiesFromUrls(domain_id, urls, type):
         filter_string = '{"where":{"and":[{"url":{"inq":["' + joinedUrls + '"]}},{"featureType":"' + str(
             type) + '"},{"domainId":"' + str(domain_id) + '"}]}}'
 
-        # filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"id":' + str(team_id) + '}]}}'
-    return restGet('DomainExtractorWebIndices', 'filter=' + filter_string)
+    extractedJsonEntities = restGet('DomainExtractorWebIndices', 'filter=' + filter_string)
+
+    ret_val = []
+    for extractedJsonEntity in extractedJsonEntities:
+        extractedEntity = lambda: None
+        extractedEntity.__dict__ = extractedJsonEntity
+        ret_val.append(extractedEntity)
+    return ret_val
 
 
 def getExtractedEntitiesFromUrls(urls, type):
     joinedUrls = '","'.join(urls)
+    joinedUrls = urllib.quote_plus(joinedUrls)
     if (type is None):
         filter_string = '{"where":{"url":{"inq":["' + joinedUrls + '"]}}}'
     else:
         filter_string = '{"where":{"and":[{"url":{"inq":["' + joinedUrls + '"]}},{"featureType":"' + str(type) + '"}]}}'
 
-    teams = restGet('GeneralExtractorWebIndices', 'filter=' + filter_string)
-    teams = restGet('GeneralExtractorWebIndices', 'filter=' + filter_string)
+    extractedJsonEntities = restGet('GeneralExtractorWebIndices', 'filter=' + filter_string)
+    ret_val = []
+    for extractedJsonEntity in extractedJsonEntities:
+        extractedEntity = lambda: None
+        extractedEntity.__dict__ = extractedJsonEntity
+        ret_val.append(extractedEntity)
+    return ret_val
 
 
 def deleteDomainItems(domainId):
@@ -165,6 +189,18 @@ def restDelete(route, recordId):
         print sys.exc_info()[0]
 
 
+def restGetCount(route, query_string):
+    try:
+        url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route + '/count'
+        url += '?' + query_string
+        res = httpSession.get(url)
+        ret_val = lambda: None
+        ret_val.__dict__ = json.loads(res.text)
+        return ret_val.count
+    except:
+        print sys.exc_info()[0]
+
+
 def restGet(route, query_string=''):
     try:
         url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
@@ -180,11 +216,11 @@ def restGet(route, query_string=''):
 def restPost(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
-        req = httpSession.post('http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route,
+        res = httpSession.post('http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route,
                                data=post_buffer,
                                headers={'content-type': 'application/json'})
         ret_val = lambda: None
-        ret_val.__dict__ = json.loads(req.text)
+        ret_val.__dict__ = json.loads(res.text)
         return ret_val
     except:
         print sys.exc_info()[0]
@@ -197,10 +233,21 @@ def restPost(route, postDict):
 # Add a post to the posts table (datawake_data)
 #
 def addBrowsePathData(team_id, domain_id, trail_id, url, userEmail):
-    sql = " INSERT INTO datawake_data (url,userEmail,team_id,domain_id,trail_id) VALUES (%s,%s,%s,%s,%s) "
-    params = [url, userEmail, team_id, domain_id, trail_id]
-    lastId = dbCommitSQL(sql, params)
-    return lastId
+    if UseRestAPI:
+        added_data = restPost('DatawakeData',
+                              dict(id=0, url=url, domainId=domain_id, trailId=trail_id, useremail=userEmail,
+                                   teamId=team_id))
+        try:
+            ret_val = added_data.id
+            return ret_val
+        except:
+            print sys.exc_info()[0]
+            return -1
+    else:
+        sql = "INSERT INTO datawake_data (url,userEmail,team_id,domain_id,trail_id) VALUES (%s,%s,%s,%s,%s) "
+        params = [url, userEmail, team_id, domain_id, trail_id]
+        lastId = dbCommitSQL(sql, params)
+        return lastId
 
 
 def getBrowsePathUrls(trail_id):
@@ -654,13 +701,20 @@ def getRankedUrls(trail_id):
 # by the data wake
 #
 def getUrlCount(team_id, domain_id, trail_id, url):
-    sql = "SELECT count(1) from datawake_data where url = %s AND team_id = %s AND domain_id = %s AND trail_id = %s"
-    params = [url, team_id, domain_id, trail_id]
-    rows = dbGetRows(sql, params)
-    if len(rows) == 0:
-        return 0
+    if UseRestAPI:
+        filter_string = '{' + '"teamId":"' + str(team_id) + '","domainId":"' + str(domain_id) + '","trailId":"' + str(
+            trail_id) + '","url":"' + str(url) + '"}'
+        filter_string = urllib.quote_plus(filter_string)
+        url_count = restGetCount('DatawakeData', 'where=' + filter_string)
+        return url_count
     else:
-        return rows[0][0]
+        sql = "SELECT count(1) from datawake_data where url = %s AND team_id = %s AND domain_id = %s AND trail_id = %s"
+        params = [url, team_id, domain_id, trail_id]
+        rows = dbGetRows(sql, params)
+        if len(rows) == 0:
+            return 0
+        else:
+            return rows[0][0]
 
 
 #### Datawake Domains ####
@@ -779,8 +833,4 @@ def get_marked_features(trail_id):
         params = [trail_id]
         rows = dbGetRows(sql, params)
         return map(lambda x: dict(type=x[0], value=x[1]), rows)
-
-
-
-
 
