@@ -1,6 +1,6 @@
 # Site settings
 title: Datawake
-baseurl: "/datawake"
+baseurl: "/Datawake"
 safe: true
 lsi: false
 highlighter: pygments
@@ -11,8 +11,8 @@ description: > # this means to ignore newlines until "baseurl:"
 
 url: "http://sotera.github.io"
 github_username:  Sotera
-repository_url: https://github.com/Sotera/datawake
+repository_url: https://github.com/Sotera/Datawake
 
 show_downloads: true
-zip_url: https://github.com/Sotera/datawake/zipball/master
-tar_url: https://github.com/Sotera/datawake/tarball/master
+zip_url: https://github.com/Sotera/Datawake/zipball/master
+tar_url: https://github.com/Sotera/Datawake/tarball/master
