@@ -20,7 +20,7 @@ Files Needed: <br />
 [Docker Startup Script for Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File") <br />
 
   <br />
-*Docker & Docker Container*
+**Docker & Docker Container**
 
 Should you wish to have a local installation that doesn't require the use of a VM, the Docker container can be installed within your local Docker instance.  This may require some additional configuration within your environment, as the Docker container’s webserver uses port 80. 
 
