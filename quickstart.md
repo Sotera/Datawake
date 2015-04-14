@@ -8,8 +8,8 @@ permalink: /quick-start/
 The Datawake demo environment consists of a Docker container that can be run within your native OS or within the Demo Virtual Machine using Virtual Box. 
   <br />  
   <br />  
-## Installation Types  <br />
-### Preconfigured Virtual Machine
+##Installation Types  <br />
+###Preconfigured Virtual Machine
 
 The simplest demo environment setup can be achieved utilizing the Demo Virtual Machine (VM).  It will allow you to run a complete standalone Datawake instance consisting of Docker, the Datawake Docker Container and Firefox with the installed Datawake plugin.  The VM requires virtually no setup aside from running the VM on your machine.  It should be noted that data tracked will not be permanently persisted to the VM, that is each time you restart the VM or Docker you will be working only with the pre-loaded demo data in the VM.
 
@@ -19,7 +19,7 @@ The simplest demo environment setup can be achieved utilizing the Demo Virtual M
 [Docker Startup Script for Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File") <br />
 
   <br />
-### Docker & Docker Container   <br />
+###Docker & Docker Container   <br />
 Should you wish to have a local installation that doesn't require the use of a VM, the Docker container can be installed within your local Docker instance.  This may require some additional configuration within your environment, as the Docker container’s webserver uses port 80. 
 
 **Files Needed:** <br />
