@@ -4,10 +4,11 @@ title: Quick Start
 permalink: /quick-start/
 ---
 
-## Introduction  <br />
+##Introduction  <br />
 The Datawake demo environment consists of a Docker container that can be run within your native OS or within the Demo Virtual Machine using Virtual Box. 
   <br />  
   <br />  
+  
 ##Installation Types  <br />
 ###Preconfigured Virtual Machine
 
