@@ -30,4 +30,4 @@ Should you wish to have a local installation that doesn't require the use of a V
 [Docker Startup Script for Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File") <br />
 
 _Additional Installation Instructions can be found [here](https://s3.amazonaws.com/soterastuff/Datawake_Demo/Datawake-Demo-InstallationGuide.docx "Datawake Demo Installation Guide")_ <br />
-_The Datawake User's Guide is located  [here](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx "Datawake User's Guide")_
+_The Datawake User's Guide is located  [here](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx "Datawake User's Guide")_ 
