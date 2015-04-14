@@ -226,65 +226,68 @@ class MySqlEntityDataConnector(DataConnector):
 
 
     def get_extracted_entities_with_domain_check(self, domain_id, urls, types=[]):
-        """
-        Return all entities extracted from a given set of urls, indication which entities were found in the domain
-        :param urls:  list of urls to look up
-        :param types: list of extract_types to filter on.  empty list will search on all types
-        :param domain:  the domain to check for memebership against
-        :return:  dict of results with the form  { url: { extract_type: { extract_value: in_domain, .. }, .. } , ..} where in_domain is 'y' or 'n'
-        """
         assert (len(urls) > 0)
-        self._check_conn()
-        cursor = self.cnx.cursor()
-        try:
-            params = []
-            params.extend(urls)
-            urls_in = "(" + ( ','.join(['%s' for i in range(len(urls))]) ) + ")"
-            sql = "select url,feature_type,feature_value from general_extractor_web_index where  url in " + urls_in
-            params = []
-            params.extend(urls)
-            if len(types) > 0:
-                params.extend(types)
-                types_in = "(" + ( ','.join(['%s' for i in range(len(types))]) ) + ")"
-                sql = sql + " and feature_type in " + types_in
+        if not datawake_mysql.UseRestAPI:
+            domainEntityMatches = datawake_mysql.getDomainEntityMatches(domain_id, values, type)
+        else:
+            """
+            Return all entities extracted from a given set of urls, indication which entities were found in the domain
+            :param urls:  list of urls to look up
+            :param types: list of extract_types to filter on.  empty list will search on all types
+            :param domain:  the domain to check for memebership against
+            :return:  dict of results with the form  { url: { extract_type: { extract_value: in_domain, .. }, .. } , ..} where in_domain is 'y' or 'n'
+            """
+            self._check_conn()
+            cursor = self.cnx.cursor()
+            try:
+                params = []
+                params.extend(urls)
+                urls_in = "(" + ( ','.join(['%s' for i in range(len(urls))]) ) + ")"
+                sql = "select url,feature_type,feature_value from general_extractor_web_index where  url in " + urls_in
+                params = []
+                params.extend(urls)
+                if len(types) > 0:
+                    params.extend(types)
+                    types_in = "(" + ( ','.join(['%s' for i in range(len(types))]) ) + ")"
+                    sql = sql + " and feature_type in " + types_in
 
-            cursor.execute(sql, params)
-            allEntities = {}
-            for row in cursor.fetchall():
-                url = row[0]
-                attr = row[1]
-                value = row[2]
-                if url not in allEntities:
-                    allEntities[url] = {}
-                if attr not in allEntities[url]:
-                    allEntities[url][attr] = {}
-                allEntities[url][attr][value] = 'n'
+                cursor.execute(sql, params)
+                allEntities = {}
+                for row in cursor.fetchall():
+                    url = row[0]
+                    attr = row[1]
+                    value = row[2]
+                    if url not in allEntities:
+                        allEntities[url] = {}
+                    if attr not in allEntities[url]:
+                        allEntities[url][attr] = {}
+                    allEntities[url][attr][value] = 'n'
 
-            params = [domain_id]
-            params.extend(urls)
-            sql = "select url,feature_type,feature_value from domain_extractor_web_index where  domain_id = %s and url in " + urls_in
-            if len(types) > 0:
-                params.extend(types)
-                types_in = "(" + ( ','.join(['%s' for i in range(len(types))]) ) + ")"
-                sql = sql + " and feature_type in " + types_in
+                params = [domain_id]
+                params.extend(urls)
+                sql = "select url,feature_type,feature_value from domain_extractor_web_index where  domain_id = %s and url in " + urls_in
+                if len(types) > 0:
+                    params.extend(types)
+                    types_in = "(" + ( ','.join(['%s' for i in range(len(types))]) ) + ")"
+                    sql = sql + " and feature_type in " + types_in
 
-            cursor.execute(sql, params)
-            for row in cursor.fetchall():
-                url = row[0]
-                attr = row[1]
-                value = row[2]
-                if url not in allEntities:
-                    allEntities[url] = []
-                if attr not in allEntities[url]:
-                    allEntities[url][attr] = {}
-                allEntities[url][attr][value] = 'y'
+                cursor.execute(sql, params)
+                for row in cursor.fetchall():
+                    url = row[0]
+                    attr = row[1]
+                    value = row[2]
+                    if url not in allEntities:
+                        allEntities[url] = []
+                    if attr not in allEntities[url]:
+                        allEntities[url][attr] = {}
+                    allEntities[url][attr][value] = 'y'
 
-            cursor.close()
-            return allEntities
+                cursor.close()
+                return allEntities
 
-        except:
-            self.close()
-            raise
+            except:
+                self.close()
+                raise
 
 
     # # DOMAINS  ####

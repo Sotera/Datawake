@@ -25,6 +25,7 @@ import mysql.connector
 from mysql.connector import errorcode
 import tangelo
 import requests
+import datetime
 
 from datawake.conf import datawakeconfig as dbconfig
 
@@ -257,25 +258,46 @@ def getBrowsePathUrls(trail_id):
 
 
 def getVisitedUrlsInTrailForTimeRange(trail_id, startdate, enddate, userEmails=[]):
-    command = """SELECT unix_timestamp(t1.ts) as ts, t1.url,t2.hits,t1.userEmail
-                 FROM datawake_data as t1 LEFT JOIN (select url,count(1) as hits from datawake_data WHERE trail_id = %s group by url ) as t2 ON t1.url = t2.url
-                 WHERE t1.trail_id=%s AND unix_timestamp(ts) >= %s AND unix_timestamp(ts) <= %s
-              """
-    commandArgs = [trail_id, trail_id, startdate, enddate]
-    # add the user filter
-    if (len(userEmails) > 0):
-        command = command + " AND "
-        params = ['%s' for i in range(len(userEmails))]
-        params = ','.join(params)
-        command = command + "  userEmail in (" + params + ") "
-        commandArgs.extend(userEmails)
+    if UseRestAPI:
+        startdateJson = datetime.datetime.utcfromtimestamp(startdate).strftime('%Y-%m-%dT%H:%M:%S')
+        enddateJson = datetime.datetime.utcfromtimestamp(enddate).strftime('%Y-%m-%dT%H:%M:%S')
+        if (len(userEmails) > 0):
+            joinedValues = '","'.join(userEmails)
+            joinedValues = urllib.quote_plus(joinedValues)
+            filter_string = '{"where":{"and":[{"useremail":{"inq":["' + joinedValues + '"]}}, {"ts":{"between":["' + startdateJson + '","' + enddateJson + '"]}},'
+            filter_string += '{"trailId":"' + str(trail_id) + '"}]}}'
+        else:
+            filter_string = '{"where":{"and":[{"ts":{"between":["' + startdateJson + '","' + enddateJson + '"]}},'
+            filter_string += '{"trailId":"' + str(trail_id) + '"}]}}'
 
-    command = command + " ORDER BY userEmail,t1.ts asc"
-    tangelo.log(command)
-    tangelo.log(commandArgs)
-    rows = dbGetRows(command, commandArgs)
-    tangelo.log("Rows returned: " + str(len(rows)))
-    return map(lambda x: dict(ts=x[0], url=x[1], hits=x[2], userEmail=x[3]), rows)
+        visited_urls = restGet('VwUrlsInTrails')
+        # visited_urls = restGet('VwUrlsInTrails', 'filter=' + filter_string)
+        ret_val = []
+        for visited_url in visited_urls:
+            ret_val_element = dict(ts=visited_url['ts'], url=visited_url['url'], hits=visited_url['hits'],
+                                   userEmail=visited_url['useremail'])
+            ret_val.append(ret_val_element)
+        return ret_val
+    else:
+        command = """SELECT unix_timestamp(t1.ts) as ts, t1.url,t2.hits,t1.userEmail
+                     FROM datawake_data as t1 LEFT JOIN (select url,count(1) as hits from datawake_data WHERE trail_id = %s group by url ) as t2 ON t1.url = t2.url
+                     WHERE t1.trail_id=%s AND unix_timestamp(ts) >= %s AND unix_timestamp(ts) <= %s
+                  """
+        commandArgs = [trail_id, trail_id, startdate, enddate]
+        # add the user filter
+        if (len(userEmails) > 0):
+            command = command + " AND "
+            params = ['%s' for i in range(len(userEmails))]
+            params = ','.join(params)
+            command = command + "  userEmail in (" + params + ") "
+            commandArgs.extend(userEmails)
+
+        command = command + " ORDER BY userEmail,t1.ts asc"
+        tangelo.log(command)
+        tangelo.log(commandArgs)
+        rows = dbGetRows(command, commandArgs)
+        tangelo.log("Rows returned: " + str(len(rows)))
+        return map(lambda x: dict(ts=x[0], url=x[1], hits=x[2], userEmail=x[3]), rows)
 
 
 #
