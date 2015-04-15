@@ -29,9 +29,11 @@ function useContextMenu(tab) {
             items: [
                 contextMenu.Item({ label: "Capture Selection", data: "selection", context: contextMenu.SelectionContext()}),
                 contextMenu.Item({ label: "Tag a feature", data: "feedback", context: contextMenu.SelectionContext()}),
+                contextMenu.Item({ label: "Geolocate Address", data: "geolocate", context: contextMenu.SelectionContext()}),
                 contextMenu.Separator(),
                 contextMenu.Item({ label: "Hide Selections", data: "hide"}),
                 contextMenu.Item({ label: "Show Selections", data: "highlight"}),
+
 
             ],
             onMessage: function (message) {
@@ -49,6 +51,9 @@ function useContextMenu(tab) {
                         break;
                     case "hide":
                         hideSelections("selections");
+                        break;
+                    case "geolocate":
+                        geolocateWindowSelection(datawakeInfo, tabs.activeTab.url, message.text);
                         break;
                 }
             }
@@ -128,6 +133,14 @@ function saveWindowSelection(datawakeInfo, url, selectionText) {
     var post_url = addOnPrefs.datawakeDeploymentUrl + "/selections/save";
     requestHelper.post(post_url, post_data, function (response) {
         console.debug("Selection saved");
+    });
+}
+
+function geolocateWindowSelection(selectionText) {
+    var get_url = addOnPrefs.datawakeDeploymentUrl + "/geo/instagram?address=" + encodeURIComponent(selectionText);
+    requestHelper.get(get_url, function (response) {
+        strResp = JSON.parse(response);
+        alert(strResp);
     });
 }
 
