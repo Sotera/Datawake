@@ -34,25 +34,25 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 ### Instructions
 
 1.  Download and install the Virtual Box version pertaining to your
-    operating system from https://www.virtualbox.org/wiki/Downloads\
-1.  Copy the Datawake Demo Virtual Machine to your preferred location\
+    operating system from https://www.virtualbox.org/wiki/Downloads
+1.  Copy the Datawake Demo Virtual Machine to your preferred location
 1.  Select “Machine, Add” and browse to the location of your copy of the
-    VM. Select the DataWakeDemoVM.vbox file.\
-1.  Start the VM, the user and password are “demo”,”demo”\
+    VM. Select the DataWakeDemoVM.vbox file.
+1.  Start the VM, the user and password are “demo”,”demo”
 1.  Double-click the “MATE Terminal” icon o Type ‘sudo
     /opt/dockerstartup.sh’ and click Enter, you will be prompted for the
-    demo password\
-1.  Start Firefox\
+    demo password
+1.  Start Firefox
 1.  Click the Datawake Widget in the top right corner of the Firefox
-    browser.\
-1.  Click the “Sign in” button.\
+    browser.
+1.  Click the “Sign in” button.
 1.  Click the Datawake Widget button again. Select the “CWhite” from the
-    Team dropdown, then select an existing Domain.\
+    Team dropdown, then select an existing Domain.
 1. You may pick an existing Trail or create a new one by clicking the
-    “+” button and entering a Trail Name and Description.\
-1. Click the “Start” button to begin tracking.\
+    “+” button and entering a Trail Name and Description.
+1. Click the “Start” button to begin tracking.
 1. Click the blue “click for forensic trail viewer” button to see your
-    trails in the Forensic Viewer.\
+    trails in the Forensic Viewer.
 1. Your Datawake Demo VM is now functional.
 
 ## Docker & Docker Container
