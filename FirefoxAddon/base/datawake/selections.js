@@ -2,10 +2,13 @@ var contextMenu = require("sdk/context-menu");
 var self = require("sdk/self");
 var data = self.data;
 var addOnPrefs = require("sdk/simple-prefs").prefs;
+var ui = require('sdk/ui');
 var tabs = require("sdk/tabs");
 var requestHelper = require("./request-helper");
 var storage = require("./storage");
 var tracking = require("./tracking");
+var panel = require("sdk/panel");
+var notifications = require("sdk/notifications");
 
 exports.useContextMenu = useContextMenu;
 exports.cleanUpTab = cleanUpTab;
@@ -53,7 +56,7 @@ function useContextMenu(tab) {
                         hideSelections("selections");
                         break;
                     case "geolocate":
-                        geolocateWindowSelection(datawakeInfo, tabs.activeTab.url, message.text);
+                        geolocateWindowSelection(message.text);
                         break;
                 }
             }
@@ -137,10 +140,15 @@ function saveWindowSelection(datawakeInfo, url, selectionText) {
 }
 
 function geolocateWindowSelection(selectionText) {
-    var get_url = addOnPrefs.datawakeDeploymentUrl + "/geo/instagram?address=" + encodeURIComponent(selectionText);
+    var geo_no_plugin_url = addOnPrefs.datawakeDeploymentUrl.replace(/\/plugin/,'');
+    var get_url = geo_no_plugin_url + "/geo/instagram?address=" + encodeURIComponent(selectionText);
     requestHelper.get(get_url, function (response) {
-        strResp = JSON.parse(response);
-        alert(strResp);
+        message = response.json.streetAddress + ', ' + response.json.city + ', ' + response.json.state + ' - Instagram Image Count: ' + response.json.imageCount;
+        notifications.notify({
+            title: "Instagram Lookup",
+            text: message,
+            iconURL: self.data.url("img/waveicon38.png")
+        });
     });
 }
 

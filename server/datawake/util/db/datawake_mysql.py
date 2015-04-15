@@ -30,7 +30,7 @@ import datetime
 from datawake.conf import datawakeconfig as dbconfig
 
 
-UseRestAPI = True
+UseRestAPI = False
 StrongLoopHostname = 'localhost'
 StrongLoopPort = '5500'
 
