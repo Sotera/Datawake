@@ -1,18 +1,7 @@
 FROM ubuntu:14.04
 
-RUN dpkg-divert --local --rename --add /sbin/initctl
-RUN ln -nfs /bin/true /sbin/initctl
-
 RUN apt-get -y update \
     && apt-get -y upgrade
-
-# install mysql
-RUN echo "mysql-server-5.6 mysql-server/root_password password root" | debconf-set-selections
-RUN echo "mysql-server-5.6 mysql-server/root_password_again password root" | debconf-set-selections
-RUN apt-get -y install mysql-server-5.6
-
-# config mysql to have mysqld bind to available networks, not just localhost
-RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 
 RUN apt-get install -y python-software-properties \
     && apt-get install -y software-properties-common \
@@ -40,16 +29,11 @@ RUN mkdir /usr/lib/mitie \
     && cmake --build . --config Release \
     && cd ../../../mitielib \
     && make
-ENV MITIE_HOME /usr/lib/mitie/MITIE
-
 
 # misc python libs
-
 RUN pip install happybase
 RUN pip install httplib2
 RUN pip install tldextract
-
-
 
 # install mysql client
 RUN wget http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.2.3.tar.gz \
@@ -57,21 +41,16 @@ RUN wget http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-pyt
     && cd mysql-connector-python-1.2.3/ \
     && python setup.py install
 
-
 # install igraph
-
 RUN add-apt-repository -y ppa:igraph/ppa \
     && apt-get update \
     && apt-get install -y python-igraph
 
-
 # install pyodc
-
 RUN apt-get -y install aptitude \
     && aptitude -y install g++ \
     && apt-get -y install unixodbc-dev \
     && pip install --allow-external pyodbc --allow-unverified pyodbc pyodbc
-
 
 # install beatiful soup
 RUN apt-get install -y python-bs4
@@ -82,23 +61,23 @@ RUN pip install tangelo
 # Install elastic search for the domain dive feature
 RUN pip install elasticsearch
 
-# copy over the web apps and conf
+# copy over the tangelo web apps 
 COPY datawake /usr/local/share/tangelo/web/datawake
 COPY forensic /usr/local/share/tangelo/web/forensic
-ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
 
-
-
-# setup tangelo conf and entry point for container
-# set the default container command to run startup script (tangelo, mysql)
+# setup tangelo user account and configuration, expose port 80 for tangelo
 RUN adduser  --no-create-home --disabled-password --disabled-login --gecos "" tangelo
 COPY tangelo.conf /etc/tangelo.conf
 EXPOSE 80
 
-COPY startup.sh /opt/startup.sh
-RUN chmod 777 /opt/startup.sh
-CMD ["/bin/bash", "startup.sh"]
+# copy over the Datawake Environment Variable file and startup script
+COPY opt /opt
+RUN chmod 777 /opt/dockerstartup.sh
+RUN chmod 666 /opt/DWenvVar.txt
 
+# set the default container command to run the startup script each time
+CMD ["/opt/dockerstartup.sh"]
 
-
-
+# All environmental variables should be loaded from the DWenvVar.txt file above
+## ENV MITIE_HOME /usr/lib/mitie/MITIE
+## ENV PYTHONPATH /usr/local/share/tangelo/web:$PYTHONPATH
