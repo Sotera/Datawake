@@ -32,7 +32,7 @@ function useContextMenu(tab) {
             items: [
                 contextMenu.Item({ label: "Capture Selection", data: "selection", context: contextMenu.SelectionContext()}),
                 contextMenu.Item({ label: "Tag a feature", data: "feedback", context: contextMenu.SelectionContext()}),
-                contextMenu.Item({ label: "Geolocate Address", data: "geolocate", context: contextMenu.SelectionContext()}),
+                contextMenu.Item({ label: "InstaWake", data: "geolocate", context: contextMenu.SelectionContext()}),
                 contextMenu.Separator(),
                 contextMenu.Item({ label: "Hide Selections", data: "hide"}),
                 contextMenu.Item({ label: "Show Selections", data: "highlight"}),
@@ -144,11 +144,7 @@ function geolocateWindowSelection(selectionText) {
     var get_url = geo_no_plugin_url + "/geo/instagram?address=" + encodeURIComponent(selectionText);
     requestHelper.get(get_url, function (response) {
         message = response.json.streetAddress + ', ' + response.json.city + ', ' + response.json.state + ' - Instagram Image Count: ' + response.json.imageCount;
-        notifications.notify({
-            title: "Instagram Lookup",
-            text: message,
-            iconURL: self.data.url("img/waveicon38.png")
-        });
+        require("sdk/tabs").open('http://geogram-stream.52.8.42.59.xip.io/');
     });
 }
 
