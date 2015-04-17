@@ -60,20 +60,18 @@ def getAddressLatLon(streetAddress):
     return geolocatedLatLon
 
 
-def doInstagramMagic(address, client_id, start_date, end_date, lat, lon):
+def doInstagramMagic(address, client_id, start_date, end_date, lat, lon, radiusMeters):
     time_inc_seconds = 3600  # one hour is what we'll start with
 
     tmp_start_date = start_date
     tmp_end_date = start_date + timedelta(seconds=time_inc_seconds)  # set this to start + the time increment
-
-    distance_in_meters = 5000
 
     while tmp_start_date < end_date:
         response = None
         try:
             # make the call to instagram
             response = urllib2.urlopen('https://api.instagram.com/v1/media/search?distance='
-                                       + str(distance_in_meters) + '&'
+                                       + str(radiusMeters) + '&'
                                        + 'min_timestamp=' + str(int(mktime(tmp_start_date.timetuple()))) + '&'
                                        + 'max_timestamp=' + str(int(mktime(tmp_end_date.timetuple()))) + '&'
                                        + 'lat=' + str(lat) + '&'
@@ -98,14 +96,17 @@ def doInstagramMagic(address, client_id, start_date, end_date, lat, lon):
 
         count = len(responseObject.data)  # count the number of images.
 
-        responseObject.resolvedAddress = address.streetAddress + ', ' + address.city + ', ' + address.state
+        try:
+            responseObject.resolvedAddress = address.streetAddress + ', ' + address.city + ', ' + address.state
+        except:
+            responseObject.resolvedAddress = u'No Address'
+
         responseObject.latitude = str(lat)
         responseObject.longitude = str(lon)
-        responseObject.radiusInMeters = str(distance_in_meters)
+        responseObject.radiusInMeters = str(radiusMeters)
 
         json_dumps = (json.dumps(responseObject.__dict__), count)
         return json_dumps
-
 
         sleep(1)  # this sleep call ensures we don't hit instagram's api limit of 5000 an hour.
         tmp_start_date = tmp_end_date  # make the start time equal to the previous end.
@@ -113,21 +114,22 @@ def doInstagramMagic(address, client_id, start_date, end_date, lat, lon):
 
 
 @tangelo.restful
-@required_parameters(['address'])
-def get(address):
+# @required_parameters(['address'])
+def get(address=u'', lat=0, lon=0, radius=0):
     # streetAddress = '1600 Pennsylvania Ave, Washington, DC'
-    resolvedAddress = lambda: None
-    resolvedAddress.__dict__ = getAddressLatLon(address)
-
     client_id = '8728ec7ee9424eb4aae9d45107ee6481'
+
+    resolvedAddress = lambda: None
+
+    if len(address) > 0:
+        resolvedAddress.__dict__ = getAddressLatLon(address)
+        lat = float(resolvedAddress.lat)
+        lon = float(resolvedAddress.lon)
+        radius = 5000
 
     now = datetime.now()
     sevenDaysEarlier = now - timedelta(days=7)
-
-    lat = float(resolvedAddress.lat)
-    lon = float(resolvedAddress.lon)
-
-    instagramReturnTuple = doInstagramMagic(resolvedAddress, client_id, sevenDaysEarlier, now, lat, lon)
+    instagramReturnTuple = doInstagramMagic(resolvedAddress, client_id, sevenDaysEarlier, now, lat, lon, radius)
     instagramJson = instagramReturnTuple[0]
     resolvedAddress.imageCount = instagramReturnTuple[1]
 
