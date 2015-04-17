@@ -128,8 +128,8 @@ def get(address=u'', lat=0, lon=0, radius=0):
         radius = 5000
 
     now = datetime.now()
-    sevenDaysEarlier = now - timedelta(days=7)
-    instagramReturnTuple = doInstagramMagic(resolvedAddress, client_id, sevenDaysEarlier, now, lat, lon, radius)
+    sixHoursEarlier = now - timedelta(hours=1)
+    instagramReturnTuple = doInstagramMagic(resolvedAddress, client_id, sixHoursEarlier, now, lat, lon, radius)
     instagramJson = instagramReturnTuple[0]
     resolvedAddress.imageCount = instagramReturnTuple[1]
 
