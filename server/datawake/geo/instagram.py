@@ -65,6 +65,7 @@ def doInstagramMagic(address, client_id, start_date, end_date, lat, lon, radiusM
 
     tmp_start_date = start_date
     tmp_end_date = start_date + timedelta(seconds=time_inc_seconds)  # set this to start + the time increment
+    tmp_end_date = end_date
 
     while tmp_start_date < end_date:
         response = None
@@ -125,7 +126,7 @@ def get(address=u'', lat=0, lon=0, radius=0):
         resolvedAddress.__dict__ = getAddressLatLon(address)
         lat = float(resolvedAddress.lat)
         lon = float(resolvedAddress.lon)
-        radius = 5000
+        radius = 1000
 
     now = datetime.now()
     sixHoursEarlier = now - timedelta(hours=1)
