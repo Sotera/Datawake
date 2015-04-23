@@ -33,15 +33,14 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 
 ### Instructions
 
-1.  Download and install the Virtual Box version pertaining to your
-    operating system from https://www.virtualbox.org/wiki/Downloads
-1.  Copy the Datawake Demo Virtual Machine to your preferred location
-1.  Select “Machine, Add” and browse to the location of your copy of the
-    VM. Select the DataWakeDemoVM.vbox file.
-1.  Start the VM, the user and password are “demo”,”demo”
-1.  Double-click the “MATE Terminal” icon o Type ‘sudo
-    /opt/dockerstartup.sh’ and click Enter, you will be prompted for the
-    demo password
+1.  Download and install the [Virtual Box](https://www.virtualbox.org/wiki/Downloads)  
+1.  Download the [Datawake Demo VM](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DataWakeDemoVM.zip)  
+1.  In Virtual Box, select “Machine, Add” and browse to the location of DataWakeDemoVM.vbox downloaded in the previous step.
+1.  Start the VM.
+  * The user and password are “demo”,”demo”
+1.  Double-click the “MATE Terminal” icon
+1.  In the terminal, type ‘sudo /opt/dockerstartup.sh’ and click Enter
+  * You will be prompted for the password. Enter 'demo' and click enter.
 1.  Start Firefox
 
 
