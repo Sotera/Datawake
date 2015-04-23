@@ -6,7 +6,6 @@ The Datawake project consists of various server and database
 technologies along with a Firefox plugin that aggregate user browsing data via a plug-in using
 domain-specific searches. This captured, or extracted, data is organized
 into browse paths and elements of interest.  
----
 
 
 ![Firefox Plugin](img/firefoxPlugin.png)  
@@ -20,15 +19,15 @@ those pages.
 
 ![Forensic View](img/forensic.png)
 The full graph of the data.  
----
 
-# Applied Technology  #
+
+## Applied Technology  ##
 This work was funded by [DARPA's
 Memex](http://www.darpa.mil/Our_Work/I2O/Programs/Memex.aspx) program
 and leverages several technologies from [DARPA's Open
 Catalog](http://www.darpa.mil/opencatalog/).  DataWake is available on the [Memex Open Catalog](http://www.darpa.mil/opencatalog/MEMEX.html)  
 
-## Datawake utilizes the following Darpa technology ##
+# Datawake utilizes the following Darpa technology #
 [MITIE: MIT Information Extraction](https://github.com/mitll/MITIE) - MIT-LL  
 [Topic Clustering](https://github.com/mitll/topic-clustering) - MIT-LL  
 [Tangelo](http://tangelo.kitware.com) - Kitware  
