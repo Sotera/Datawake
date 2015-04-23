@@ -4,15 +4,15 @@ title: Quick Start
 permalink: /quick-start/
 ---
 
-# Introduction
+## Introduction
 
 The Datawake demo environment consists of a Docker container that can be
 run within your native OS or within the Demo Virtual Machine using
 Virtual Box.  
 
-# Installation Types
+## Installation Types
 
-## Preconfigured Virtual Machine
+# Preconfigured Virtual Machine
 
 The simplest demo environment setup can be achieved utilizing the Demo
 Virtual Machine (VM). It will allow you to run a complete standalone
@@ -43,19 +43,9 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
     /opt/dockerstartup.sh’ and click Enter, you will be prompted for the
     demo password
 1.  Start Firefox
-1.  Click the Datawake Widget in the top right corner of the Firefox
-    browser.
-1.  Click the “Sign in” button.
-1.  Click the Datawake Widget button again. Select the “CWhite” from the
-    Team dropdown, then select an existing Domain.
-1. You may pick an existing Trail or create a new one by clicking the
-    “+” button and entering a Trail Name and Description.
-1. Click the “Start” button to begin tracking.
-1. Click the blue “click for forensic trail viewer” button to see your
-    trails in the Forensic Viewer.
-1. Your Datawake Demo VM is now functional.
 
-## Docker & Docker Container
+
+# Docker & Docker Container
 
 Should you wish to have a local installation that doesn't require the
 use of a VM, the Docker container can be installed within your local
@@ -64,15 +54,14 @@ your environment, as the Docker container’s webserver uses port 80.
 
 Files Needed:  
 [Docker
-Application](https://docs.docker.com/installation/#installation "Docker Installation Info & Files")  
+Application](https://docs.docker.com/installation/#installation "Docker Installation Info & Files")
 [Demo Docker
 Container](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dw_demo.tar "Tarfile for Docker Container")  
 [Docker Environment
 Variables](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DWenvVar.txt "Docker Environment Variables")  
 [Docker Startup Script for
-Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File")  
+Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File")
 [Datawake Firefox Plugin](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi)  
-
 
 
 ### Instructions
@@ -85,7 +74,7 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 1.	Download the [Firefox addon](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi) (datawakefirefoxaddon.xpi)
 1.  Install the addon in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
 
-### Using DataWake
+## Using DataWake
 1.	Click the Datawake Widget in the top right corner of the Firefox browser.
 1.	Click the “Sign in” button.
 1.	Click the Datawake Widget button again. Select the “CWhite” from the Team dropdown, then select an existing Domain.  
