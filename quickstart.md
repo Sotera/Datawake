@@ -43,6 +43,8 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
   * You will be prompted for the password. Enter 'demo' and click enter.
 1.  Start Firefox
 
+If you trying to use Firefox outside of the VM and are having problems with the plugin logging in, you may need to change your VM network settings to "bridged" mode so the VM and your PC are on the same network.  Using Firefox within the VM should not have this issue.
+
 
 # Docker & Docker Container
 
@@ -70,8 +72,10 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 1.	Type ‘sudo docker run -d -p 0.0.0.0:80:80 -it --name "datawake_demo" dw_demo bash’ to create the Datawake Demo Container from the image you loaded
 1.	Type ‘sudo dockerstartup.sh’ to execute the Docker container via the shell script.  
   * This will startup the Tangelo web server and the MySQL database instance.
+1. Within boot2docker type 'ifconfig' to find your IP (this is likely 192.168.59.103).  You will need this to configure the Firefox plugin.	
 1.	Download the [Firefox addon](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi) (datawakefirefoxaddon.xpi)
 1.  Install the addon in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
+1.  In the Firefox Menu, Add-ons, click on the Datawake Extension 'Options'.  Here, replace the IP addresses listed to reflect the IP address you got in the steps above for boot2docker.  Restart Firefox.
 1.	To stop/startup the Datawake instance after the initial run, type the following commands:
   *	sudo docker stop datawake_demo
   *	sudo ./dockerstartup.sh
@@ -85,11 +89,6 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 1.	Click the “Start” button to begin tracking.
 1.	Click the blue “click for forensic trail viewer” button to see your trails in the Forensic Viewer.
 1.	Your Datawake Demo VM is now functional.
-
-## Plugin Troubleshooting
-* If you are using Boot2Docker, check the startup output for the Docker VM IP.  
-* In the Firefox Menu, Add-ons, click on the Datawake Extension preference.  
-* Change all 127.0.0.1 addresses to 192.168.59.103 or the Boot2Docker IP.  
 
 
 *Additional Installation Instructions can be found
