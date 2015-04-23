@@ -14,7 +14,7 @@ This is our standard Forensic view. Notice the smaller green nodes, these are em
 addresses and phone numbers.
 
 
-![Deep Dive Forensic View](../img/postDomainDive)
+![Domain Dive Forensic View](../img/postDomainDive.png)
 This is the Forensic View after performing a Domain Dive. Notice that the smaller
 green nodes are now surrounded by small brown nodes. Those are web pages that we
 have previously looked at that contain those phone numbers and/or email addresses.
