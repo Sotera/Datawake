@@ -12,7 +12,7 @@ into browse paths and elements of interest.
 Firefox Plugin showing entities extracted From the current page.  
 
 
-![Build Forensic Graph](img/buidGraph.png)  
+![Build Forensic Graph](img/buildGraph.png)  
 Building the graph based on the pages that have been visited and the data within
 those pages.  
 
