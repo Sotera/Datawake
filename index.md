@@ -25,7 +25,9 @@ The full graph of the data.
 This work was funded by [DARPA's
 Memex](http://www.darpa.mil/Our_Work/I2O/Programs/Memex.aspx) program
 and leverages several technologies from [DARPA's Open
-Catalog](http://www.darpa.mil/opencatalog/).
+Catalog](http://www.darpa.mil/opencatalog/).  DataWake is available on the [Memex Open Catalog](http://www.darpa.mil/opencatalog/MEMEX.html)  
+
+## Datawake utilizes the following Darpa technology
 [MITIE: MIT Information Extraction](https://github.com/mitll/MITIE) - MIT-LL  
 [Topic Clustering](https://github.com/mitll/topic-clustering) - MIT-LL  
 [Tangelo](http://tangelo.kitware.com) - Kitware  
