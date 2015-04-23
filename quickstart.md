@@ -70,7 +70,8 @@ Container](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dw_demo.tar "Tarfi
 [Docker Environment
 Variables](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DWenvVar.txt "Docker Environment Variables")  
 [Docker Startup Script for
-Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File") [Datawake Firefox Plugin](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi "Datawake Firefox Plugin")
+Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File")  
+[Datawake Firefox Plugin](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi)  
 
 
 
@@ -80,7 +81,8 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 1.	Type ‘sudo docker load < dw_demo.tar’  to load the image.
 1.	Type ‘sudo docker run -d -p 0.0.0.0:80:80 -it --name "datawake_demo" dw_demo bash’ to create the Datawake Demo Container from the image you loaded
 1.	Type ‘sudo dockerstartup.sh’ to execute the Docker container via the shell script.  This will startup the Tangelo web server and the MySQL database instance.
-1.	Copy the Firefox addon ‘datawakefirefoxaddon.xpi’ to your machine.  Install it in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
+1.	Copy the Firefox addon ‘datawakefirefoxaddon.xpi’ to your machine.  
+1.  Install it in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
 1.	Click the Datawake Widget in the top right corner of the Firefox browser.
 1.	Click the “Sign in” button.
 1.	Click the Datawake Widget button again. Select the “CWhite” from the Team dropdown, then select an existing Domain.  
