@@ -79,12 +79,17 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 
 ## Using DataWake
 1.	Click the Datawake Widget in the top right corner of the Firefox browser.
-1.	Click the “Sign in” button.
+1.	Click the “Sign in” button.  
 1.	Click the Datawake Widget button again. Select the “CWhite” from the Team dropdown, then select an existing Domain.  
 1.	You may pick an existing Trail or create a new one by clicking the “+” button and entering a Trail Name and Description.
 1.	Click the “Start” button to begin tracking.
 1.	Click the blue “click for forensic trail viewer” button to see your trails in the Forensic Viewer.
 1.	Your Datawake Demo VM is now functional.
+
+## Plugin Troubleshooting
+* If you are using Boot2Docker, check the startup output for the Docker VM IP.  
+* In the Firefox Menu, Add-ons, click on the Datawake Extension preference.  
+* Change all 127.0.0.1 addresses to 192.168.59.103 or the Boot2Docker IP.  
 
 
 *Additional Installation Instructions can be found
