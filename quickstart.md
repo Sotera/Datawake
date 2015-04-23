@@ -76,13 +76,16 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 
 
 ### Instructions
-1.	Download and install the Docker software for your operating system(instructions available @ https://docs.docker.com/installation/ )
-1.	Copy or pull the Datawake Demo Container and start file to your machine (dw_demo.tar and dockerstartup.sh)
+1.	Download and install the [Docker software](https://docs.docker.com/) for your operating system.
+1.	Download the [Datawake Demo Container](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dw_demo.tar) and [start file](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh) (dw_demo.tar and dockerstartup.sh).
 1.	Type ‘sudo docker load < dw_demo.tar’  to load the image.
 1.	Type ‘sudo docker run -d -p 0.0.0.0:80:80 -it --name "datawake_demo" dw_demo bash’ to create the Datawake Demo Container from the image you loaded
-1.	Type ‘sudo dockerstartup.sh’ to execute the Docker container via the shell script.  This will startup the Tangelo web server and the MySQL database instance.
-1.	Copy the Firefox addon ‘datawakefirefoxaddon.xpi’ to your machine.  
-1.  Install it in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
+1.	Type ‘sudo dockerstartup.sh’ to execute the Docker container via the shell script.  
+  * This will startup the Tangelo web server and the MySQL database instance.
+1.	Download the [Firefox addon](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi) (datawakefirefoxaddon.xpi)
+1.  Install the addon in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
+
+### Using DataWake
 1.	Click the Datawake Widget in the top right corner of the Firefox browser.
 1.	Click the “Sign in” button.
 1.	Click the Datawake Widget button again. Select the “CWhite” from the Team dropdown, then select an existing Domain.  
