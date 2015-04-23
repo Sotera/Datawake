@@ -70,7 +70,9 @@ Container](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dw_demo.tar "Tarfi
 [Docker Environment
 Variables](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DWenvVar.txt "Docker Environment Variables")  
 [Docker Startup Script for
-Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File")  
+Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File") [Datawake Firefox Plugin](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi "Datawake Firefox Plugin")
+
+
 
 ### Instructions
 1.	Download and install the Docker software for your operating system(instructions available @ https://docs.docker.com/installation/ )
