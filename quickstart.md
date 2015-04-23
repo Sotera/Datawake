@@ -60,7 +60,7 @@ Container](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dw_demo.tar "Tarfi
 [Docker Environment
 Variables](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DWenvVar.txt "Docker Environment Variables")  
 [Docker Startup Script for
-Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File")
+Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "Docker Startup File")  
 [Datawake Firefox Plugin](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi)  
 
 
@@ -73,6 +73,10 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
   * This will startup the Tangelo web server and the MySQL database instance.
 1.	Download the [Firefox addon](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi) (datawakefirefoxaddon.xpi)
 1.  Install the addon in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
+1.	To stop/startup the Datawake instance after the initial run, type the following commands:
+  *	sudo docker stop datawake_demo
+  *	sudo ./dockerstartup.sh
+
 
 ## Using DataWake
 1.	Click the Datawake Widget in the top right corner of the Firefox browser.
@@ -82,9 +86,6 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 1.	Click the “Start” button to begin tracking.
 1.	Click the blue “click for forensic trail viewer” button to see your trails in the Forensic Viewer.
 1.	Your Datawake Demo VM is now functional.
-1.	To stop/startup the Datawake instance after the initial run, type the following commands:
-  *	sudo docker stop datawake_demo
-  *	sudo ./dockerstartup.sh
 
 
 *Additional Installation Instructions can be found
