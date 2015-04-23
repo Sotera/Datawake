@@ -5,7 +5,7 @@ layout: page
 The Datawake project consists of various server and database
 technologies along with a Firefox plugin that aggregate user browsing data via a plug-in using
 domain-specific searches. This captured, or extracted, data is organized
-into browse paths and elements of interest.
+into browse paths and elements of interest.  
 
 
 ![Firefox Plugin](img/firefoxPlugin.png)  
