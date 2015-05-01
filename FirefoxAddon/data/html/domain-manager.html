@@ -92,16 +92,18 @@
                 <h4 class="modal-title" id="previewModalLabel">{{previewDomain.name}} Sample</h4>
             </div>
             <div class="modal-body">
-                <table>
+                <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Value</th>
+					    <tr>
+                            <th class="col-lg-2">Type</th>
+                            <th class="col-lg-9">Value</th>
                         </tr>
-                        <tr ng-repeat="feature in domainPreviewFeatures">
+                        <tbody>
+						<tr ng-repeat="feature in domainPreviewFeatures">
                             <td>{{feature.type}}</td>
                             <td>{{feature.value}}</td>
-                        </tr>
+						</tr>
+						</tbody>
                     </thead>
                 </table>
 

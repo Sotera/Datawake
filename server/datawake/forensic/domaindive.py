@@ -57,12 +57,11 @@ def query(data):
     rr = []
     num = 0
     for t in search_terms:
-        if t['type'] == 'selection' or t['type'] == 'phone' or t['type'] == 'email' or t['type'] == 'info':
+        types = {'selection','phone','email','PERSON','ORGANIZATION','MISC'}
+        if t['type'] in types:
             num_to_search = t['id']
             if t['type'] == 'selection':
                 num_to_search = t['data']
-            if t['type'] == 'info':
-                num_to_search = t['id'].split('->')[1].strip()
             #results = es.search(index=ind,body={"size":max_results_per_node,"fields":["_index","_type","_id"],"query":{"match_phrase": {"_all": num_to_search}}})
             results = es.search(index=ind,body={"size":max_results_per_node,"query":{"match_phrase": {"_all": num_to_search}}})
             num += results['hits']['total']
