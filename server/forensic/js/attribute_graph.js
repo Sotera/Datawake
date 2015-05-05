@@ -456,7 +456,7 @@ function showLinkDialog(data) {
         mainDiv.append("hr");
     }
 
-    if (type !== 'browse path ') {
+    if (type !== 'browse path ' && type !== 'domain search -ad') {
         mainDiv.append("a")
             .attr('id', 'dd1_btn')
             .attr('class', "btn btn-success")
