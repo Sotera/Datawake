@@ -251,18 +251,25 @@
                     </tr>
                     <tr>
                         <td>
-                            <b>Team / Users:</b>
+                            <b>Team</b>
                         </td>
-                        <td style="white-space:nowrap; width: 75%">
+                        <td>
                             <div>
                                 <select id="team_select" class="form-control" ng-model="selectedTeam"
                                         ng-change="teamChanged(selectedTeam);"
                                         ng-options="team as team.name for team in teams"
                                         data-placeholder="Select a Team">
                                 </select>
-                                <select multiple id="user_select" data-placeholder=" " class="form-control styled-select" />
                             </div>
                         </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <b>Users: </b>
+                        </td>
+                      <td>
+                        <select multiple id="user_select" data-placeholder=" " class="form-control styled-select" />
+                      </td>
                     </tr>
                     <tr>
                         <td>
