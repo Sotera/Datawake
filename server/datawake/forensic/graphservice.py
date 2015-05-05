@@ -124,6 +124,14 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
         rows = graph_helper.getOculusForensicGraph(org,startdate,enddate,userlist,trail,domain)
         return json.dumps(rows)
 
+    if view == 'browse path - with text selections':
+        tangelo.log("Getting text selections")
+        graph = graph_helper.getBrowsePathWithTextSelections(trail_id, startdate, enddate,users)
+        output = json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
+        tangelo.log(output)
+        return output
+
+
     return json.dumps(dict(nodes=[], links=[]))
 
 
