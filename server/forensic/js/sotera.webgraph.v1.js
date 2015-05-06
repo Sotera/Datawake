@@ -129,7 +129,8 @@ var SWG = (function() {
             var node = nodes[i]
             if (node.name){
                 var nodetext = node.name.toLowerCase()
-                var type = nodetext.substring(0,nodetext.indexOf(":"))
+                var type = node.type + ' ' + node.groupName
+                //var type = nodetext.substring(0,nodetext.indexOf(":"))
                 if (type.length > 0) {
                     if (type in pubs.node_types) pubs.node_types[type]['count'] += 1
                     else pubs.node_types[type] = {'count':1 ,'group':node.group}
