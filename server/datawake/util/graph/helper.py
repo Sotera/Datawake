@@ -367,17 +367,7 @@ def processEdges(rawEdges,nodeDict={}):
         value['group'] = group
         value['index'] = curr_node
         value['community'] = 'n/a'
-        if value['type'] == 'phone':
-            value['name'] = 'Phone: ' + key
-        elif value['type'] == 'email':
-             value['name'] = 'Email: ' + key
-        elif value['type'] == 'browse path':
-             value['name'] = 'Browse Path: ' + groupName
-        elif value['type'] == 'website':
-             value['name'] = 'Website: ' + value['groupName']
-        else:
-            value['name'] = value['type']+"-"+value['groupName']+":"+key
-        # value['name'] = value['type']+"-"+value['groupName']+":"+key
+        value['name'] = value['type']+" "+value['groupName']+":"+key
 
         nodes.append(value)
         node_map[key] = curr_node

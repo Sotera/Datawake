@@ -50,11 +50,6 @@ function formatDuartion(start, end) {
   return days + " days " + hours + " hours " + minutes + " minutes";
 }
 
-
-
-
-
-
 /*
  Called whenever a graph is selected to load and draw
  the new graph.
@@ -163,7 +158,18 @@ function change_graph(graph) {
  We override here for example purposes only
  */
 SWG.node_text_func = function(d) {
-  return d.name;
+  //return d.name;
+
+  if (d.type == 'selection') {
+    return d.type + ' ' + d.data
+  } else if (d.type == 'domain search') {
+    return 'domain search-' + d.jindex + ': ' + d.search_term
+  }
+  else if (d.type != 'browse path' && d.type != 'website') {
+    return d.type + ' ' + d.id
+  } else {
+    return d.type + ' ' + d.groupName
+  }
 };
 
 
@@ -440,7 +446,7 @@ function showLinkDialog(data) {
     mainDiv.append("hr");
   }
 
-  if (type !== 'browse path' && type !== 'domain search -ad') {
+  if (type !== 'browse path' && type !== 'domain search') {
     mainDiv.append("a")
       .attr('id', 'dd1_btn')
       .attr('class', "btn btn-success")

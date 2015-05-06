@@ -57,8 +57,8 @@ def query(data):
     rr = []
     num = 0
     for t in search_terms:
-        types = {'selection','phone','email','PERSON','ORGANIZATION','MISC'}
-        if t['type'] in types:
+        types = {'selection','phone','email','person','organization','misc'}
+        if t['type'].lower() in types:
             num_to_search = t['id']
             if t['type'] == 'selection':
                 num_to_search = t['data']

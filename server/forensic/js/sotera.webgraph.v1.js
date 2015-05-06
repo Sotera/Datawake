@@ -71,7 +71,6 @@ var SWG = (function() {
         }
     }
 
-
     /**
      * Display a graph
      *
@@ -129,8 +128,7 @@ var SWG = (function() {
             var node = nodes[i]
             if (node.name){
                 var nodetext = node.name.toLowerCase()
-                var type = node.type + ' ' + node.groupName
-                //var type = nodetext.substring(0,nodetext.indexOf(":"))
+                var type = nodetext.substring(0,nodetext.indexOf(":"))
                 if (type.length > 0) {
                     if (type in pubs.node_types) pubs.node_types[type]['count'] += 1
                     else pubs.node_types[type] = {'count':1 ,'group':node.group}
@@ -266,14 +264,14 @@ var SWG = (function() {
                 var groupval;
                 if ( type_map[guy.itype] == undefined ) { type_map[guy.itype] = ++start_num; groupval = start_num;}
                 else { groupval = type_map[guy.itype];}
-                var node_to_add = {'name':'domain search -'+ guy.itype + ': ' + guy.eid,
+                var node_to_add = {'name':'domain search: ' + guy.itype + ' ' + guy.eid,
                     'search_url':guy.url,
                     'id':guy.eid,
                     //'postIds':[5],
                     'size':10,
                     //'timestamps':[1412436873],
                     //'trails':["good"],
-                    'type':'domain search -'+guy.itype,
+                    'type':'domain search',
                     'nid':guy.nid,
                     'search_term':guy.search_term,
                     'jindex':guy.jindex
