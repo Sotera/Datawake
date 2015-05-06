@@ -43,7 +43,7 @@ DEBUG = True
 #
 @is_in_session
 def listGraphs():
-    return json.dumps(dict(graphs=['none',
+    return json.dumps(dict(graphs=[
                                    'browse path',
                                    'browse path - with adjacent urls',
                                    'browse path - with adjacent urls min degree 2',
@@ -107,15 +107,6 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
         graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
-    if view == 'browse path - with adjacent email #\'s':
-        graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
-        return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
-
-    if view ==  'browse path - with phone and email #\'s':
-        graph = graph_helper.getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['email','phone'],1,users)
-        return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
-
-
     if view == 'browse path - with adjacent info':
         graph = graph_helper.getBrowsePathAndAdjacentInfoEdges(domain_id,trail_id, startdate, enddate,1,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
@@ -127,7 +118,6 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
     if view == 'browse path - with text selections':
         graph = graph_helper.getBrowsePathWithTextSelections(trail_id, startdate, enddate,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))        
-
 
     return json.dumps(dict(nodes=[], links=[]))
 
