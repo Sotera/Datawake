@@ -49,7 +49,7 @@ def getBrowsePathEdges(trail_id,startdate,enddate,userlist=[]):
 
         if url not in nodes:
             nodes[url] = {'id':url,
-                              'type':'browse path ',
+                              'type':'browse path',
                               'size':10,
                               'timestamps':[],
                               'hits':0,
@@ -324,17 +324,6 @@ def getBrowsePathWithTextSelections(trail_id,startdate,enddate,userlist=[]):
     except:
         raise
 
-
-
-
-
-
-
-
-
-
-
-
 #
 # add the url ranking to a set of nodes, and update the node size
 #
@@ -378,7 +367,17 @@ def processEdges(rawEdges,nodeDict={}):
         value['group'] = group
         value['index'] = curr_node
         value['community'] = 'n/a'
-        value['name'] = value['type']+"-"+value['groupName']+":"+key
+        if value['type'] == 'phone':
+            value['name'] = 'Phone: ' + key
+        elif value['type'] == 'email':
+             value['name'] = 'Email: ' + key
+        elif value['type'] == 'browse path':
+             value['name'] = 'Browse Path: ' + groupName
+        elif value['type'] == 'website':
+             value['name'] = 'Website: ' + value['groupName']
+        else:
+            value['name'] = value['type']+"-"+value['groupName']+":"+key
+        # value['name'] = value['type']+"-"+value['groupName']+":"+key
 
         nodes.append(value)
         node_map[key] = curr_node
@@ -503,5 +502,3 @@ def getBrowsePathWithLookAhead(org,startdate,enddate,userlist=[],trail='*',domai
     #tangelo.log("PROCESSED GRAPH IN "+str(t2-t1))
     entityDataConnector.close()
     return {'nodes':nodes,'edges':edges}
-
-
