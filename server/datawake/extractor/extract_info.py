@@ -47,7 +47,13 @@ class ExtractInfo(extractor.Extractor):
     def extract(self, url, status, headers, flags, body, timestamp, source):
 
         soup = BeautifulSoup(body)
-        tokens = tokenize(soup.get_text().encode('ascii', 'ignore'))
+        # remove scripts and style
+        for script in soup(["script", "style"]):
+            script.extract()
+
+        text = soup.get_text().encode('ascii', 'ignore')
+
+        tokens = tokenize(text)
         entities = self.ner.extract_entities(tokens)
         #print entities
         ents = {}
