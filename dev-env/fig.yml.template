@@ -3,7 +3,7 @@ mysql:
   environment:
     MYSQL_ROOT_PASSWORD: root
   ports:
-    - "3336:3306"
+    - "3306:3306"
   volumes:
     - "~/src/Datawake/server/mysql:/var/lib/mysql"
 
@@ -17,11 +17,17 @@ datawake:
     DW_DB: memex_sotera
     DW_DB_USER: root
     DW_DB_PASSWORD: root
-    DW_DB_HOST: 192.168.59.103
-    DW_DB_PORT: 3336
+    DW_DB_HOST: 127.0.0.1
+    DW_DB_PORT: 3306
     DW_MOCK_AUTH:  1
     DW_MOCK_FORENSIC_AUTH: 1
     DW_CONN_TYPE: mysql
+	DW_EXTERNAL_LINK_NAMES:"foo,bar"”
+	DW_EXTERNAL_LINK_VALUES:"http://www.foo.gov/query?type=$ATTR$value=$VALUE,http://www.bar/$ATTR/$VALUE"
+	FORENSIC_ES_URL:"els.istresearch.com:9200"
+	FORENSIC_ES_INDEX:"memex_ht"
+	FORENSIC_ES_CRED:"memex:j9fd0LK8.a6olH24U7X81"
+	FORENSIC_ES_MRPN:10
   volumes:
     - ~/src/Datawake/server/datawake:/usr/local/share/tangelo/web/datawake
     - ~/src/Datawake/server/forensic:/usr/local/share/tangelo/web/forensic
