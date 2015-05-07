@@ -5,6 +5,7 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
     <link href="../css/jRating.jquery.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
     <style type="text/css">
         .vertical-center {
             min-height: 100%; /* Fallback for browsers do NOT support vh unit */
@@ -18,20 +19,21 @@
 <body ng-controller="PanelCtrl">
 <div class="container">
     <div>
+      <div class="row">
         <div ng-include="headerPartial"></div>
+      </div>
         <div ng-include="createTrailPartial"></div>
         <div ng-include="createDomainPartial"></div>
         <div ng-include="createTeamPartial"></div>
         <div class="row">
             <ul class="nav nav-tabs nav-pills" role="tablist">
                 <li><a href="#/features/all">Extracted Features</a></li>
-                <li><a href="#/features/domain" ng-show="domainFeaturesEnabled">Features in Domain</a></li>
+                <li class="active"><a href="#/features/domain" ng-show="domainFeaturesEnabled">Features in Domain</a></li>
                 <li><a href="#/features/manual">Manual Features</a></li>
             </ul>
             <div class="tab-content">
                 <div ng-view></div>
             </div>
-
         </div>
     </div>
 </div>

@@ -1,14 +1,14 @@
 <div>
-    <h3>Extracted Features
         <button ng-show="allowEditFeatures" style="float: right;" class="btn btn-default" ng-click="editFeatures()">Done</button>
-        <button ng-show="!allowEditFeatures" style="float: right;" class="btn btn-default" ng-click="editFeatures()">Edit</button>
-    </h3>
+        <button ng-show="!allowEditFeatures" style="float: right;" class="btn btn-default" ng-click="editFeatures()">Edit</button>    
     <div ng-repeat="(entityType, entities) in extracted_entities_dict">
         <h3>{{entityType}}</h3>
-        <table class="table table-bordered">
+        <table class="table table-condensed table-hover">
             <tr ng-repeat="name in entities track by $index" ng-hide="invalid[name]">
                 <td ng-show="allowEditFeatures" width="15px">
-                    <button ng-hide="invalid[name]" class="btn btn-sm btn-danger" ng-click="markInvalid(entityType, name);">-</button>
+                    <button ng-hide="invalid[name]" class="btn btn-sm btn-danger" ng-click="markInvalid(entityType, name);">
+                      <i class="fa fa-remove"></i>
+                    </button>
                     <span ng-hide="!invalid[name]">Marked</span>
                 </td>
                 <td>
