@@ -26,6 +26,7 @@
 <link href=css/bootstrap.min.css rel=stylesheet>
 <link href="chosen_v1.10/chosen.min.css" rel="stylesheet">
 <link href="css/daterangepicker-bs3.css" rel="stylesheet">
+<link href="css/chosen-bootstrap.css" rel="stylesheet">
 
 
 <!-- TODO, to use authentication you must fill in your client id here  -->
@@ -234,119 +235,95 @@
 <!-- Create a drawer with the control panel in it -->
 <div id=control-panel>
     <div class=container-fluid>
-        <div class=row>
-
             <!--Trail Select -->
-            <div class=col-md-4>
+            <div class="col-md-5">
                 <div class="row">
                     <h4>Trail Selection <span id=filter_help class="glyphicon glyphicon-question-sign"></span></h4>
                 </div>
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td><b>Date Range:</b></td>
-                        <td>
-                            <input date-range-picker class="form-control date-picker" type="text" ng-model="date"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Team</b>
-                        </td>
-                        <td>
-                            <div>
-                                <select id="team_select" class="form-control" ng-model="selectedTeam"
-                                        ng-change="teamChanged(selectedTeam);"
-                                        ng-options="team as team.name for team in teams"
-                                        data-placeholder="Select a Team">
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <b>Users: </b>
-                        </td>
-                      <td>
-                        <select multiple id="user_select" data-placeholder=" " class="form-control styled-select" />
-                      </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Domain:</b>
-                        </td>
-                        <td style="white-space:nowrap;">
-                            <select id="domain_select" class="form-control" ng-model="selectedDomain"
-                                    ng-change="domainChanged(selectedDomain);"
-                                    ng-options="domain.name for domain in domains"
-                                    data-placeholder="Select a Domain"
-                                    style="display: inline-block; margin-right: 10px; width: 95%">
-                            </select>
-                            <img ng-show="domainSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Trail:</b>
-                        </td>
-                        <td style="white-space:nowrap;">
-                            <select id="trail_select" class="form-control" ng-model="selectedTrail"
-                                    ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails"
-                                    placeholder="Select a previous Trail"
-                                    style="display: inline-block; margin-right: 10px; width: 95%">
-                            </select>
-                            <img ng-show="trailSpinner" src="../img/ajax-loader.gif" alt="Loading"/>
-                        </td>
-                    </tr>
-
-
-                    </tbody>
-                </table>
-            </div>
-
+                <form role="form" class="form-horizontal">
+                  <div class="form-group form-group-sm">
+                    <label for="date_range" class="control-label col-md-3">Date Range:</label>
+                    <div class="col-md-9">
+                      <input date-range-picker class="form-control date-picker" type="text" ng-model="date" id="date_range"/>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-sm">
+                    <label for="team_select" class="control-label col-md-3">Team:</label>
+                    <div class="col-md-9">
+                      <select id="team_select" class="form-control" ng-model="selectedTeam"
+                              ng-change="teamChanged(selectedTeam);"
+                              ng-options="team as team.name for team in teams"
+                              data-placeholder="Select a Team">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-lg">
+                    <label for="user_select" class="control-label col-md-3">Users:</label>
+                    <div class="col-md-9">
+                      <select multiple id="user_select" data-placeholder=" " class="form-control styled-select" style="height: 20px">
+                    </select>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-sm">
+                    <label for="domain_select" class="control-label col-md-3">Domain:</label>
+                    <div class="col-md-9">
+                      <select id="domain_select" class="form-control" ng-model="selectedDomain"
+                              ng-change="domainChanged(selectedDomain);"
+                              ng-options="domain.name for domain in domains"
+                              data-placeholder="Select a Domain">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-sm">
+                    <label for="trail_select" class="control-label col-md-3">Trail:</label>
+                    <div class="col-md-9">
+                      <select id="trail_select" class="form-control" ng-model="selectedTrail"
+                              ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails"
+                              placeholder="Select a previous Trail">
+                      </select>
+                    </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
 
             <!-- View selections -->
-            <div class=col-md-4>
+            <div class="col-md-5">
 
                 <div class="row">
                     <h4>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></h4>
                 </div>
-
-
-                <div class=row>
-                    <b>Links:</b>
-                        <select id="graph_select" class="form-control" ng-model="selectedGraphView"
-                                ng-change="graphViewChanged(selectedGraphView);"
-                                ng-options="view for view in views"
-                                data-placeholder="Select a Graph View"
-                                style="display: inline-block; margin-right: 10px; width: 95%">
-                        </select>
-                        <b>Coloring:</b>
-                            <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
-                                    ng-change="graphColoringChanged(selectedGraphColoring);"
-                                    ng-options="colorOption.text for colorOption in colorOptions"
-                                    data-placeholder="Select graph coloring"
-                                    style="display: inline-block; margin-right: 10px; width: 95%">
-                            </select>
-                            <label class=checkbox>
-                                <input type=checkbox id=usetext onchange="SWG.toogleLabels(); "> Render text labels
-                            </label>
-                            <div style="padding: 10px;">
-                                <button  ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">Draw Graph</button>
-                            </div>
-                            <div style="padding: 10px;">
-                                <button  ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive</button>
-                            </div>
-
-
-                </div>
-
-
+                <form role="form" class="form-horizontal">
+                  <div class="form-group form-group-sm">
+                    <label for="graph_select" class="control-label col-md-3">Links:</label>
+                    <div class="col-md-9">
+                      <select id="graph_select" class="form-control" ng-model="selectedGraphView"
+                              ng-change="graphViewChanged(selectedGraphView);"
+                              ng-options="view for view in views"
+                              data-placeholder="Select a Graph View"
+                              style="display: inline-block; margin-right: 10px; width: 95%">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-sm">
+                    <label for="graph_coloring" class="control-label col-md-3">Coloring:</label>
+                    <div class="col-md-9">
+                      <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
+                              ng-change="graphColoringChanged(selectedGraphColoring);"
+                              ng-options="colorOption.text for colorOption in colorOptions"
+                              data-placeholder="Select graph coloring"
+                              style="display: inline-block; margin-right: 10px; width: 95%">
+                      </select>
+                    </div>
+                  </div>
+                  <label class=checkbox>
+                      <input type=checkbox id=usetext onchange="SWG.toogleLabels(); "> Render text labels
+                  </label>
+                </form>
             </div>
 
-
             <!-- Graph layout controls -->
-            <div class="col-md-2" style="margin-left: 50px">
+            <div class="col-md-2">
                 <div class="row">
                     <b>Layout Options:<b><br>
                 </div>
@@ -365,12 +342,16 @@
                             <td>Repulsion</td>
                         </tr>
                     </table>
-
+                </div>
+                <div class="row">
+                  <div style="padding: 10px;">
+                      <button  ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">Draw Graph</button>
+                  </div>
+                  <div style="padding: 10px;">
+                      <button  ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive</button>
+                  </div>
                 </div>
             </div>
-
-
-        </div>
 
         <!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
         <div class="row" style="margin-bottom: 10px"></div>
