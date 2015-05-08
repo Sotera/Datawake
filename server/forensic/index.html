@@ -233,11 +233,11 @@
     <div class=container-fluid>
         <!--Trail Select -->
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <form role="form" class="form-horizontal">
                     <legend>Trail Selection <span id=filter_help class="glyphicon glyphicon-question-sign"></span>
                     </legend>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group form-group-sm">
                             <label for="date_range" class="control-label col-md-3">Date Range:</label>
 
@@ -268,7 +268,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group form-group-sm">
                             <label for="domain_select" class="control-label col-md-3">Domain:</label>
 
@@ -294,18 +294,18 @@
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="col-md-2">
-              <div style="padding: 10px;">
-                    <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
-                            class="btn btn-success" ng-click="drawGraph()">Draw Graph
-                    </button>
-                </div>
-                <div style="padding: 10px;">
-                    <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive
-                    </button>
-                </div>
+                <div class="col-md-2">
+                  <div style="padding: 10px;">
+                        <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
+                                class="btn btn-success" ng-click="drawGraph()">Draw Graph
+                        </button>
+                    </div>
+                    <div style="padding: 10px;">
+                        <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive
+                        </button>
+                    </div>
 
+                </div>
             </div>
             <div class="col-md-2">
                 <legend>Layout Options</legend>
@@ -332,14 +332,13 @@
                 </div>
             </div>
         </div>
-        <!-- </div> -->
 
         <!-- View selections -->
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <form role="form" class="form-horizontal">
                     <legend>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></legend>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group form-group-sm">
                             <label for="graph_select" class="control-label col-md-3">Links:</label>
 
@@ -352,7 +351,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group form-group-sm">
                             <label for="graph_coloring" class="control-label col-md-3">Coloring:</label>
 
