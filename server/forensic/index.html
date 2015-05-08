@@ -257,9 +257,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group form-group-lg">
+                    <div class="form-group form-group-sm">
                         <label for="user_select" class="control-label col-md-3">Users:</label>
-
                         <div class="col-md-9">
                             <select multiple id="user_select" data-placeholder=" " class="form-control styled-select"
                                     style="height: 20px">
@@ -292,12 +291,40 @@
                     </div>
                 </div>
             </form>
+            <div class="col-md-2">
+              <h4>Layout Options</h4>
+              <div class="row">
+                <div class="col-md-2">
+                  <div id="linkstrengthsllider"></div>
+                </div>
+                <div class="col-md-2">
+                  <div id="forceslider"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  Link Strength
+                </div>
+                <div class="col-md-2">
+                  Repulsion
+                </div>
+              </div>
+              <div class="row">
+                  <div style="padding: 10px;">
+                      <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
+                              class="btn btn-success" ng-click="drawGraph()">Draw Graph
+                      </button>
+                  </div>
+                  <div style="padding: 10px;">
+                      <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive</button>
+                  </div>
+              </div>
+            </div>
         </div>
     </div>
 
     <!-- View selections -->
     <div class="row">
-
         <div class="col-md-12">
             <h4>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></h4>
         </div>
@@ -318,7 +345,6 @@
             <div class="col-md-4">
                 <div class="form-group form-group-sm">
                     <label for="graph_coloring" class="control-label col-md-3">Coloring:</label>
-
                     <div class="col-md-9">
                         <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
                                 ng-change="graphColoringChanged(selectedGraphColoring);"
@@ -332,39 +358,6 @@
                 <input type=checkbox id=usetext onchange="SWG.toogleLabels(); "> Render text labels
             </label>
         </form>
-    </div>
-
-    <!-- Graph layout controls -->
-    <div class="col-md-2">
-        <div class="row">
-            <b>Layout Options:<b><br>
-        </div>
-        <div class="row" style="margin-top: 10px">
-            <table style="align-content: center ">
-                <tr>
-                    <td>
-                        <div id="linkstrengthsllider"></div>
-                    </td>
-                    <td>
-                        <div id="forceslider"></div>
-                    </td>
-                </tr>
-                <tr style="font-size: 70%">
-                    <td>Link <br>Strength</td>
-                    <td>Repulsion</td>
-                </tr>
-            </table>
-        </div>
-        <div class="row">
-            <div style="padding: 10px;">
-                <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
-                        class="btn btn-success" ng-click="drawGraph()">Draw Graph
-                </button>
-            </div>
-            <div style="padding: 10px;">
-                <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive</button>
-            </div>
-        </div>
     </div>
 
     <!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
