@@ -233,137 +233,146 @@
     <div class=container-fluid>
         <!--Trail Select -->
         <div class="row">
-            <div class="col-md-12">
-                <h4>Trail Selection <span id=filter_help class="glyphicon glyphicon-question-sign"></span></h4>
+            <div class="col-md-8">
+                <form role="form" class="form-horizontal">
+                    <legend>Trail Selection <span id=filter_help class="glyphicon glyphicon-question-sign"></span>
+                    </legend>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-sm">
+                            <label for="date_range" class="control-label col-md-3">Date Range:</label>
+
+                            <div class="col-md-9">
+                                <input date-range-picker class="form-control date-picker" type="text" ng-model="date"
+                                       id="date_range"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="team_select" class="control-label col-md-3">Team:</label>
+
+                            <div class="col-md-9">
+                                <select id="team_select" class="form-control" ng-model="selectedTeam"
+                                        ng-change="teamChanged(selectedTeam);"
+                                        ng-options="team as team.name for team in teams"
+                                        data-placeholder="Select a Team">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="user_select" class="control-label col-md-3">Users:</label>
+
+                            <div class="col-md-9">
+                                <select multiple id="user_select" data-placeholder=" "
+                                        class="form-control styled-select"
+                                        style="height: 20px">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-sm">
+                            <label for="domain_select" class="control-label col-md-3">Domain:</label>
+
+                            <div class="col-md-9">
+                                <select id="domain_select" class="form-control" ng-model="selectedDomain"
+                                        ng-change="domainChanged(selectedDomain);"
+                                        ng-options="domain.name for domain in domains"
+                                        data-placeholder="Select a Domain">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="trail_select" class="control-label col-md-3">Trail:</label>
+
+                            <div class="col-md-9">
+                                <select id="trail_select" class="form-control" ng-model="selectedTrail"
+                                        ng-change="trailChanged(selectedTrail);"
+                                        ng-options="trail.name for trail in trails"
+                                        placeholder="Select a previous Trail">
+                                </select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <form role="form" class="form-horizontal">
-                <div class="col-md-4">
-                    <div class="form-group form-group-sm">
-                        <label for="date_range" class="control-label col-md-3">Date Range:</label>
-
-                        <div class="col-md-9">
-                            <input date-range-picker class="form-control date-picker" type="text" ng-model="date"
-                                   id="date_range"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label for="team_select" class="control-label col-md-3">Team:</label>
-
-                        <div class="col-md-9">
-                            <select id="team_select" class="form-control" ng-model="selectedTeam"
-                                    ng-change="teamChanged(selectedTeam);"
-                                    ng-options="team as team.name for team in teams"
-                                    data-placeholder="Select a Team">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label for="user_select" class="control-label col-md-3">Users:</label>
-                        <div class="col-md-9">
-                            <select multiple id="user_select" data-placeholder=" " class="form-control styled-select"
-                                    style="height: 20px">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group form-group-sm">
-                        <label for="domain_select" class="control-label col-md-3">Domain:</label>
-
-                        <div class="col-md-9">
-                            <select id="domain_select" class="form-control" ng-model="selectedDomain"
-                                    ng-change="domainChanged(selectedDomain);"
-                                    ng-options="domain.name for domain in domains"
-                                    data-placeholder="Select a Domain">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label for="trail_select" class="control-label col-md-3">Trail:</label>
-
-                        <div class="col-md-9">
-                            <select id="trail_select" class="form-control" ng-model="selectedTrail"
-                                    ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails"
-                                    placeholder="Select a previous Trail">
-                            </select>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </form>
             <div class="col-md-2">
-              <h4>Layout Options</h4>
-              <div class="row">
-                <div class="col-md-2">
-                  <div id="linkstrengthsllider"></div>
+              <div style="padding: 10px;">
+                    <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
+                            class="btn btn-success" ng-click="drawGraph()">Draw Graph
+                    </button>
                 </div>
-                <div class="col-md-2">
-                  <div id="forceslider"></div>
+                <div style="padding: 10px;">
+                    <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive
+                    </button>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  Link Strength
-                </div>
-                <div class="col-md-2">
-                  Repulsion
-                </div>
-              </div>
-              <div class="row">
-                  <div style="padding: 10px;">
-                      <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
-                              class="btn btn-success" ng-click="drawGraph()">Draw Graph
-                      </button>
-                  </div>
-                  <div style="padding: 10px;">
-                      <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive</button>
-                  </div>
-              </div>
+
             </div>
-        </div>
-    </div>
-
-    <!-- View selections -->
-    <div class="row">
-        <div class="col-md-12">
-            <h4>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></h4>
-        </div>
-        <form role="form" class="form-horizontal">
-            <div class="col-md-4">
-                <div class="form-group form-group-sm">
-                    <label for="graph_select" class="control-label col-md-3">Links:</label>
-
-                    <div class="col-md-9">
-                        <select id="graph_select" class="form-control" ng-model="selectedGraphView"
-                                ng-change="graphViewChanged(selectedGraphView);"
-                                ng-options="view for view in views"
-                                data-placeholder="Select a Graph View">
-                        </select>
+            <div class="col-md-2">
+                <legend>Layout Options</legend>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div id="linkstrengthsllider"></div>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="forceslider"></div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group form-group-sm">
-                    <label for="graph_coloring" class="control-label col-md-3">Coloring:</label>
-                    <div class="col-md-9">
-                        <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
-                                ng-change="graphColoringChanged(selectedGraphColoring);"
-                                ng-options="colorOption.text for colorOption in colorOptions"
-                                data-placeholder="Select graph coloring">
-                        </select>
+                <div class="row">
+                    <div class="col-md-2">
+                        Link Strength
+                    </div>
+                    <div class="col-md-2">
+                        Repulsion
                     </div>
                 </div>
+                <div class="row">
+                    <label class="checkbox">
+                        <input type="checkbox" id="usetext" onchange="SWG.toogleLabels(); "> Render text labels
+                    </label>
+                </div>
             </div>
-            <label class=checkbox>
-                <input type=checkbox id=usetext onchange="SWG.toogleLabels(); "> Render text labels
-            </label>
-        </form>
+        </div>
+        <!-- </div> -->
+
+        <!-- View selections -->
+        <div class="row">
+            <div class="col-md-8">
+                <form role="form" class="form-horizontal">
+                    <legend>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></legend>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-sm">
+                            <label for="graph_select" class="control-label col-md-3">Links:</label>
+
+                            <div class="col-md-9">
+                                <select id="graph_select" class="form-control" ng-model="selectedGraphView"
+                                        ng-change="graphViewChanged(selectedGraphView);"
+                                        ng-options="view for view in views"
+                                        data-placeholder="Select a Graph View">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-sm">
+                            <label for="graph_coloring" class="control-label col-md-3">Coloring:</label>
+
+                            <div class="col-md-9">
+                                <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
+                                        ng-change="graphColoringChanged(selectedGraphColoring);"
+                                        ng-options="colorOption.text for colorOption in colorOptions"
+                                        data-placeholder="Select graph coloring">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
+        <div class="row" style="margin-bottom: 10px"></div>
+
     </div>
-
-    <!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
-    <div class="row" style="margin-bottom: 10px"></div>
-
-</div>
 </div>
 
 <div id="dialog" title="Highlighted Vertices"/>
