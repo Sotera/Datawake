@@ -56,7 +56,7 @@ RUN add-apt-repository -y ppa:igraph/ppa \
     && apt-get install -y python-igraph
 
 
-# install pyodc
+# install pyodbc
 
 RUN apt-get -y install aptitude \
     && aptitude -y install g++ \
@@ -64,7 +64,7 @@ RUN apt-get -y install aptitude \
     && pip install --allow-external pyodbc --allow-unverified pyodbc pyodbc
 
 
-# install beatiful soup
+# install beautiful soup
 RUN apt-get install -y python-bs4
 
 # install tangelo
