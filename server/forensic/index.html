@@ -313,21 +313,23 @@
                     <div class="col-md-2">
                         <div id="linkstrengthsllider"></div>
                     </div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-2">
                         <div id="forceslider"></div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" style="padding-top: 10px">
                     <div class="col-md-2">
-                        Link Strength
+                        Link Length
                     </div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-2">
-                        Repulsion
+                        Zoom
                     </div>
                 </div>
                 <div class="row">
                     <label class="checkbox">
-                        <input type="checkbox" id="usetext" onchange="SWG.toogleLabels(); "> Render text labels
+                        <input type="checkbox" id="usetext" onchange="SWG.toogleLabels(); "> Show text labels
                     </label>
                 </div>
             </div>
@@ -395,12 +397,12 @@
 
     $(function () {
         $("#linkstrengthsllider").slider({
-            min: 1,
-            max: 1000,
-            value: 1000,
+            min: -1000,
+            max: 1,
+            value: -1000,
             orientation: "vertical",
             change: function (event, ui) {
-                var strength = ui.value / 1000.0;
+                var strength = Math.abs(ui.value) / 1000.0;
                 console.log("setting link strength to " + strength);
                 SWG.setLengthStrength(strength);
             }
