@@ -43,7 +43,7 @@ DEBUG = True
 #
 @is_in_session
 def listGraphs():
-    graphs = graphs=[
+    graphs = dict(graphs=[
                                    'browse path',
                                    'browse path - with adjacent urls',
                                    'browse path - with adjacent urls min degree 2',
@@ -51,12 +51,9 @@ def listGraphs():
                                    'browse path - with adjacent email #\'s',
                                    'browse path - with phone and email #\'s',
                                    'browse path - with text selections',
-                                   'browse path - with adjacent info',]
-    graphViews = {}
-    graphViews['graphs'] = graphs
-    graphViews['selectedGraphView'] = graphs[0]
+                                   'browse path - with adjacent info',])
 
-    return json.dumps(graphViews)
+    return json.dumps(graphs)
 
 #
 # return all time stamps from the selected trail,users,org
