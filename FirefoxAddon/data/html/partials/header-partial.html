@@ -33,7 +33,7 @@
         <div class="form-group form-group-sm col-sm-11">
           <label for="domain_select" class="control-label col-sm-1">Domain:</label>
           <div class="col-sm-1">
-            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#domainModal">
+            <button class="btn btn-primary btn-sm" ng-click="loadDomainManager()">
               <i ng-hide="domainSpinner" class="fa fa-plus"></i>
               <i ng-show="domainSpinner" class="fa fa-refresh fa-spin"></i>
             </button>
