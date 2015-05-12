@@ -43,7 +43,7 @@ DEBUG = True
 #
 @is_in_session
 def listGraphs():
-    return json.dumps(dict(graphs=[
+    graphs = graphs=[
                                    'browse path',
                                    'browse path - with adjacent urls',
                                    'browse path - with adjacent urls min degree 2',
@@ -51,11 +51,12 @@ def listGraphs():
                                    'browse path - with adjacent email #\'s',
                                    'browse path - with phone and email #\'s',
                                    'browse path - with text selections',
-                                   'browse path - with adjacent info',]))
+                                   'browse path - with adjacent info',]
+    graphViews = {}
+    graphViews['graphs'] = graphs
+    graphViews['selectedGraphView'] = graphs[0]
 
-
-
-
+    return json.dumps(graphViews)
 
 #
 # return all time stamps from the selected trail,users,org
@@ -107,7 +108,7 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
         graph = graph_helper.getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id, startdate, enddate, 1, users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
-    if view ==  'browse path - with phone and email #\'s':		
+    if view ==  'browse path - with phone and email #\'s':
         graph = graph_helper.getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['email','phone'],1,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
