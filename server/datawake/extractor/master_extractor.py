@@ -3,6 +3,7 @@ from extract_email import ExtractEmail
 from extract_phonenumber import ExtractPhoneNumber
 from extract_website import ExtractWebsite
 from extract_info import ExtractInfo
+from extract_btc import ExtractBtc
 import traceback
 
 class ExtractorThread(threading.Thread):
@@ -63,6 +64,7 @@ def extractAll(content):
     threads.append(ExtractorThread(ExtractPhoneNumber(),data,lock))
     threads.append(ExtractorThread(ExtractWebsite(),data,lock))
     threads.append(ExtractorThread(ExtractInfo(),data,lock))
+    threads.append(ExtractorThread(ExtractBtc(),data,lock))
     for thread in threads:
         thread.start()
     for thread in threads:
