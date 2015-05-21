@@ -9,7 +9,7 @@
     "version": "0.6-SNAPSHOT",
     "permissions": {
         "private-browsing": true,
-        "cross-domain-content": ["https://poprox.istresearch.com:3443"]
+        "cross-domain-content": ["http://localhost"]
     },
     "preferences": [
         {
@@ -17,28 +17,28 @@
             "title": "Datawake Deployment Address",
             "description": "(Required) Sets the current Datawake instance address.",
             "type": "string",
-            "value": "https://poprox.istresearch.com:3443/datawake/plugin"
+            "value": "http://localhost/datawake/plugin"
         },
         {
             "name": "forensicDeploymentUrl",
             "title": "Forensic View Deployment Address",
             "description": "(Required) Sets the current Datawake instance address. NOTE should end in a /",
             "type": "string",
-            "value": "https://poprox.istresearch.com:3443/forensic/"
+            "value": "http://localhost/forensic/"
         },
         {
             "name": "proxyHost",
             "title": "Datawake Deployment Address IP",
             "description": "(Required) Sets the proxy ip address for sending side requests through Tor.",
             "type": "string",
-            "value": "https://poprox.istresearch.com"
+            "value": "http://localhost"
         },
         {
             "name": "proxyPort",
             "title": "Datawake Deployment Address PORT",
             "description": "(Required) Sets the proxy port for sending side requests through Tor.",
             "type": "integer",
-            "value": 3443
+            "value": 80
         },
         {
             "name": "useGoogleAuth",
