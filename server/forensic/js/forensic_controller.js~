@@ -178,7 +178,6 @@ forensicApp.controller('ForensicController', function($scope) {
     $scope.selectedUsers = [];
     $scope.selectedDomain = null
     $scope.selectedTrail = null;
-    $scope.selectedGraphColoring = null;
     get_domains(team.id)
     get_users(team.id)
   };
@@ -311,8 +310,6 @@ forensicApp.controller('ForensicController', function($scope) {
 
 
  $scope.graphColoringChanged = function(selectedGraphColoring) {
-   console.log(selectedGraphColoring);
-   $scope.selectedGraphColoring = selectedGraphColoring;
    change_highlight(selectedGraphColoring)
  }
 

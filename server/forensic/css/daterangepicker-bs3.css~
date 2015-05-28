@@ -42,7 +42,7 @@
 
 .daterangepicker .calendar {
   display: none;
-  max-width: 370px;
+  max-width: 270px;
 }
 
 .daterangepicker.show-calendar .calendar {

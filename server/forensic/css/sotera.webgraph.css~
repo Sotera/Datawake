@@ -58,11 +58,12 @@ body {
 
 
 .selected {
-  background-color: #3399FF;
+  background-color: green;
   color: ffffff;
   font-weight: bold;
 }
 
 
-
+option:selected {background:url(yellow.jpg)}
+option:selected {color:#0f0;background-color:#cc0}
 
