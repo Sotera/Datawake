@@ -1,20 +1,18 @@
 <html ng-app="forensicApp">
 
-<script src="js/angular.min.js"></script>
+<script src=js/angular.min.js></script>
 <script src=js/jquery-1.11.0.min.js></script>
 <script src=js/jquery-ui-1.10.4.custom.min.js></script>
 <script src=js/d3.v3.min.js charset=utf-8></script>
-<script src="js/bootstrap.min.js"></script>
+<script src=js/bootstrap.min.js></script>
 <script src=js/sotera.webgraph.v1.js></script>
 <script src=js/attribute_graph.js></script>
-<script src="chosen_v1.10/chosen.jquery.min.js"></script>
-<script src="js/date_widget.js"></script>
-<script src="js/googleAuthHelper.js"></script>
-<script src="js/underscore-min.js"></script>
-<script src="js/moment.min.js"></script>
-<script src="js/daterangepicker.js"></script>
-<script src="js/angular-daterangepicker.min.js"></script>
-<script src="js/forensic_controller.js"></script>
+<script src=js/date_widget.js></script>
+<script src=js/underscore-min.js></script>
+<script src=js/moment.min.js></script>
+<script src=js/daterangepicker.js></script>
+<script src=js/angular-daterangepicker.min.js></script>
+<script src=js/forensic_controller.js></script>
 <script src=/plugin/tangelo/tangelo.min.js></script>
 <script src=/plugin/config/config.js></script>
 <script src=/plugin/ui/controlPanel.js></script>
@@ -24,97 +22,15 @@
 <link href=css/jquery-ui-1.10.4.custom.min.css rel=stylesheet>
 <link href=css/sotera.webgraph.css rel=stylesheet>
 <link href=css/bootstrap.min.css rel=stylesheet>
-<link href="chosen_v1.10/chosen.min.css" rel="stylesheet">
-<link href="css/daterangepicker-bs3.css" rel="stylesheet">
-<link href="css/chosen-bootstrap.css" rel="stylesheet">
+<link href=css/bootstrap-theme.min.css rel=stylesheet>
+<link href=css/daterangepicker-bs3.css rel=stylesheet>
+<link rel="shortcut icon" href="img/waveicon38.png">
 
 
-<!-- TODO, to use authentication you must fill in your client id here  -->
-<meta name="google-signin-clientid" content=""/>
-<meta name="google-signin-scope"
-      content="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email"/>
-<meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction"/>
-<meta name="google-signin-cookiepolicy" content="single_host_origin"/>
-<meta name="google-signin-callback" content="onSignInCallback"/>
 
-<!-- add the google plus script dynamically because google says so -->
-<script type="text/javascript">
-    //Make sure you add your client id if you enable.
-    var useGoogleAuth = false;
-    (function () {
-
-        authHelper.setOnLoggedIn(function () {
-            //once a session is established on the datawake server refresh the view
-            refreshForensicView()
-        });
-
-        if (!useGoogleAuth) {
-            authHelper.onSignInCallback({'access_token': '123456'});
-        } else {
-            var po = document.createElement('script');
-            po.type = 'text/javascript';
-            po.async = true;
-            po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(po, s);
-            checkClientId();
-        }
-
-    })();
-
-    function checkClientId() {
-        var clientId = $("meta[name='google-signin-clientid']").attr('content');
-        if (clientId == "") {
-            alert("You have Google Auth Enabled, but forgot to add a client Id!");
-        }
-    }
-
-    function onSignInCallback(authResult) {
-        authHelper.onSignInCallback(authResult);
-    }
-</script>
-
-<style>
-    .extent {
-        stroke: #fff;
-        fill-opacity: .125;
-        shape-rendering: crispEdges;
-    }
-
-    .brush .extent {
-        fill-opacity: .125;
-        shape-rendering: crispEdges;
-    }
-
-    .chart rect {
-        fill: steelblue;
-    }
-
-    .chart text {
-        fill: white;
-        font: 10px sans-serif;
-        text-anchor: end;
-    }
-
-    .axis text {
-        font: 10px sans-serif;
-    }
-
-    .axis path,
-    .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-    }
-
-    .chosen-container .chosen-results {
-        max-height: 120px;
-        overflow-y: auto;
-    }
-</style>
 
 <head>
-    <title>Data Wake Forensics</title>
+    <title>Datawake Forensics</title>
 </head>
 
 <body id="forensic-body" ng-controller="ForensicController">
@@ -146,6 +62,7 @@
     </div>
 </div>
 
+
 <div id="config-panel" class="modal fade">
     <div class=modal-dialog>
         <div class=modal-content>
@@ -154,33 +71,32 @@
                 Set configuration options to override defaults on the server.
             </div>
             <p>
-
             <div class="input-group">
                 <div class="col-lg-12">
                     <form role="form">
                         <div class="form-group">
                             <label for="e_url">protocol (http or https):</label>
-                            <input type="text" ng-model="esConfig.protocol" class="form-control">
+                            <input type="text" ng-model="esConfig.protocol" class="form-control" >
                         </div>
                         <div class="form-group">
                             <label for="e_url">Elasticsearch URL:</label>
-                            <input type="text" ng-model="esConfig.url" class="form-control">
+                            <input type="text" ng-model="esConfig.url" class="form-control" >
                         </div>
                         <div class="form-group">
                             <label for="index">Elasticsearch Index (leave blank for all):</label>
-                            <input type="text" ng-model="esConfig.index" class="form-control">
+                            <input type="text" ng-model="esConfig.index" class="form-control" >
                         </div>
                         <p>
 
                         <div class="form-group">
                             <label for="num_per_node">Max Results Per Node:</label>
-                            <input type="text" ng-model="esConfig.maxResultsPerNode" class="form-control">
+                            <input type="text" ng-model="esConfig.maxResultsPerNode" class="form-control" >
                         </div>
                         <p>
 
                         <div class="form-group">
                             <label for="num_per_node">Credentials: (u:pw)</label>
-                            <input type="text" ng-model="esConfig.credentials" class="form-control">
+                            <input type="text" ng-model="esConfig.credentials" class="form-control" >
                         </div>
                         <p>
                     </form>
@@ -195,32 +111,107 @@
     </div>
 </div>
 
-<div class="navbar navbar-default navbar-fixed-top">
+
+
+
+<div class="navbar navbar-inverse navbar-fixed-top">
     <div class=navbar-header>
-        <div class=navbar-brand>Data Wake Viewer <span id="forensic_version"></span></div>
-    </div>
-
-    <ul class="nav navbar-nav">
-        <li><a style="cursor:pointer" data-toggle="modal" data-target="#info-panel"><span
-                class="glyphicon glyphicon-info-sign"></span> Info</a>
-    </ul>
-    <ul class="nav navbar-nav">
-        <li><a style="cursor:pointer" data-toggle="modal" data-target="#config-panel"><span
-                class="glyphicon glyphicon-pencil"></span> Config</a>
-    </ul>
-
-    <div style="position: fixed; right: 2%; top: 1%;" id="googleAuthContainer">
-        <!-- Google Sign In -->
-        <div id="gConnect">
-            <button class="g-signin"></button>
-        </div>
-        <!-- Google Sign out / revoke token -->
-        <div id="gDisconnect" style="display:none">
-            <button onclick="authHelper.disconnectUser()">Sign Out</button>
+        <div class=navbar-brand><span><IMG SRC="img/waveicon38.png" style="width:25px;height:25px"></span>
+        Datawake Graph Viewer <span id="forensic_version"></span>
         </div>
     </div>
-</div>
 
+
+    <ul class="nav navbar-nav">
+        <li><a style="cursor:pointer" data-toggle="modal" data-target="#info-panel"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
+    </ul>
+    <ul class="nav navbar-nav">
+        <li><a style="cursor:pointer" data-toggle="modal" data-target="#config-panel"><span class="glyphicon glyphicon-pencil"></span> Config</a></li>
+    </ul>
+    <ul class="nav navbar-nav"> 
+    	<div class="checkbox navbar-btn" style="padding-top:7px">
+    	<label class="navbar-link" for="usetext">
+        <input type=checkbox id=usetext onchange="SWG.toggleLabels(); "> Render text labels
+        </label>
+        </div>
+    </ul> 
+
+
+   
+    <!-- start of button toolbar buttons -->
+  
+    <ul class=navbar-header>
+    <form>
+        <!--Date Picker Button-->
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" date-range-picker class="form-control date-picker" type="text" ng-model="date">Date </button>
+        </div>  
+        <!--Team Select Button-->
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Team <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="team_select">
+		<li ng-repeat="team in teams" ng-click="teamChanged(team)" class="pointer" ng-class="{selected : team === selectedTeam}">
+            		{{team.name}}		
+        	</li>
+            </ul>
+        </div>
+        <!--User Selection Button backup  -->
+        <div class="btn-group" id="selectUsers">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Users <span class="caret"></span></button>
+            <ul class="dropdown-menu" ng-click="$event.stopPropagation()">
+                <li>
+                    <select id="user_select" multiple="multiple"></select>
+		</li>
+            </ul>
+        </div>  
+        <!--Domain Selection Button-->
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Domain <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="domain_select">
+		<li ng-repeat="domain in domains" ng-click="domainChanged(domain)" class="pointer" ng-class="{selected : domain === selectedDomain}">
+            		{{domain.name}}		
+        	</li>
+            </ul>
+        </div>
+        <!--Trail Selection Button-->
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Trail <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="trail_select">
+		<li ng-repeat="trail in trails" ng-click="trailChanged(trail)" class="pointer" ng-class="{selected : trail === selectedTrail}">
+            		{{trail.name}}		
+        	</li>
+            </ul>
+        </div>
+        <!--Graph Type to Draw Menu Button-->
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Graph Type <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="graph_select" style="width: 300px">
+                <li ng-repeat="view in views" ng-click="graphViewChanged(view)" class="pointer" ng-class="{selected : view === selectedGraphView}">
+			{{view}}		 
+		</li>	   
+	     </ul>
+        </div>
+        <!--Graph Coloring Menu Button-->
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Coloring <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="graph_coloring">
+                <li ng-repeat="colorOption in colorOptions" ng-click="graphColoringChanged(colorOption)" class="pointer" ng-class="{selected : colorOption === selectedGraphColoring}">
+			{{colorOption.text}}		 
+		</li>	   
+	    </ul>
+        </div>
+        <!--Draw Graph Button-->
+        <div class="btn-group">
+              <button  ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">
+              <span class="glyphicon glyphicon-edit"></span> Draw Graph</button>
+	</div>        
+        <!--Domain Dive Button-->
+        <div class="btn-group">
+    	      <button  ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()"><span class="glyphicon glyphicon-search"></span> Domain Dive</button>
+        </div>        
+      </form>
+   </div>    
+<!-- end button stuff in toolbar -->
 
 <!-- Create a fullscreen SVG element -->
 <div id=node_graph></div>
@@ -228,149 +219,8 @@
 <!-- Create an SVG element to represent the legend -->
 <svg id=legend height=100% style="position:fixed; top:100px; right:0px; pointer-events:none;"></svg>
 
-<!-- Create a drawer with the control panel in it -->
-<div id=control-panel>
-    <div class=container-fluid>
-        <!--Trail Select -->
-        <div class="row">
-            <div class="col-md-10">
-                <form role="form" class="form-horizontal">
-                    <legend>Trail Selection <span id=filter_help class="glyphicon glyphicon-question-sign"></span>
-                    </legend>
-                    <div class="col-md-5">
-                        <div class="form-group form-group-sm">
-                            <label for="date_range" class="control-label col-md-3">Date Range:</label>
-
-                            <div class="col-md-9">
-                                <input date-range-picker class="form-control date-picker" type="text" ng-model="date"
-                                       id="date_range"/>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="team_select" class="control-label col-md-3">Team:</label>
-
-                            <div class="col-md-9">
-                                <select id="team_select" class="form-control" ng-model="selectedTeam"
-                                        ng-change="teamChanged(selectedTeam);"
-                                        ng-options="team as team.name for team in teams"
-                                        data-placeholder="Select a Team">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="user_select" class="control-label col-md-3">Users:</label>
-
-                            <div class="col-md-9">
-                                <select multiple id="user_select" data-placeholder=" "
-                                        class="form-control styled-select"
-                                        style="height: 20px">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-group form-group-sm">
-                            <label for="domain_select" class="control-label col-md-3">Domain:</label>
-
-                            <div class="col-md-9">
-                                <select id="domain_select" class="form-control" ng-model="selectedDomain"
-                                        ng-change="domainChanged(selectedDomain);"
-                                        ng-options="domain.name for domain in domains"
-                                        data-placeholder="Select a Domain">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="trail_select" class="control-label col-md-3">Trail:</label>
-
-                            <div class="col-md-9">
-                                <select id="trail_select" class="form-control" ng-model="selectedTrail"
-                                        ng-change="trailChanged(selectedTrail);"
-                                        ng-options="trail.name for trail in trails"
-                                        placeholder="Select a previous Trail">
-                                </select>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <div class="col-md-2">
-                  <div style="padding: 10px;">
-                        <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView"
-                                class="btn btn-success" ng-click="drawGraph()">Draw Graph
-                        </button>
-                    </div>
-                    <div style="padding: 10px;">
-                        <button ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()">Domain Dive
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-md-2">
-                <legend>Layout Options</legend>
-                <div class="row">
-                    <div class="col-md-2">
-                        <div id="linkstrengthsllider"></div>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-2">
-                        <div id="forceslider"></div>
-                    </div>
-                </div>
-                <div class="row" style="padding-top: 10px">
-                    <div class="col-md-2">
-                        Link Length
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-2">
-                        Zoom
-                    </div>
-                </div>
-                <div class="row">
-                    <label class="checkbox">
-                        <input type="checkbox" id="usetext" onchange="SWG.toogleLabels(); "> Show text labels
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- View selections -->
-        <div class="row">
-            <div class="col-md-10">
-                <form role="form" class="form-horizontal">
-                    <legend>View Options <span id=search_help class="glyphicon glyphicon-question-sign"></span></legend>
-                    <div class="col-md-5">
-                        <div class="form-group form-group-sm">
-                            <label for="graph_select" class="control-label col-md-3">Links:</label>
-
-                            <div class="col-md-9">
-                                <select id="graph_select" class="form-control" ng-model="selectedGraphView"
-                                        ng-change="graphViewChanged(selectedGraphView);"
-                                        ng-options="view for view in views">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-group form-group-sm">
-                            <label for="graph_coloring" class="control-label col-md-3">Coloring:</label>
-
-                            <div class="col-md-9">
-                                <select id="graph_coloring" class="form-control" ng-model="selectedGraphColoring"
-                                        ng-change="graphColoringChanged(selectedGraphColoring);"
-                                        ng-options="colorOption.text for colorOption in colorOptions"
-                                        data-placeholder="Select graph coloring">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
-        <div class="row" style="margin-bottom: 10px"></div>
+<!-- This empty row at the bottom of the container keeps other content from touching the bottom of the screen -->
+    <div class="row" style="margin-bottom: 10px"></div>
 
     </div>
 </div>
@@ -378,52 +228,4 @@
 <div id="dialog" title="Highlighted Vertices"/>
 <div id="link-dialog" title="Vertex Details"/>
 </body>
-
-
-<script>
-
-
-    if (!useGoogleAuth)
-        $("#googleAuthContainer").hide();
-    $(function () {
-        $('#user_select').chosen({'width': "100%"});
-        // $('#userselect').change(updateTimeSlider);
-
-        //$('#trail_select').chosen({'width': "100%", height: "200px"});
-        //$('#trail_select').change(updateTimeSlider)
-
-    });
-
-
-    $(function () {
-        $("#linkstrengthsllider").slider({
-            min: -1000,
-            max: 1,
-            value: -1000,
-            orientation: "vertical",
-            change: function (event, ui) {
-                var strength = Math.abs(ui.value) / 1000.0;
-                console.log("setting link strength to " + strength);
-                SWG.setLengthStrength(strength);
-            }
-        });
-    });
-
-    $(function () {
-        $("#forceslider").slider({
-            min: 0,
-            max: 1000,
-            value: 30,
-            orientation: "vertical",
-            change: function (event, ui) {
-                var strength = 0 - ui.value;
-                console.log("setting force to " + strength);
-                SWG.setChargeStrength(strength);
-            }
-        });
-    });
-
-</script>
-
-
 </html>

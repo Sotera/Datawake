@@ -141,7 +141,7 @@ forensicApp.controller('ForensicController', function($scope) {
       success: function(response) {
         console.log("GOT USERS")
         console.log(response)
-          // $scope.users = response;
+          $scope.users = response;
           // $scope.$apply();
           // $("#user_select").trigger("chosen:updated")
         d3.select("#user_select").selectAll("option").remove();
@@ -169,6 +169,7 @@ forensicApp.controller('ForensicController', function($scope) {
    * @param team
    */
   $scope.teamChanged = function(team) {
+    $scope.selectedTeam = team;
     console.log("Team changed: ")
     console.log(team)
     $scope.domains = []
@@ -177,6 +178,7 @@ forensicApp.controller('ForensicController', function($scope) {
     $scope.selectedUsers = [];
     $scope.selectedDomain = null
     $scope.selectedTrail = null;
+    $scope.selectedGraphColoring = null;
     get_domains(team.id)
     get_users(team.id)
   };
@@ -188,6 +190,7 @@ forensicApp.controller('ForensicController', function($scope) {
    * @param domain
    */
   $scope.domainChanged = function(domain) {
+    $scope.selectedDomain = domain;
     $scope.trails = [];
     $scope.selectedTrail = null;
     get_trails($scope.selectedTeam.id, domain.id)
@@ -205,7 +208,9 @@ forensicApp.controller('ForensicController', function($scope) {
   }
 
 
+  
   $scope.trailChanged = function(trail) {
+    $scope.selectedTrail = trail;
     console.log("TRAIL CHANGED")
     console.log($scope.selectedTeam)
     console.log($scope.selectedDomain)
@@ -240,6 +245,10 @@ forensicApp.controller('ForensicController', function($scope) {
     });
   }
 
+
+  $scope.graphViewChanged = function(view) {
+    $scope.selectedGraphView = view;
+  }
 
   /**
    * Populate graph coloring options
@@ -301,10 +310,11 @@ forensicApp.controller('ForensicController', function($scope) {
   }
 
 
-
-  $scope.graphColoringChanged = function(selectedGraphColoring) {
-    change_highlight(selectedGraphColoring)
-  }
+ $scope.graphColoringChanged = function(selectedGraphColoring) {
+   console.log(selectedGraphColoring);
+   $scope.selectedGraphColoring = selectedGraphColoring;
+   change_highlight(selectedGraphColoring)
+ }
 
 
   /**
