@@ -227,8 +227,11 @@ class MySqlEntityDataConnector(DataConnector):
 
     def get_extracted_entities_with_domain_check(self, domain_id, urls, types=[]):
         assert (len(urls) > 0)
-        if not datawake_mysql.UseRestAPI:
-            domainEntityMatches = datawake_mysql.getDomainEntityMatches(domain_id, values, type)
+        #TODO: Implement rest call
+        # if datawake_mysql.UseRestAPI:
+        #     domainEntityMatches = datawake_mysql.getDomainEntityMatches(domain_id, values, type)
+        if 0 == 1:
+            x = 0
         else:
             """
             Return all entities extracted from a given set of urls, indication which entities were found in the domain
