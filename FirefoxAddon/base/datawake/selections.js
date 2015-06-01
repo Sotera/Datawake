@@ -2,10 +2,13 @@ var contextMenu = require("sdk/context-menu");
 var self = require("sdk/self");
 var data = self.data;
 var addOnPrefs = require("sdk/simple-prefs").prefs;
+var ui = require('sdk/ui');
 var tabs = require("sdk/tabs");
 var requestHelper = require("./request-helper");
 var storage = require("./storage");
 var tracking = require("./tracking");
+var panel = require("sdk/panel");
+var notifications = require("sdk/notifications");
 
 exports.useContextMenu = useContextMenu;
 exports.cleanUpTab = cleanUpTab;
@@ -29,9 +32,11 @@ function useContextMenu(tab) {
             items: [
                 contextMenu.Item({ label: "Capture Selection", data: "selection", context: contextMenu.SelectionContext()}),
                 contextMenu.Item({ label: "Tag a feature", data: "feedback", context: contextMenu.SelectionContext()}),
+                contextMenu.Item({ label: "InstaWake", data: "geolocate", context: contextMenu.SelectionContext()}),
                 contextMenu.Separator(),
                 contextMenu.Item({ label: "Hide Selections", data: "hide"}),
                 contextMenu.Item({ label: "Show Selections", data: "highlight"}),
+
 
             ],
             onMessage: function (message) {
@@ -49,6 +54,9 @@ function useContextMenu(tab) {
                         break;
                     case "hide":
                         hideSelections("selections");
+                        break;
+                    case "geolocate":
+                        geolocateWindowSelection(message.text);
                         break;
                 }
             }
@@ -128,6 +136,15 @@ function saveWindowSelection(datawakeInfo, url, selectionText) {
     var post_url = addOnPrefs.datawakeDeploymentUrl + "/selections/save";
     requestHelper.post(post_url, post_data, function (response) {
         console.debug("Selection saved");
+    });
+}
+
+function geolocateWindowSelection(selectionText) {
+    var geo_no_plugin_url = addOnPrefs.datawakeDeploymentUrl.replace(/\/plugin/,'');
+    var get_url = geo_no_plugin_url + "/geo/instagram?address=" + encodeURIComponent(selectionText);
+    requestHelper.get(get_url, function (response) {
+        message = response.json.streetAddress + ', ' + response.json.city + ', ' + response.json.state + ' - Instagram Image Count: ' + response.json.imageCount;
+        require("sdk/tabs").open('http://geogram-stream.52.8.42.59.xip.io/');
     });
 }
 
