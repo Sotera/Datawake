@@ -404,9 +404,9 @@ var SWG = (function() {
     pubs.updateGraph = updateGraph;
 
     /*
-     * Toogle on / off all node labels
+     * Toggle on / off all node labels
      */
-    function toogleLabels(){
+    function toggleLabels(){
         if (viz && render_labels) {
             viz.selectAll(".node").selectAll("svg text").remove()
         }
@@ -422,7 +422,7 @@ var SWG = (function() {
         render_labels = ! render_labels
 
     }
-    pubs.toogleLabels = toogleLabels
+    pubs.toggleLabels = toggleLabels
 
 
     function clear_legend() {
