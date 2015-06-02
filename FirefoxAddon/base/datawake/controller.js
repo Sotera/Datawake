@@ -229,7 +229,7 @@ function attachActionButton() {
     datawakeButton = ui.ActionButton({
         id: "datawake-widget",
         label: "Datawake Widget",
-        icon: data.url("img/waveicon38_bw.png"),
+        icon: data.url("images/waveicon38.png"),
         onClick: onToggle
     });
 }
@@ -672,11 +672,11 @@ function getDomainPreviewForWorker(worker,team_id,domain_id){
 
 
 function activeIcon() {
-    datawakeButton.icon = data.url("img/waveicon38.png");
+    datawakeButton.icon = data.url("images/waveicon38.png");
 }
 
 function resetIcon() {
-    datawakeButton.icon = data.url("img/waveicon38_bw.png");
+    datawakeButton.icon = data.url("images/waveicon38.png");
 }
 
 
@@ -687,7 +687,7 @@ function notifyError(message){
     notifications.notify({
         title: "Datawake Error",
         text: message,
-        iconURL: self.data.url("img/waveicon38.png")
+        iconURL: self.data.url("images/waveicon38.png")
     });
 }
 
@@ -695,7 +695,7 @@ function notifySuccess(message){
     notifications.notify({
         title: "Datawake Success",
         text: message,
-        iconURL: self.data.url("img/waveicon38.png")
+        iconURL: self.data.url("images/waveicon38.png")
     });
 }
 
@@ -731,7 +731,7 @@ function launchLoginPanel(){
             notifications.notify({
                 title: "Datawake Sign On",
                 text: "Sign On Successful.  Click the datawake button to begin.",
-                iconURL: self.data.url("img/waveicon38.png"),
+                iconURL: self.data.url("images/waveicon38.png"),
                 onClick:  function(data) {
                     console.log("clicked it")
                     launchDatawakePanel()

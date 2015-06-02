@@ -45,7 +45,7 @@ function notify(message){
     notifications.notify({
         title: "Datawake Notice",
         text: message,
-        iconURL: self.data.url("img/waveicon38.png")
+        iconURL: self.data.url("images/waveicon38.png")
     });
 }
 
