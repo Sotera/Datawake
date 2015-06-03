@@ -184,7 +184,7 @@
         </div>
         <!--Graph Type to Draw Menu Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Graph Type <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Graph Type: {{selectedGraphView}}<span class="caret"></span></button>
             <ul class="dropdown-menu" id="graph_select" style="width: 300px">
                 <li ng-repeat="view in views" ng-click="graphViewChanged(view)" class="pointer" ng-class="{selected : view === selectedGraphView}">
 			{{view}}		 
