@@ -148,7 +148,7 @@
         </div>  
         <!--Team Select Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Team <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="margin-bottom: 4px;white-space: normal;">Team: {{selectedTeam.name}} <span class="caret"></span></button>
             <ul class="dropdown-menu" id="team_select">
 		<li ng-repeat="team in teams" ng-click="teamChanged(team)" class="pointer" ng-class="{selected : team === selectedTeam}">
             		{{team.name}}		
@@ -166,7 +166,7 @@
         </div>  
         <!--Domain Selection Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Domain <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Domain: {{selectedDomain.name}} <span class="caret"></span></button>
             <ul class="dropdown-menu" id="domain_select">
 		<li ng-repeat="domain in domains" ng-click="domainChanged(domain)" class="pointer" ng-class="{selected : domain === selectedDomain}">
             		{{domain.name}}		
@@ -175,7 +175,7 @@
         </div>
         <!--Trail Selection Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Trail <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Trail: {{selectedTrail.name}} <span class="caret"></span></button>
             <ul class="dropdown-menu" id="trail_select">
 		<li ng-repeat="trail in trails" ng-click="trailChanged(trail)" class="pointer" ng-class="{selected : trail === selectedTrail}">
             		{{trail.name}}		
