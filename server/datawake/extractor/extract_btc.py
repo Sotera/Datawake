@@ -38,7 +38,7 @@ class ExtractBtc(extractor.Extractor):
         return "btc-extractor"
 
     def name(self):
-        return "Bitcoin Address"
+        return "bitcoin"
 
     def version(self):
         return "1.0"

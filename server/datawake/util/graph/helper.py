@@ -139,7 +139,6 @@ def getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,
 def getBrowsePathAndAdjacentWebsiteEdgesWithLimit(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
     return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['website'],limit,userlist)
 
-
 def getBrowsePathAndAdjacentPhoneEdgesWithLimit(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
     return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['phone'],limit,userlist)
 
@@ -148,6 +147,9 @@ def getBrowsePathAndAdjacentEmailEdgesWithLimit(domain_id,trail_id,startdate,end
 
 def getBrowsePathAndAdjacentInfoEdges(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
     return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['PERSON','ORGANIZATION','MISC'],limit,userlist)
+
+def getBrowsePathAndAdjacentBitcoinEdgesWithLimit(domain_id,trail_id,startdate,enddate,limit,userlist=[]):
+    return getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,['bitcoin'],limit,userlist)
 
 
 def getOculusForensicGraph(org,startdate,enddate,userlist=[],trail='*',domain=''):

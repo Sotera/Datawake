@@ -50,6 +50,7 @@ def listGraphs():
                                    'browse path - with adjacent phone #\'s',
                                    'browse path - with adjacent email #\'s',
                                    'browse path - with phone and email #\'s',
+                                   'browse path - with bitcoin addresses',
                                    'browse path - with text selections',
                                    'browse path - with adjacent info',])
 
@@ -111,6 +112,10 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
 
     if view == 'browse path - with adjacent info':
         graph = graph_helper.getBrowsePathAndAdjacentInfoEdges(domain_id,trail_id, startdate, enddate,1,users)
+        return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
+
+    if view == 'browse path - with bitcoin addresses':
+        graph = graph_helper.getBrowsePathAndAdjacentBitcoinEdgesWithLimit(domain_id,trail_id,startdate,enddate,1,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
     if view == 'OculusForensicRequest':
