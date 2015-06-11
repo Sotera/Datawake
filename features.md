@@ -24,14 +24,4 @@ have previously looked at that contain those phone numbers and/or email addresse
 Datawake prefetch allows a user to define entities and initiate a crawl of all websites
 containing those entities.
 
-
-![Add Entities](../img/addEntities.png)  
-First we are going to add an entity.  
-
-
-![Add Irrelevant Entities](../img/addIrEntities.png)  
-Now we are going to exclude pages relating to baseball.  
-
-
-![Explore](../img/viewingPages.png)  
-Now we can look at pages and how they rank given the defined entities.  
+More information on DataWake Prefetch can be found on our [Gihub Page](http://sotera.github.io/datawake-prefetch)

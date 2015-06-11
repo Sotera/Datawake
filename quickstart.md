@@ -72,7 +72,7 @@ Datawake](https://s3.amazonaws.com/soterastuff/Datawake_Demo/dockerstartup.sh "D
 1.	Type ‘sudo docker run -d -p 0.0.0.0:80:80 -it --name "datawake_demo" dw_demo bash’ to create the Datawake Demo Container from the image you loaded
 1.	Type ‘sudo dockerstartup.sh’ to execute the Docker container via the shell script.  
   * This will startup the Tangelo web server and the MySQL database instance.
-1. Within boot2docker type 'ifconfig' to find your IP (this is likely 192.168.59.103).  You will need this to configure the Firefox plugin.	
+1. Within boot2docker type 'ifconfig' to find your IP (this is likely 192.168.59.103).  You will need this to configure the Firefox plugin.
 1.	Download the [Firefox addon](https://s3.amazonaws.com/soterastuff/Datawake_Demo/datawakefirefoxaddon.xpi) (datawakefirefoxaddon.xpi)
 1.  Install the addon in Firefox using the Firefox Menu, Add-ons, Install Add-on from File option.
 1.  In the Firefox Menu, Add-ons, click on the Datawake Extension 'Options'.  Here, replace the IP addresses listed to reflect the IP address you got in the steps above for boot2docker.  Restart Firefox.
