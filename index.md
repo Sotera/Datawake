@@ -7,19 +7,16 @@ technologies along with a Firefox plugin that aggregate user browsing data via a
 domain-specific searches. This captured, or extracted, data is organized
 into browse paths and elements of interest.  
 
-
 ![Firefox Plugin](img/firefoxPlugin.png)  
 Firefox Plugin showing entities extracted From the current page.  
 
 
-![Build Forensic Graph](img/buildGraph.png)  
-Building the graph based on the pages that have been visited and the data within
-those pages.  
+![Build Forensic Graph](img/buildGraph.png)
+Graph of all extracted data from the pages visited by the user.
 
 
 ![Forensic View](img/forensic.png)
-The full graph of the data.  
-
+Graph based on all links from the pages visited by the user.
 
 ## Applied Technology  ##
 This work was funded by [DARPA's
