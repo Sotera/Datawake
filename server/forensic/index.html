@@ -56,7 +56,7 @@
             </div>
 
             <div class=modal-footer>
-                <a class="btn btn-default" data-dismiss=modal>OK</a>
+                <a class="btn btn-primary btn-sm" data-dismiss=modal>OK</a>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
             <p>
 
             <div class=modal-footer>
-                <a class="btn btn-default" data-dismiss=modal>OK</a>
+                <a class="btn btn-primary btn-sm" data-dismiss=modal>OK</a>
             </div>
         </div>
     </div>
@@ -115,40 +115,38 @@
 
 
 <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class=navbar-header>
-        <div class=navbar-brand><span><IMG SRC="images/waveicon38.png" style="width:25px;height:25px"></span>
+    <div class="navbar-header">
+        <a class="navbar-brand"><span><IMG SRC="images/waveicon38.png" style="width:25px;height:25px"></span>
         Datawake Graph Viewer <span id="forensic_version"></span>
-        </div>
+        </a>
     </div>
 
+	<form class="navbar-nav nav">
 
-    <ul class="nav navbar-nav">
-        <li><a style="cursor:pointer" data-toggle="modal" data-target="#info-panel"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
-    </ul>
-    <ul class="nav navbar-nav">
-        <li><a style="cursor:pointer" data-toggle="modal" data-target="#config-panel"><span class="glyphicon glyphicon-pencil"></span> Config</a></li>
-    </ul>
-    <ul class="nav navbar-nav"> 
-    	<div class="checkbox navbar-btn" style="padding-top:7px">
-    	<label class="navbar-link" for="usetext">
-        <input type=checkbox id=usetext onchange="SWG.toggleLabels(); "> Render text labels
-        </label>
-        </div>
-    </ul> 
+      <li><a data-toggle="modal" data-target="#info-panel"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
+      <li><a data-toggle="modal" data-target="#config-panel"><span class="glyphicon glyphicon-pencil"></span> Config</a></li>
+    	<li>
+         	<div class="checkbox navbar-link">
+            		<label class="checkbox checkbox-inline">
+                      <input type="checkbox" id=usetext onchange="SWG.toggleLabels();"> Render Text labels
+ 		            </label>
+            </div>
+		</li>
+  	</form>
 
 
-   
+
     <!-- start of button toolbar buttons -->
   
     <ul class=navbar-header>
     <form>
         <!--Date Picker Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" date-range-picker class="form-control date-picker" type="text" ng-model="date">Date </button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle" date-range-picker class="form-control date-picker" type="text" ng-model="date">Date </button>
         </div>  
         <!--Team Select Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="margin-bottom: 4px;white-space: normal;">Team: {{selectedTeam.name}} <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Team: {{selectedTeam.name}} <span class="caret"></span></button>
             <ul class="dropdown-menu" id="team_select">
 		<li ng-repeat="team in teams" ng-click="teamChanged(team)" class="pointer" ng-class="{selected : team === selectedTeam}">
             		{{team.name}}		
@@ -157,7 +155,7 @@
         </div>
         <!--User Selection Button backup  -->
         <div class="btn-group" id="selectUsers">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Users <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Users <span class="caret"></span></button>
             <ul class="dropdown-menu" ng-click="$event.stopPropagation()">
                 <li>
                     <select id="user_select" multiple="multiple"></select>
@@ -166,7 +164,7 @@
         </div>  
         <!--Domain Selection Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Domain: {{selectedDomain.name}} <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Domain: {{selectedDomain.name}} <span class="caret"></span></button>
             <ul class="dropdown-menu" id="domain_select">
 		<li ng-repeat="domain in domains" ng-click="domainChanged(domain)" class="pointer" ng-class="{selected : domain === selectedDomain}">
             		{{domain.name}}		
@@ -175,7 +173,7 @@
         </div>
         <!--Trail Selection Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Trail: {{selectedTrail.name}} <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Trail: {{selectedTrail.name}} <span class="caret"></span></button>
             <ul class="dropdown-menu" id="trail_select">
 		<li ng-repeat="trail in trails" ng-click="trailChanged(trail)" class="pointer" ng-class="{selected : trail === selectedTrail}">
             		{{trail.name}}		
@@ -184,7 +182,7 @@
         </div>
         <!--Graph Type to Draw Menu Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Graph Type: {{selectedGraphView}}<span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Graph Type: {{selectedGraphView}}<span class="caret"></span></button>
             <ul class="dropdown-menu" id="graph_select" style="width: 300px">
                 <li ng-repeat="view in views" ng-click="graphViewChanged(view)" class="pointer" ng-class="{selected : view === selectedGraphView}">
 			{{view}}		 
@@ -193,7 +191,7 @@
         </div>
         <!--Graph Coloring Menu Button-->
         <div class="btn-group">
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Coloring <span class="caret"></span></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Coloring <span class="caret"></span></button>
             <ul class="dropdown-menu" id="graph_coloring">
                 <li ng-repeat="colorOption in colorOptions" ng-click="graphColoringChanged(colorOption)" class="pointer" ng-class="{selected : colorOption === selectedGraphColoring}">
 			{{colorOption.text}}		 
@@ -202,12 +200,12 @@
         </div>
         <!--Draw Graph Button-->
         <div class="btn-group">
-              <button  ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success" ng-click="drawGraph()">
+              <button  ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success btn-sm" ng-click="drawGraph()">
               <span class="glyphicon glyphicon-edit"></span> Draw Graph</button>
 	</div>        
         <!--Domain Dive Button-->
         <div class="btn-group">
-    	      <button  ng-disabled="!graphDrawn" class="btn btn-success" ng-click="domainDive()"><span class="glyphicon glyphicon-search"></span> Domain Dive</button>
+    	      <button  ng-disabled="!graphDrawn" class="btn btn-success btn-sm" ng-click="domainDive()"><span class="glyphicon glyphicon-search"></span> Domain Dive</button>
         </div>        
       </form>
    </div>    
