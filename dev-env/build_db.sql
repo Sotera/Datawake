@@ -172,11 +172,12 @@ CREATE VIEW vw_urls_in_trails AS
 ;
 
 CREATE VIEW vw_domain_entities AS	
-	SELECT	d.id,
-			d.name,
-			d.description,
-			d.team_id,
-			e.feature_Type,
+	SELECT	d.id, 
+			d.name, 
+			d.description, 
+			d.team_id, 
+			e.domain_entity_id as domainEntityID, 
+			e.feature_Type, 
 			e.feature_Value
 	FROM datawake_domains as d
 		INNER JOIN datawake_domain_entities as e on d.id = e.domain_id
