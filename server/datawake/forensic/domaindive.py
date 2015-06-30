@@ -73,9 +73,27 @@ def query(data):
     tangelo.log(result)
     return json.dumps(result)
 
+def indices():
+    url = conf.FORENSIC_ES_URL
+    cred = conf.FORENSIC_ES_CRED
+    protocol = 'https'
+    if cred is not None and len(cred) > 0:
+        es = Elasticsearch([protocol+'://' + cred + '@' + url])
+    else:
+        es = Elasticsearch([url])
+    indices = Elasticsearch.cat.indices(h='i')
+    return json.dumps([x.strip() for x in indices.split('\n')])
+
+
+
+
 
 post_actions = {
     'query': query,
+}
+
+get_actions = {
+    'indices': indices,
 }
 
 
@@ -87,3 +105,10 @@ def post(action, *args, **kwargs):
         return tangelo.HTTPStatusCode(400, "invalid service call")
 
     return post_actions.get(action, unknown)(**post_data)
+
+@tangelo.restful
+def get(action, *args, **kwargs):
+    def unknown(**kwargs):
+        return tangelo.HTTPStatusCode(400, "invalid service call")
+
+    return get_actions.get(action, unknown)(**kwargs)
