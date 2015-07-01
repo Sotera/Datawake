@@ -18,6 +18,7 @@ import json
 import tangelo
 import urllib
 import datawake.util.db.datawake_mysql as db
+import datawake.util.deepdive.deepdive as deepdive
 from datawake.util.dataconnector import factory
 from datawake.util.session.helper import is_in_session
 from datawake.util.session.helper import has_team
@@ -58,6 +59,8 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
 
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
+    deepdive.export(team_id,domain_id,trail_id,url,content)
+
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
     return json.dumps(result)
@@ -91,6 +94,3 @@ def post(action, *args, **kwargs):
         return tangelo.HTTPStatusCode(400, "invalid service call")
 
     return post_actions.get(action, unknown)(**post_data)
-
-
-
