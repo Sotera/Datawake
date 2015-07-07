@@ -16,6 +16,7 @@ limitations under the License.
 
 """
 
+import os
 import json
 import collections
 import sys
@@ -31,8 +32,10 @@ from datawake.conf import datawakeconfig as dbconfig
 
 
 UseRestAPI = False
-StrongLoopHostname = 'localhost'
-StrongLoopPort = '5500'
+# StrongLoopHostname = 'localhost'
+StrongLoopHostname = os.environ['MYSQL_PORT_3306_TCP_ADDR']
+# StrongLoopPort = '5500'
+StrongLoopPort = os.environ['MYSQL_PORT_3306_TCP_PORT']
 
 """
 
