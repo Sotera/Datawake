@@ -38,7 +38,7 @@
             "title": "Datawake Deployment Address PORT",
             "description": "(Required) Sets the proxy port for sending side requests through Tor.",
             "type": "integer",
-            "value": 8181
+            "value": 80
         },
         {
             "name": "useGoogleAuth",

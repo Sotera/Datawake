@@ -46,8 +46,8 @@ REQUIRED_PARAMS = [
     'DW_DB',
     'DW_DB_USER',
     'DW_DB_PASSWORD',
-    'DW_DB_HOST',
-    'DW_DB_PORT',
+    # 'DW_DB_HOST',
+    # 'DW_DB_PORT',
 ]
 not_found = []
 for param in REQUIRED_PARAMS:
