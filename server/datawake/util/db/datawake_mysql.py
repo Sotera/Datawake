@@ -33,9 +33,9 @@ from datawake.conf import datawakeconfig as dbconfig
 
 UseRestAPI = False
 # StrongLoopHostname = 'localhost'
-StrongLoopHostname = os.environ['MYSQL_PORT_3306_TCP_ADDR']
+StrongLoopHostname = os.environ['LOOPBACK_PORT_3001_TCP_ADDR']
 # StrongLoopPort = '5500'
-StrongLoopPort = os.environ['MYSQL_PORT_3306_TCP_PORT']
+StrongLoopPort = os.environ['LOOPBACK_PORT_3001_TCP_PORT']
 
 """
 
