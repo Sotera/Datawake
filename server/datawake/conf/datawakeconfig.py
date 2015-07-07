@@ -70,8 +70,10 @@ DATAWAKE_CORE_DB = {
     'database': os.environ['DW_DB'],
     'user': os.environ['DW_DB_USER'],
     'password':os.environ['DW_DB_PASSWORD'],
-    'host': os.environ['DW_DB_HOST'],
-    'port': os.environ['DW_DB_PORT']
+    'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+    'port': os.environ['MYSQL_PORT_3306_TCP_PORT']
+    # 'host': os.environ['DW_DB_HOST'],
+    # 'port': os.environ['DW_DB_PORT']
 }
 
 
