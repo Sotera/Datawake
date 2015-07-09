@@ -61,7 +61,11 @@ FORENSIC_ES_URL = os.environ['FORENSIC_ES_URL'] if 'FORENSIC_ES_URL' in os.envir
 FORENSIC_ES_INDEX = os.environ['FORENSIC_ES_INDEX'] if 'FORENSIC_ES_INDEX' in os.environ else ''
 FORENSIC_ES_CRED = os.environ['FORENSIC_ES_CRED'] if 'FORENSIC_ES_CRED' in os.environ else ''
 FORENSIC_ES_MRPN = os.environ['FORENSIC_ES_MRPN'] if 'FORENSIC_ES_MRPN' in os.environ else 10
-
+DEEPDIVE_URL = os.getenv('DEEPDIVE_URL','')
+DEEPDIVE_TOKEN = os.getenv('DEEPDIVE_TOKEN','')
+DEEPDIVE_USER = os.getenv('DEEPDIVE_USER','')
+DEEPDIVE_REPO  = os.getenv('DEEPDIVE_REPO','')
+DW_CRAWL = os.getenv('DW_CRAWL', False)
 
 
 # read required params
@@ -131,5 +135,3 @@ if 'DW_EXTERNAL_LINK_NAMES' in os.environ or 'DW_EXTERNAL_LINK_VALUES' in os.env
             EXTERNAL_LINKS.append({'display':linkNames[i],'link':linkValues[i]})
     except:
         raise ValueError("if DW_LINK_NAMES or DW_LINK_VALUES are set, both must be set and of equal length")
-
-

@@ -18,6 +18,9 @@ import json
 import tangelo
 import urllib
 import datawake.util.db.datawake_mysql as db
+import datawake.util.deepdive.deepdive as deepdive
+import datawake.util.cdr.cdr as cdr
+from datawake.conf import datawakeconfig as conf
 from datawake.util.dataconnector import factory
 from datawake.util.session.helper import is_in_session
 from datawake.util.session.helper import has_team
@@ -44,7 +47,6 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
     for error in errors:
         tangelo.log("FEATURE EXTRACTION ERROR: "+error)
 
-
     for type,values in features.iteritems():
         connector.insert_entities(url,type,values)
         if len(values) > 0:
@@ -55,9 +57,14 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
                 tangelo.log(features_in_domain)
                 connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
 
-
-
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
+
+    if conf.DW_CRAWL == 'True':
+        doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
+        crawl_data = {'deepdive-id': doc_id, 'user': userEmail}
+        crawl_data['entities'] = features
+        cdr.export(url, content, crawl_data)
+
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
     return json.dumps(result)
@@ -91,6 +98,3 @@ def post(action, *args, **kwargs):
         return tangelo.HTTPStatusCode(400, "invalid service call")
 
     return post_actions.get(action, unknown)(**post_data)
-
-
-
