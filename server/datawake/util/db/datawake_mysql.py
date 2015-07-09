@@ -33,9 +33,9 @@ from datawake.conf import datawakeconfig as dbconfig
 
 UseRestAPI = False
 # StrongLoopHostname = 'localhost'
-StrongLoopHostname = os.environ['LOOPBACK_PORT_3001_TCP_ADDR']
+StrongLoopHostname = dbconfig.LOOPBACK_PORT_3001_TCP_ADDR
 # StrongLoopPort = '5500'
-StrongLoopPort = os.environ['LOOPBACK_PORT_3001_TCP_PORT']
+StrongLoopPort = dbconfig.LOOPBACK_PORT_3001_TCP_PORT
 
 """
 
@@ -858,4 +858,3 @@ def get_marked_features(trail_id):
         params = [trail_id]
         rows = dbGetRows(sql, params)
         return map(lambda x: dict(type=x[0], value=x[1]), rows)
-

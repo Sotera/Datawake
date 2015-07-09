@@ -66,6 +66,8 @@ DEEPDIVE_TOKEN = os.getenv('DEEPDIVE_TOKEN','')
 DEEPDIVE_USER = os.getenv('DEEPDIVE_USER','')
 DEEPDIVE_REPO  = os.getenv('DEEPDIVE_REPO','')
 DW_CRAWL = os.getenv('DW_CRAWL', False)
+LOOPBACK_PORT_3001_TCP_ADDR = os.getenv('LOOPBACK_PORT_3001_TCP_ADDR','localhost')
+LOOPBACK_PORT_3001_TCP_PORT = os.getenv('LOOPBACK_PORT_3001_TCP_PORT','3001')
 
 
 # read required params
