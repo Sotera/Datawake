@@ -4,7 +4,7 @@ html, body, #graph {
 }
 
 body {
- padding-top: 50px;
+ padding-top: 110px;
 }
 
 #control-panel {
@@ -107,4 +107,3 @@ body {
 .checkbox-inline.no_indent:last-child {
   margin-right: 0;
 }
-

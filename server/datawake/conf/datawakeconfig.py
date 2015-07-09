@@ -38,7 +38,7 @@ FORENSIC_ES_CRED:  username:password for elastic search
 FORENSIC_ES_MRPN: max elastic search results to return per node
 """
 
-VERSION_NUMBER="0.6-SNAPSHOT"
+VERSION_NUMBER="0.7-SNAPSHOT"
 
 # enforce requirement for all required paramaters to be set
 
