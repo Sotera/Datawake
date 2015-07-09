@@ -15,17 +15,15 @@ Copyright 2014 Sotera Defense Solutions, Inc.
 """
 
 import json
-from bs4 import BeautifulSoup
-
-import tangelo
 import requests
+import tangelo
+from bs4 import BeautifulSoup
+from datawake.conf import datawakeconfig as conf
 
 def export(team_id,domain_id,trail_id,url,content):
 
      docid = 'dw-%i-%i-%i-%i' %(team_id, domain_id, trail_id, hash(url))
-     username='justin'
-     repository='atf'
-     url = 'https://api.clearcutcorp.com/docs/'+username+'/'+repository+'/'
+     dd_url = '%s/%s/%s/'%(conf.DEEPDIVE_URL, conf.DEEPDIVE_USER, conf.DEEPDIVE_REPO)
 
      soup = BeautifulSoup(content)
      # remove scripts and style
@@ -34,9 +32,9 @@ def export(team_id,domain_id,trail_id,url,content):
 
      text = soup.get_text(strip=True).encode('ascii', 'ignore')
 
-     headers = {'Authorization': 'Token cac59b455cbdedc4c54d767c254b6cea2d8267da'}
+     headers = {'Authorization': 'Token %s' % conf.DEEPDIVE_TOKEN}
      payload = {'docid': docid, 'doc_url': url, 'content': text }
-     r = requests.post(url, headers=headers, data=payload)
+     r = requests.post(dd_url, headers=headers, data=payload)
      tangelo.log('Sending page to deepdive at: %s' % r.url)
 
-     tangelo.log(r.json())
+     return docid
