@@ -31,7 +31,7 @@ import datetime
 from datawake.conf import datawakeconfig as dbconfig
 
 
-UseRestAPI = True
+UseRestAPI = False
 # StrongLoopHostname = 'localhost'
 StrongLoopHostname = dbconfig.LOOPBACK_PORT_3001_TCP_ADDR
 # StrongLoopPort = '5500'
@@ -790,6 +790,17 @@ def remove_domain(domain_id):
         restDelete('DatawakeDomains', domain_id)
     else:
         dbCommitSQL("DELETE FROM datawake_domains WHERE id = %s", [domain_id])
+
+def get_domain_name(domain_id):
+    if UseRestAPI:
+        filter_string = '{"where":{"id":' + domain_id + '}}'
+        domains = restGet('DatawakeDomains', 'filter=' + filter_string)
+        if domains[0]:
+            return domains[0]['name']
+    else:
+        sql = "SELECT name from datawake_domains where id = %s"
+        rows = dbGetRows(sql, [domain_id])
+        return rows[0][0]
 
 
 # Feature extraction additions and removals

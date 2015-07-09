@@ -18,8 +18,9 @@ import json
 import tangelo
 import urllib
 import datawake.util.db.datawake_mysql as db
-import datawake.util.deepdive.deepdive as deepdive
-import datawake.util.cdr.cdr as cdr
+import datawake.util.externalTools.cdr as cdr
+import datawake.util.externalTools.deepdive as deepdive
+import datawake.util.externalTools.dig as dig
 from datawake.conf import datawakeconfig as conf
 from datawake.util.dataconnector import factory
 from datawake.util.session.helper import is_in_session
@@ -30,9 +31,7 @@ from datawake.util.validate.parameters import required_parameters
 from datawake.extractor import master_extractor as extractors
 
 """
-
     - Record a page visit and extract features
-
 """
 
 
@@ -59,11 +58,15 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
 
+    domain = db.get_domain_name(domain_id)
+    tangelo.log('The domain for %i is %s' % (domain_id, domain))
+
     if conf.DW_CRAWL == 'True':
         doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
         crawl_data = {'deepdive-id': doc_id, 'user': userEmail}
         crawl_data['entities'] = features
-        cdr.export(url, content, crawl_data)
+        cdr_payload = cdr.export(domain, url, content, crawl_data)
+        dig.export(domain, cdr_payload)
 
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)

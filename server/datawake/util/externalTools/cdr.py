@@ -24,7 +24,7 @@ import tangelo
 import requests
 import time
 
-def export(url,content, crawl_data):
+def export(domain, url,content, crawl_data):
 
     creds = conf.FORENSIC_ES_CRED
     es_url = 'https://' + creds + '@' + conf.FORENSIC_ES_URL
@@ -38,4 +38,5 @@ def export(url,content, crawl_data):
     text = soup.get_text(strip=True).encode('ascii', 'ignore')
     crawl_data['full-text'] = text
     payload = {'url': url, 'timestamp': int(time.time())*1000, 'team': 'sotera', 'crawler': 'datawake', 'content-type': 'full-raw-html', 'raw_content': content, 'crawl_data': crawl_data, 'images':'','videos':''}
-    res = es.index(index="memex-domains", doc_type='weapons', body=payload)
+    res = es.index(index="memex-domains", doc_type=domain, body=payload)
+    return payload
