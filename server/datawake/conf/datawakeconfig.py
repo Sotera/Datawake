@@ -20,19 +20,19 @@ ES_MRPN: max elastic search results to return per node
 
 VERSION_NUMBER="0.7-SNAPSHOT"
 def get_es_url():
-    return db.getSetting('ES_URL')
+    return db.getSetting('ES_URL','els.istresearch.com:9200')
 def get_es_index():
     return db.getSetting('ES_INDEX')
 def get_es_cred():
     return db.getSetting('ES_CRED')
 def get_es_mrpn():
-    return db.getSetting('ES_MRPN')
+    return db.getSetting('ES_MRPN',10)
 def get_deepdive_url():
-    return db.getSetting('DEEPDIVE_URL')
+    return db.getSetting('DEEPDIVE_URL','https://api.clearcutcorp.com/docs')
 def get_deepdive_token():
     return db.getSetting('DEEPDIVE_TOKEN')
 def get_deepdive_user():
-    return db.getSetting('DEEPDIVE_USER')
+    return db.getSetting('DEEPDIVE_USER','justin')
 def get_deepdive_repo():
     return db.getSetting('DEEPDIVE_REPO')
 def get_dig_url():
@@ -52,9 +52,9 @@ def get_client_ids():
          return []
 
 def get_mock_auth():
-    return db.getSetting('DW_MOCK_AUTH')
+    return db.getSetting('DW_MOCK_AUTH', 1)
 def get_mock_forensic_auth():
-    return db.getSetting('DW_MOCK_FORENSIC_AUTH')
+    return db.getSetting('DW_MOCK_FORENSIC_AUTH', 1)
 
 def get_entity_connection():
     ENTITY_CONNECTION = 'mysql'
