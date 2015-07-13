@@ -21,7 +21,7 @@ import tangelo
 from datawake.conf import datawakeconfig as conf
 
 def export(domain, payload):
-    dig_url = conf.DIG_URL
+    dig_url = conf.get_dig_url()
     payload['domain'] = domain
     try:
         response = requests.post(dig_url, data=payload)

@@ -26,8 +26,8 @@ import time
 
 def export(domain, url,content, crawl_data):
 
-    creds = conf.FORENSIC_ES_CRED
-    es_url = 'https://' + creds + '@' + conf.FORENSIC_ES_URL
+    creds = conf.get_es_cred()
+    es_url = 'https://' + creds + '@' + conf.get_es_url()
     es = Elasticsearch(es_url)
 
     soup = BeautifulSoup(content)

@@ -39,6 +39,8 @@ def get_dig_url():
     return db.getSetting('DIG_URL')
 def crawl():
     return db.getSetting('DW_CRAWL', False)
+def get_mitie_home():
+    return db.getSetting('MITIE_HOME', '/usr/lib/mitie/MITIE')
 
 # read optional params
 

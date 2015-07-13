@@ -8,13 +8,13 @@ extraction of information using MIT-LL MITIE
 import re
 import sys, os
 import extractor
+from datawake.conf import datawakeconfig as conf
 
 # import MITIE
-if 'MITIE_HOME' not in os.environ:
+MITIE_HOME = conf.get_mitie_home();
+if not MITIE_HOME:
     raise ValueError('MITIE_HOME not set.')
 
-
-MITIE_HOME = os.environ['MITIE_HOME']
 sys.path.append(MITIE_HOME+'/mitielib')
 
 from mitie import *

@@ -49,7 +49,10 @@ def getSetting(setting, defaultval=''):
     sql = "SELECT value from datawake_settings WHERE setting = %s"
     params = [setting]
     rows = dbGetRows(sql, params)
-    return rows[0][0]
+    if rows:
+        return rows[0][0]
+    else:
+        return defaultval
 
 
 def insertDomainEntities(domain_id, url, feature_type, feature_values):
