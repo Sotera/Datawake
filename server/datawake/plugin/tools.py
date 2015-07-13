@@ -24,7 +24,7 @@ from datawake.util.session.helper import is_in_session
 
 @is_in_session
 def get_external_links():
-    links = json.dumps(conf.EXTERNAL_LINKS)
+    links = json.dumps(conf.get_external_links())
     tangelo.log(links)
     return links
 

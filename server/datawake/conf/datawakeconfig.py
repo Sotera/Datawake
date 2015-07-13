@@ -72,12 +72,17 @@ def get_entity_connection():
 # The link text may contain "$ATTR" and/or "$VALUE"
 # which will be replaced with an extracted type and value such as "phone" and "5555555555"
 #
-EXTERNAL_LINKS = []
-if 'DW_EXTERNAL_LINK_NAMES' in os.environ or 'DW_EXTERNAL_LINK_VALUES' in os.environ :
-    try:
-        linkNames = os.environ['DW_EXTERNAL_LINK_NAMES'].strip().split(',')
-        linkValues = os.environ['DW_EXTERNAL_LINK_VALUES'].strip().split(',')
-        for i in range( max (len(linkNames),len(linkValues))):
-            EXTERNAL_LINKS.append({'display':linkNames[i],'link':linkValues[i]})
-    except:
-        raise ValueError("if DW_LINK_NAMES or DW_LINK_VALUES are set, both must be set and of equal length")
+
+def get_external_links():
+    EXTERNAL_LINKS = []
+    linkNames = db.getSetting('DW_EXTERNAL_LINK_NAMES')
+    linkValues = db.getSetting('DW_EXTERNAL_LINK_VALUES')
+    if linkNames or linkValues:
+        try:
+            linkNames = linkNames.strip().split(',')
+            linkValues = linkValues.strip().split(',')
+            for i in range( max (len(linkNames),len(linkValues))):
+                EXTERNAL_LINKS.append({'display':linkNames[i],'link':linkValues[i]})
+            return EXTERNAL_LINKS
+        except:
+            raise ValueError("if DW_LINK_NAMES or DW_LINK_VALUES are set, both must be set and of equal length")

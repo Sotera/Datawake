@@ -25,7 +25,8 @@ from datawake.conf import datawakeconfig as conf
 
 @session_helper.is_in_session
 def get_external_links():
-    return json.dumps(conf.EXTERNAL_LINKS)
+    tangelo.log(conf.get_external_links())
+    return json.dumps(conf.get_external_links())
 
 
 get_actions = {
@@ -39,4 +40,3 @@ def get(action, *args, **kwargs):
         return tangelo.HTTPStatusCode(400, "invalid service call")
 
     return get_actions.get(action, unknown)(**kwargs)
-
