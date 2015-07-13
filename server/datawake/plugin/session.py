@@ -21,7 +21,7 @@ import tangelo
 from datawake.util.authentication import factory
 from datawake.util.db import datawake_mysql
 from datawake.util.session import helper
-from datawake.conf.datawakeconfig import MOCK_AUTH
+import datawake.conf.datawakeconfig as config
 
 
 def get_org(email):
@@ -38,7 +38,7 @@ def get_org(email):
 def get_user(token):
     user = helper.get_user()
     if helper.get_token() != token or user is None:
-        user_auth = factory.get_authentication_object(token,MOCK_AUTH)
+        user_auth = factory.get_authentication_object(token,config.get_mock_auth())
         user = user_auth.get_user_from_token()
 
         #tangelo.log('session.post verified user: ' + str(user))

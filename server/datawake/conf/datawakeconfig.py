@@ -28,28 +28,27 @@ def get_es_cred():
 def get_es_mrpn():
     return db.getSetting('ES_MRPN')
 def get_deepdive_url():
-    db.getSetting('DEEPDIVE_URL')
+    return db.getSetting('DEEPDIVE_URL')
 def get_deepdive_token():
-    db.getSetting('DEEPDIVE_TOKEN')
+    return db.getSetting('DEEPDIVE_TOKEN')
 def get_deepdive_user():
-    db.getSetting('DEEPDIVE_USER')
+    return db.getSetting('DEEPDIVE_USER')
 def get_deepdive_repo():
-    db.getSetting('DEEPDIVE_REPO')
+    return db.getSetting('DEEPDIVE_REPO')
 def get_dig_url():
-    db.getSetting('DIG_URL')
+    return db.getSetting('DIG_URL')
 def crawl():
-    db.getSetting('DW_CRAWL', False)
+    return db.getSetting('DW_CRAWL', False)
 
 # read optional params
 
+def get_client_ids():
+    return db.getSetting('DW_GOOGLE_CLIENT_IDS').strip().split(',')
 
-CLIENT_IDS = []
-if 'DW_GOOGLE_CLIENT_IDS' in os.environ:
-    CLIENT_IDS = os.environ['DW_GOOGLE_CLIENT_IDS'].strip().split(',')
-
-
-MOCK_AUTH = 'DW_MOCK_AUTH' in os.environ
-MOCK_FORENSIC_AUTH = 'DW_MOCK_FORENSIC_AUTH' in os.environ
+def get_mock_auth():
+    return db.getSetting('DW_MOCK_AUTH')
+def get_mock_forensic_auth():
+    return db.getSetting('DW_MOCK_FORENSIC_AUTH')
 
 
 # can be "cluster" or "mysql"
