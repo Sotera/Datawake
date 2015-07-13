@@ -1,5 +1,5 @@
 import os
-
+from datawake.util.db import datawake_mysql as db
 
 """
 All configuration for the datawake web server.
@@ -11,30 +11,22 @@ OPTIONAL ENVIRONMENT VARIABLES
 DW_GOOGLE_CLIENT_IDS: list of client ids used for google user authentication
 DW_MOCK_AUTH:  If set actual user authentication is bypassed for browser plugins. (for dev / demos only)
 DW_MOCK_FORENSIC_AUTH:  If set actual user authentication is bypassed for forensic views. (for dev / demos only)
-DW_CONN_TYPE:  Determines mysql or impala / hbase is used to store the generated web index data. default=mysql. can by mysql or cluster
-DW_IMPALA_HOSTS: Comma separated list of impala hosts (cluster only)
-DW_IMPALA_PORT: impala port
-DW_HBASE_HOST: hbase host name (cluster only)
-DW_HBASE_NAMESPACE: hbase namespace (cluster only, default: default)
-DW_HBASE_DOMAIN_ENTITIES_TABLE (cluster only, default: datawake_domain_entities_hbase)
-DW_HBASE_EXTRACTED_ALL_TABLE (cluster only, default: general_extractor_web_index_hbase)
-DW_HBASE_EXTRACTED_DOMAIN_TABLE (cluster only, default: domain_extractor_web_index_hbase)
-DW_EXTERNAL_LINK_NAMES: Comma separated list of links names to provide for extracted features found in the domain index.
-DW_EXTERNAL_LINK_VALUES: Comma separated list of links to provide for extracted features found in the domain index.
-    The link text may contain "$ATTR" and/or "$VALUE", which will be replaced with an extracted type and value such as "phone" and "5555555555"
 
-FORENSIC_ES_URL: url for forensic view elastic search
-FORENSIC_ES_INDEX: the index to search, defaults to none (all indexes)
-FORENSIC_ES_CRED:  username:password for elastic search
-FORENSIC_ES_MRPN: max elastic search results to return per node
+ES_URL: url for forensic view elastic search
+ES_INDEX: the index to search, defaults to none (all indexes)
+ES_CRED:  username:password for elastic search
+ES_MRPN: max elastic search results to return per node
 """
 
 VERSION_NUMBER="0.7-SNAPSHOT"
-
-FORENSIC_ES_URL = os.environ['FORENSIC_ES_URL'] if 'FORENSIC_ES_URL' in os.environ else ''
-FORENSIC_ES_INDEX = os.environ['FORENSIC_ES_INDEX'] if 'FORENSIC_ES_INDEX' in os.environ else ''
-FORENSIC_ES_CRED = os.environ['FORENSIC_ES_CRED'] if 'FORENSIC_ES_CRED' in os.environ else ''
-FORENSIC_ES_MRPN = os.environ['FORENSIC_ES_MRPN'] if 'FORENSIC_ES_MRPN' in os.environ else 10
+def get_es_url():
+    return db.getSetting('ES_URL')
+def get_es_index():
+    return db.getSetting('ES_INDEX')
+def get_es_cred():
+    return db.getSetting('ES_CRED')
+def get_es_mrpn():
+    return db.getSetting('ES_MRPN')
 DEEPDIVE_URL = os.getenv('DEEPDIVE_URL','')
 DEEPDIVE_TOKEN = os.getenv('DEEPDIVE_TOKEN','')
 DEEPDIVE_USER = os.getenv('DEEPDIVE_USER','')

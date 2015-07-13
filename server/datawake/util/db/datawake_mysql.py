@@ -45,6 +45,12 @@ Interface to datawake relational database tables (mysql)
 """
 
 # ## DATACONNECTOR REST CALLS: These replace the calls in the dataconnector classes
+def getSetting(setting, defaultval=''):
+    sql = "SELECT value from datawake_settings WHERE setting = %s"
+    params = [setting]
+    rows = dbGetRows(sql, params)
+    return rows[0][0]
+
 
 def insertDomainEntities(domain_id, url, feature_type, feature_values):
     addedEntities = []

@@ -26,10 +26,10 @@ def query(data):
     tangelo.log(data)
 
     # set default es options
-    url = conf.FORENSIC_ES_URL
-    indd = conf.FORENSIC_ES_INDEX
-    max_results_per_node = conf.FORENSIC_ES_MRPN
-    cred = conf.FORENSIC_ES_CRED
+    url = conf.get_es_url()
+    indd = conf.get_es_index()
+    max_results_per_node = conf.get_es_mrpn()
+    cred = conf.get_es_cred()
     protocol = 'https'
 
     # override defaults if supplied with query
@@ -74,8 +74,9 @@ def query(data):
     return json.dumps(result)
 
 def indices():
-    url = conf.FORENSIC_ES_URL
-    cred = conf.FORENSIC_ES_CRED
+    url = conf.get_es_url()
+    cred = conf.get_es_cred()
+    
     protocol = 'https'
     if cred is not None and len(cred) > 0:
         es = Elasticsearch([protocol+'://' + cred + '@' + url])
