@@ -42,19 +42,19 @@ VERSION_NUMBER="0.7-SNAPSHOT"
 
 # enforce requirement for all required paramaters to be set
 
-REQUIRED_PARAMS = [
-    'DW_DB',
-    'DW_DB_USER',
-    'DW_DB_PASSWORD',
-    # 'DW_DB_HOST',
-    # 'DW_DB_PORT',
-]
-not_found = []
-for param in REQUIRED_PARAMS:
-    if param not in os.environ:
-        not_found.append(param)
-if len(not_found) > 0:
-    raise ValueError("Datawake required environment variables not set: "+str(not_found))
+# REQUIRED_PARAMS = [
+#     'DW_DB',
+#     'DW_DB_USER',
+#     'DW_DB_PASSWORD',
+#     # 'DW_DB_HOST',
+#     # 'DW_DB_PORT',
+# ]
+# not_found = []
+# for param in REQUIRED_PARAMS:
+#     if param not in os.environ:
+#         not_found.append(param)
+# if len(not_found) > 0:
+#     raise ValueError("Datawake required environment variables not set: "+str(not_found))
 
 
 FORENSIC_ES_URL = os.environ['FORENSIC_ES_URL'] if 'FORENSIC_ES_URL' in os.environ else ''
@@ -73,15 +73,15 @@ LOOPBACK_PORT_3001_TCP_PORT = os.getenv('LOOPBACK_PORT_3001_TCP_PORT','3001')
 
 # read required params
 
-DATAWAKE_CORE_DB = {
-    'database': os.environ['DW_DB'],
-    'user': os.environ['DW_DB_USER'],
-    'password':os.environ['DW_DB_PASSWORD'],
-    'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
-    'port': os.environ['MYSQL_PORT_3306_TCP_PORT']
-    # 'host': os.environ['DW_DB_HOST'],
-    # 'port': os.environ['DW_DB_PORT']
-}
+# DATAWAKE_CORE_DB = {
+#     'database': os.environ['DW_DB'],
+#     'user': os.environ['DW_DB_USER'],
+#     'password':os.environ['DW_DB_PASSWORD'],
+#     'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+#     'port': os.environ['MYSQL_PORT_3306_TCP_PORT']
+#     # 'host': os.environ['DW_DB_HOST'],
+#     # 'port': os.environ['DW_DB_PORT']
+# }
 
 
 

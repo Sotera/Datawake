@@ -28,7 +28,7 @@ import tangelo
 import requests
 import datetime
 
-from datawake.conf import datawakeconfig as dbconfig
+from datawake.conf import dbconfig as dbconfig
 
 
 UseRestAPI = False

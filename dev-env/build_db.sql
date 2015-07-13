@@ -2,6 +2,14 @@ DROP DATABASE IF EXISTS memex_sotera;
 CREATE DATABASE IF NOT EXISTS memex_sotera;
 USE memex_sotera;
 
+CREATE TABLE datawake_settings (
+  setting VARCHAR(50) NOT NULL,
+  value VARCHAR(500) NULL,
+  PRIMARY KEY (setting),
+  UNIQUE INDEX setting_UNIQUE (setting ASC)
+  ) ;
+
+
 CREATE TABLE datawake_teams (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(100) DEFAULT NULL,
@@ -124,7 +132,7 @@ CREATE TABLE general_extractor_web_index (
 
 
 CREATE TABLE manual_extractor_markup_additions (
-  id INT NOT NULL AUTO_INCREMENT,	
+  id INT NOT NULL AUTO_INCREMENT,
   trail_id int(11) DEFAULT NULL,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   userEmail varchar(245) DEFAULT NULL,
@@ -138,7 +146,7 @@ CREATE TABLE manual_extractor_markup_additions (
 );
 
 CREATE TABLE manual_extractor_markup_removals (
-  id INT NOT NULL AUTO_INCREMENT,	
+  id INT NOT NULL AUTO_INCREMENT,
   trail_id int(11) DEFAULT NULL,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   userEmail varchar(245) DEFAULT NULL,
@@ -154,31 +162,31 @@ CREATE VIEW vw_team_users AS
 		t.name as teamName,
 		u.team_user_id as userID,
 		u.email
-	FROM (datawake_teams t 
+	FROM (datawake_teams t
 			join datawake_team_users u on((t.id = u.team_id)))
 ;
 
-CREATE VIEW vw_urls_in_trails AS	
+CREATE VIEW vw_urls_in_trails AS
 	SELECT unix_timestamp(dd2.ts) as ts,
 		dd2.id,
 		dd1.trail_id,
-		dd1.team_id,	
+		dd1.team_id,
 		dd2.userEmail,
 		dd1.url,
-		count(2) as hits		
-	FROM datawake_data as dd1 
-	RIGHT JOIN datawake_data as dd2 ON dd1.trail_id = dd2.trail_id and dd1.url = dd2.url 
+		count(2) as hits
+	FROM datawake_data as dd1
+	RIGHT JOIN datawake_data as dd2 ON dd1.trail_id = dd2.trail_id and dd1.url = dd2.url
 	GROUP BY url, ts
 ;
 
-CREATE VIEW vw_domain_entities AS	
-	SELECT	d.id, 
-			d.name, 
-			d.description, 
-			d.team_id, 
-			e.domain_entity_id as domainEntityID, 
-			e.feature_Type, 
+CREATE VIEW vw_domain_entities AS
+	SELECT	d.id,
+			d.name,
+			d.description,
+			d.team_id,
+			e.domain_entity_id as domainEntityID,
+			e.feature_Type,
 			e.feature_Value
 	FROM datawake_domains as d
 		INNER JOIN datawake_domain_entities as e on d.id = e.domain_id
-; 
+;
