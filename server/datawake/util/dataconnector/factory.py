@@ -16,6 +16,7 @@ limitations under the License.
 
 """
 from datawake.conf import datawakeconfig
+from datawake.conf import dbconfig
 
 
 if datawakeconfig.ENTITY_CONNECTION == 'cluster-impala':
@@ -38,7 +39,7 @@ def get_entity_data_connector():
         }
         return ClusterEntityDataConnector(config)
     elif datawakeconfig.ENTITY_CONNECTION == 'mysql':
-        config = datawakeconfig.DATAWAKE_CORE_DB
+        config = dbconfig.DATAWAKE_CORE_DB
         return MySqlEntityDataConnector(config)
     elif datawakeconfig.ENTITY_CONNECTION == 'cluster-hbase':
         prefix = '' if datawakeconfig.HBASE_NAMESPACE == 'default' or datawakeconfig.HBASE_NAMESPACE == '' else datawakeconfig.HBASE_NAMESPACE+':'
@@ -52,11 +53,3 @@ def get_entity_data_connector():
         return HBASEDataConnector(config)
     else:
         raise ValueError("ENTITY_CONNECTION must be mysql, cluster-impala, or cluster-hbase, not " + datawakeconfig.ENTITY_CONNECTION)
-
-
-
-
-
-
-
-
