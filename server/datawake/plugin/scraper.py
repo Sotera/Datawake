@@ -58,15 +58,16 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
 
-    domain = db.get_domain_name(domain_id)
-    tangelo.log('The domain for %i is %s' % (domain_id, domain))
-
     if conf.crawl() == 'True':
+        domain = db.get_domain_name(domain_id)
+        tangelo.log("Sending crawls to external services")
         doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
         crawl_data = {'deepdive-id': doc_id, 'user': userEmail}
         crawl_data['entities'] = features
         cdr_payload = cdr.export(domain, url, content, crawl_data)
         dig.export(domain, cdr_payload)
+    else:
+        tangelo.log("Not sending crawls to external services")
 
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
