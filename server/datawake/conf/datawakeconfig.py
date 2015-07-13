@@ -50,13 +50,16 @@ def get_mock_auth():
 def get_mock_forensic_auth():
     return db.getSetting('DW_MOCK_FORENSIC_AUTH')
 
+def get_entity_connection():
+    ENTITY_CONNECTION = 'mysql'
+    DW_CONN_TYPE = db.getSetting('DW_CONN_TYPE')
+    if DW_CONN_TYPE:
+        ENTITY_CONNECTION = DW_CONN_TYPE.lower()
+    if ENTITY_CONNECTION != 'mysql' and ENTITY_CONNECTION != 'cluster-impala' and ENTITY_CONNECTION != 'cluster-hbase':
+        raise ValueError("DW_CONN_TYPE must be 'mysql' or 'cluster-impala', or 'cluster-hbase' if set. ")
+
 
 # can be "cluster" or "mysql"
-ENTITY_CONNECTION = 'mysql'
-if 'DW_CONN_TYPE' in os.environ:
-    ENTITY_CONNECTION = os.environ['DW_CONN_TYPE'].lower()
-if ENTITY_CONNECTION != 'mysql' and ENTITY_CONNECTION != 'cluster-impala' and ENTITY_CONNECTION != 'cluster-hbase':
-    raise ValueError("DW_CONN_TYPE must be 'mysql' or 'cluster-impala', or 'cluster-hbase' if set. ")
 
 #
 # Link to external tools.  provide a list of links in the form:

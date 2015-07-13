@@ -19,16 +19,16 @@ from datawake.conf import datawakeconfig
 from datawake.conf import dbconfig
 
 
-if datawakeconfig.ENTITY_CONNECTION == 'cluster-impala':
+if datawakeconfig.get_entity_data_connector() == 'cluster-impala':
     from datawake.util.dataconnector.impala_entity_data_connector import ClusterEntityDataConnector
-elif datawakeconfig.ENTITY_CONNECTION == 'cluster-hbase':
+elif datawakeconfig.get_entity_data_connector() == 'cluster-hbase':
     from datawake.util.dataconnector.hbase_entity_data_connector import HBASEDataConnector
-elif datawakeconfig.ENTITY_CONNECTION == 'mysql':
+elif datawakeconfig.get_entity_data_connector() == 'mysql':
     from datawake.util.dataconnector.local_entity_data_connector import MySqlEntityDataConnector
 
 
 def get_entity_data_connector():
-    if datawakeconfig.ENTITY_CONNECTION == 'cluster-impala':
+    if datawakeconfig.get_entity_data_connector() == 'cluster-impala':
         prefix = datawakeconfig.IMPALA_DB+'.' if datawakeconfig.IMPALA_DB != 'default' and datawakeconfig.IMPALA_DB != '' else ''
         config = {
             'hosts': datawakeconfig.IMPALA_HOSTS,
@@ -38,10 +38,10 @@ def get_entity_data_connector():
             'extracted_domain_table': prefix+datawakeconfig.IMPALA_EXTRACTED_DOMAIN_TABLE
         }
         return ClusterEntityDataConnector(config)
-    elif datawakeconfig.ENTITY_CONNECTION == 'mysql':
+    elif datawakeconfig.get_entity_data_connector() == 'mysql':
         config = dbconfig.DATAWAKE_CORE_DB
         return MySqlEntityDataConnector(config)
-    elif datawakeconfig.ENTITY_CONNECTION == 'cluster-hbase':
+    elif datawakeconfig.get_entity_data_connector() == 'cluster-hbase':
         prefix = '' if datawakeconfig.HBASE_NAMESPACE == 'default' or datawakeconfig.HBASE_NAMESPACE == '' else datawakeconfig.HBASE_NAMESPACE+':'
         config = {
             'host': datawakeconfig.HBASE_HOST,
@@ -52,4 +52,4 @@ def get_entity_data_connector():
         }
         return HBASEDataConnector(config)
     else:
-        raise ValueError("ENTITY_CONNECTION must be mysql, cluster-impala, or cluster-hbase, not " + datawakeconfig.ENTITY_CONNECTION)
+        raise ValueError("ENTITY_CONNECTION must be mysql, cluster-impala, or cluster-hbase, not " + datawakeconfig.get_entity_data_connector())
