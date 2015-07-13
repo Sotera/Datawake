@@ -1,18 +1,11 @@
 import os
-
-# REQUIRED_PARAMS = [
-#     'DW_DB',
-#     'DW_DB_USER',
-#     'DW_DB_PASSWORD',
-#     # 'DW_DB_HOST',
-#     # 'DW_DB_PORT',
-# ]
-# not_found = []
-# for param in REQUIRED_PARAMS:
-#     if param not in os.environ:
-#         not_found.append(param)
-# if len(not_found) > 0:
-#     raise ValueError("Datawake required environment variables not set: "+str(not_found))
+"""
+DW_DB: database name
+DW_DB_USER: database username
+DW_DB_PASSWORD: database password
+DW_DB_HOST: database ip address or hostname
+DW_DB_PORT: database port
+"""
 
 DATAWAKE_CORE_DB = {
     'database': os.getenv('DW_DB','memex_sotera'),

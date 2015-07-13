@@ -6,15 +6,6 @@ All configuration for the datawake web server.
 To change the configuration you should set the appropriate environment variables.
 Environment variables are used to set conf to conform to standard docker practices.
 
-REQUIRED ENVIRONMENT VARIABLES
-
-DW_DB: database name
-DW_DB_USER: database username
-DW_DB_PASSWORD: database password
-DW_DB_HOST: database ip address or hostname
-DW_DB_PORT: database port
-
-
 OPTIONAL ENVIRONMENT VARIABLES
 
 DW_GOOGLE_CLIENT_IDS: list of client ids used for google user authentication
@@ -40,23 +31,6 @@ FORENSIC_ES_MRPN: max elastic search results to return per node
 
 VERSION_NUMBER="0.7-SNAPSHOT"
 
-# enforce requirement for all required paramaters to be set
-
-# REQUIRED_PARAMS = [
-#     'DW_DB',
-#     'DW_DB_USER',
-#     'DW_DB_PASSWORD',
-#     # 'DW_DB_HOST',
-#     # 'DW_DB_PORT',
-# ]
-# not_found = []
-# for param in REQUIRED_PARAMS:
-#     if param not in os.environ:
-#         not_found.append(param)
-# if len(not_found) > 0:
-#     raise ValueError("Datawake required environment variables not set: "+str(not_found))
-
-
 FORENSIC_ES_URL = os.environ['FORENSIC_ES_URL'] if 'FORENSIC_ES_URL' in os.environ else ''
 FORENSIC_ES_INDEX = os.environ['FORENSIC_ES_INDEX'] if 'FORENSIC_ES_INDEX' in os.environ else ''
 FORENSIC_ES_CRED = os.environ['FORENSIC_ES_CRED'] if 'FORENSIC_ES_CRED' in os.environ else ''
@@ -67,24 +41,6 @@ DEEPDIVE_USER = os.getenv('DEEPDIVE_USER','')
 DEEPDIVE_REPO  = os.getenv('DEEPDIVE_REPO','')
 DIG_URL = os.getenv('DIG_URL','')
 DW_CRAWL = os.getenv('DW_CRAWL', False)
-LOOPBACK_PORT_3001_TCP_ADDR = os.getenv('LOOPBACK_PORT_3001_TCP_ADDR','localhost')
-LOOPBACK_PORT_3001_TCP_PORT = os.getenv('LOOPBACK_PORT_3001_TCP_PORT','3001')
-
-
-# read required params
-
-# DATAWAKE_CORE_DB = {
-#     'database': os.environ['DW_DB'],
-#     'user': os.environ['DW_DB_USER'],
-#     'password':os.environ['DW_DB_PASSWORD'],
-#     'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
-#     'port': os.environ['MYSQL_PORT_3306_TCP_PORT']
-#     # 'host': os.environ['DW_DB_HOST'],
-#     # 'port': os.environ['DW_DB_PORT']
-# }
-
-
-
 
 # read optional params
 
@@ -104,24 +60,6 @@ if 'DW_CONN_TYPE' in os.environ:
     ENTITY_CONNECTION = os.environ['DW_CONN_TYPE'].lower()
 if ENTITY_CONNECTION != 'mysql' and ENTITY_CONNECTION != 'cluster-impala' and ENTITY_CONNECTION != 'cluster-hbase':
     raise ValueError("DW_CONN_TYPE must be 'mysql' or 'cluster-impala', or 'cluster-hbase' if set. ")
-
-
-IMPALA_HOSTS = os.environ['DW_IMPALA_HOSTS'].strip().split(',') if 'DW_IMPALA_HOSTS' in os.environ else []
-IMPALA_PORT = os.environ['DW_IMPALA_PORT'] if 'DW_IMPALA_PORT' in os.environ else '21050'
-IMPALA_DB = os.environ['DW_IMPALA_DB'] if 'DW_IMPALA_DB' in os.environ else 'default'
-IMPALA_DOMAIN_ENTITIES_TABLE = os.environ['DW_IMPALA_DOMAIN_ENTITIES_TABLE'] if 'DW_IMPALA_DOMAIN_ENTITIES_TABLE' in os.environ else 'datawake_domain_entities'
-IMPALA_EXTRACTED_ALL_TABLE = os.environ['DW_IMPALA_EXTRACTED_ALL_TABLE'] if 'DW_IMPALA_EXTRACTED_ALL_TABLE' in os.environ else 'general_extractor_web_index'
-IMPALA_EXTRACTED_DOMAIN_TABLE = os.environ['DW_IMPALA_EXTRACTED_DOMAIN_TABLE'] if 'DW_IMPALA_EXTRACTED_DOMAIN_TABLE' in os.environ else 'domain_extractor_web_index'
-
-
-HBASE_HOST = os.environ['DW_HBASE_HOST'] if 'DW_HBASE_HOST' in os.environ else 'NO HBASE HOST SET'
-HBASE_PORT = os.environ['DW_HBASE_PORT'] if 'DW_HBASE_PORT' in os.environ else '9090'
-HBASE_NAMESPACE = os.environ['DW_HBASE_NAMESPACE'] if 'DW_HBASE_NAMESPACE' in os.environ else 'default'
-HBASE_DOMAIN_ENTITIES_TABLE = os.environ['DW_HBASE_DOMAIN_ENTITIES_TABLE'] if 'DW_HBASE_DOMAIN_ENTITIES_TABLE' in os.environ else 'datawake_domain_entities_hbase'
-HBASE_EXTRACTED_ALL_TABLE = os.environ['DW_HBASE_EXTRACTED_ALL_TABLE'] if 'DW_HBASE_EXTRACTED_ALL_TABLE' in os.environ else 'general_extractor_web_index_hbase'
-HBASE_EXTRACTED_DOMAIN_TABLE = os.environ['DW_HBASE_EXTRACTED_DOMAIN_TABLE'] if 'DW_HBASE_EXTRACTED_DOMAIN_TABLE' in os.environ else 'domain_extractor_web_index_hbase'
-
-
 
 #
 # Link to external tools.  provide a list of links in the form:
