@@ -511,7 +511,7 @@ function getExternalLinks(mainDiv, type, id) {
           }
           link = link.replace("$ATTR", encodeURI(queryterm))
 
-          linksDiv.append("a").attr("href", link).text(linkObj.display)
+          linksDiv.append("a").attr("href", link).attr("target", "_blank").text(linkObj.display)      
           linksDiv.append("br")
         }
       } else {
