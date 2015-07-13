@@ -27,12 +27,18 @@ def get_es_cred():
     return db.getSetting('ES_CRED')
 def get_es_mrpn():
     return db.getSetting('ES_MRPN')
-DEEPDIVE_URL = os.getenv('DEEPDIVE_URL','')
-DEEPDIVE_TOKEN = os.getenv('DEEPDIVE_TOKEN','')
-DEEPDIVE_USER = os.getenv('DEEPDIVE_USER','')
-DEEPDIVE_REPO  = os.getenv('DEEPDIVE_REPO','')
-DIG_URL = os.getenv('DIG_URL','')
-DW_CRAWL = os.getenv('DW_CRAWL', False)
+def get_deepdive_url():
+    db.getSetting('DEEPDIVE_URL')
+def get_deepdive_token():
+    db.getSetting('DEEPDIVE_TOKEN')
+def get_deepdive_user():
+    db.getSetting('DEEPDIVE_USER')
+def get_deepdive_repo():
+    db.getSetting('DEEPDIVE_REPO')
+def get_dig_url():
+    db.getSetting('DIG_URL')
+def crawl():
+    db.getSetting('DW_CRAWL', False)
 
 # read optional params
 

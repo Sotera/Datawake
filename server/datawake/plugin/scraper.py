@@ -61,7 +61,7 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
     domain = db.get_domain_name(domain_id)
     tangelo.log('The domain for %i is %s' % (domain_id, domain))
 
-    if conf.DW_CRAWL == 'True':
+    if conf.crawl() == 'True':
         doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
         crawl_data = {'deepdive-id': doc_id, 'user': userEmail}
         crawl_data['entities'] = features
