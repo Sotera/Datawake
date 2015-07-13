@@ -43,7 +43,11 @@ def crawl():
 # read optional params
 
 def get_client_ids():
-    return db.getSetting('DW_GOOGLE_CLIENT_IDS').strip().split(',')
+    client_ids = db.getSetting('DW_GOOGLE_CLIENT_IDS')
+    if client_ids:
+        return client_ids.strip().split(',')
+    else:
+         return []
 
 def get_mock_auth():
     return db.getSetting('DW_MOCK_AUTH')
@@ -52,11 +56,12 @@ def get_mock_forensic_auth():
 
 def get_entity_connection():
     ENTITY_CONNECTION = 'mysql'
-    DW_CONN_TYPE = db.getSetting('DW_CONN_TYPE')
-    if DW_CONN_TYPE:
-        ENTITY_CONNECTION = DW_CONN_TYPE.lower()
+    dw_conn_type = db.getSetting('DW_CONN_TYPE')
+    if dw_conn_type:
+        ENTITY_CONNECTION = dw_conn_type.lower()
     if ENTITY_CONNECTION != 'mysql' and ENTITY_CONNECTION != 'cluster-impala' and ENTITY_CONNECTION != 'cluster-hbase':
         raise ValueError("DW_CONN_TYPE must be 'mysql' or 'cluster-impala', or 'cluster-hbase' if set. ")
+    return ENTITY_CONNECTION
 
 
 # can be "cluster" or "mysql"

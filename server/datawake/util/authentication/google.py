@@ -19,8 +19,6 @@ from datawake.conf import datawakeconfig as constants
 
 VALIDATE_TOKEN_URL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
 GET_PROFILE_URL = 'https://www.googleapis.com/plus/v1/people/%s?access_token=%s'
-CLIENT_IDS = constants.get_client_ids()
-
 
 class GoogleAuthentication(Authentication):
     def __init__(self, token):
@@ -43,6 +41,7 @@ class GoogleAuthentication(Authentication):
         return self.get_user(user_id)
 
     def validate_token(self):
+        CLIENT_IDS = constants.get_client_ids()
         url = (VALIDATE_TOKEN_URL % self.token)
         h = httplib2.Http()
         result = json.loads(h.request(url, 'GET')[1])
