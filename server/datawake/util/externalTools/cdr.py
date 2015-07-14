@@ -23,9 +23,7 @@ from elasticsearch import Elasticsearch
 import time
 
 def export(domain, url,content, crawl_data):
-
-    creds = conf.get_es_cred()
-    es_url = 'https://' + creds + '@' + conf.get_es_url()
+    es_url = 'https://%s@%s:%s'%(conf.get_cdr_es_cred(), conf.get_cdr_es_host(), conf.get_cdr_es_port)
     es = Elasticsearch(es_url)
 
     soup = BeautifulSoup(content)
@@ -36,5 +34,5 @@ def export(domain, url,content, crawl_data):
     text = soup.get_text(strip=True).encode('ascii', 'ignore')
     crawl_data['full-text'] = text
     payload = {'url': url, 'timestamp': int(time.time())*1000, 'team': 'sotera', 'crawler': 'datawake', 'content-type': 'full-raw-html', 'raw_content': content, 'crawl_data': crawl_data, 'images':'','videos':''}
-    res = es.index(index="memex-domains", doc_type=domain, body=payload)
+    res = es.index(index=conf.get_cdr_es_index(), doc_type=domain, body=payload)
     return payload

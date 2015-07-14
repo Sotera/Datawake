@@ -26,8 +26,10 @@ def query(data):
     tangelo.log(data)
 
     # set default es options
-    url = conf.get_es_url()
+    host = conf.get_es_host()
+    port = conf.get_es_port()
     indd = conf.get_es_index()
+    url = '%s:%s'%(host,port)
     max_results_per_node = conf.get_es_mrpn()
     cred = conf.get_es_cred()
     protocol = 'https'
@@ -74,9 +76,11 @@ def query(data):
     return json.dumps(result)
 
 def indices():
-    url = conf.get_es_url()
+    host = conf.get_es_host()
+    port = conf.get_es_port()
+    url = '%s:%s'%(host,port)
     cred = conf.get_es_cred()
-    
+
     protocol = 'https'
     if cred is not None and len(cred) > 0:
         es = Elasticsearch([protocol+'://' + cred + '@' + url])

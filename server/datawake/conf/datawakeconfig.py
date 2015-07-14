@@ -27,6 +27,14 @@ def get_es_cred():
     return db.getSetting('ES_CRED')
 def get_es_mrpn():
     return db.getSetting('ES_MRPN',10)
+def get_cdr_es_host():
+    return db.getSetting('CDR_ES_HOST','els.istresearch.com')
+def get_cdr_es_port():
+    return db.getSetting('CDR_ES_PORT','9200')
+def get_cdr_es_cred():
+    return db.getSetting('CDR_ES_CRED')
+def get_cdr_es_index():
+    return db.getSettings('CDR_ES_INDEX','memex-domains')
 def get_deepdive_url():
     return db.getSetting('DEEPDIVE_URL','https://api.clearcutcorp.com/docs')
 def get_deepdive_token():
