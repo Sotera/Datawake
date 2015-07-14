@@ -20,8 +20,6 @@ from datawake.conf import datawakeconfig as conf
 from elasticsearch import Elasticsearch
 
 
-import tangelo
-import requests
 import time
 
 def export(domain, url,content, crawl_data):
