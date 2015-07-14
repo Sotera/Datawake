@@ -6,7 +6,22 @@ All configuration for the datawake web server.
 To change the configuration you should set the appropriate environment variables.
 Environment variables are used to set conf to conform to standard docker practices.
 
-OPTIONAL ENVIRONMENT VARIABLES
+OPTIONAL VARIABLES
+ES_URL:
+ES_INDEX
+ES_CRED
+ES_MRPN
+CDR_ES_HOST
+CDR_ES_PORT
+CDR_ES_CRED
+CDR_ES_INDEX
+DEEPDIVE_URL
+DEEPDIVE_TOKEN
+DEEPDIVE_USER
+DEEPDIVE_REPO
+DIG_URL
+DW_CRAWL
+MITIE_HOME
 
 DW_GOOGLE_CLIENT_IDS: list of client ids used for google user authentication
 DW_MOCK_AUTH:  If set actual user authentication is bypassed for browser plugins. (for dev / demos only)
@@ -19,8 +34,10 @@ ES_MRPN: max elastic search results to return per node
 """
 
 VERSION_NUMBER="0.7-SNAPSHOT"
-def get_es_url():
-    return db.getSetting('ES_URL','els.istresearch.com:9200')
+def get_es_host():
+    return db.getSetting('ES_URL','els.istresearch.com')
+def get_es_port():
+    return db.getSetting('ES_PORT','9200')
 def get_es_index():
     return db.getSetting('ES_INDEX')
 def get_es_cred():
