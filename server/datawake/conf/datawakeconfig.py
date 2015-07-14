@@ -16,22 +16,16 @@ CDR_ES_HOST: Elasticsearch host for cdr
 CDR_ES_PORT: Elasticsearch port for cdr
 CDR_ES_CRED: Elasticsearch credentials for cdr user:password
 CDR_ES_INDEX: Elasticsearch index for cdr
-DEEPDIVE_URL
-DEEPDIVE_TOKEN
-DEEPDIVE_USER
-DEEPDIVE_REPO
-DIG_URL
+DEEPDIVE_URL: 
+DEEPDIVE_TOKEN:
+DEEPDIVE_USER:
+DEEPDIVE_REPO:
+DIG_URL:
 DW_CRAWL: if set, send pages to cdr and other external tools
 MITIE_HOME: mitie home
-
 DW_GOOGLE_CLIENT_IDS: list of client ids used for google user authentication
 DW_MOCK_AUTH:  If set actual user authentication is bypassed for browser plugins. (for dev / demos only)
 DW_MOCK_FORENSIC_AUTH:  If set actual user authentication is bypassed for forensic views. (for dev / demos only)
-
-ES_URL: url for forensic view elastic search
-ES_INDEX: the index to search, defaults to none (all indexes)
-ES_CRED:  username:password for elastic search
-ES_MRPN: max elastic search results to return per node
 """
 
 VERSION_NUMBER="0.7-SNAPSHOT"
