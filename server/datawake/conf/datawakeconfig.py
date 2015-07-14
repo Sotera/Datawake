@@ -7,21 +7,22 @@ To change the configuration you should set the appropriate environment variables
 Environment variables are used to set conf to conform to standard docker practices.
 
 OPTIONAL VARIABLES
-ES_URL:
-ES_INDEX
-ES_CRED
-ES_MRPN
-CDR_ES_HOST
-CDR_ES_PORT
-CDR_ES_CRED
-CDR_ES_INDEX
+ES_HOST: Elasticsearch host for forensic
+ES_PORT: Elasticsearch port for forensic
+ES_INDEX: Elasticsearch index for forensic
+ES_CRED: Elasticsearch credentials for forensic user:password
+ES_MRPN: Elasticsearch max rusults per node for forensic
+CDR_ES_HOST: Elasticsearch host for cdr
+CDR_ES_PORT: Elasticsearch port for cdr
+CDR_ES_CRED: Elasticsearch credentials for cdr user:password
+CDR_ES_INDEX: Elasticsearch index for cdr
 DEEPDIVE_URL
 DEEPDIVE_TOKEN
 DEEPDIVE_USER
 DEEPDIVE_REPO
 DIG_URL
-DW_CRAWL
-MITIE_HOME
+DW_CRAWL: if set, send pages to cdr and other external tools
+MITIE_HOME: mitie home
 
 DW_GOOGLE_CLIENT_IDS: list of client ids used for google user authentication
 DW_MOCK_AUTH:  If set actual user authentication is bypassed for browser plugins. (for dev / demos only)
