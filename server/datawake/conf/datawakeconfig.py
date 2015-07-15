@@ -16,7 +16,7 @@ CDR_ES_HOST: Elasticsearch host for cdr
 CDR_ES_PORT: Elasticsearch port for cdr
 CDR_ES_CRED: Elasticsearch credentials for cdr user:password
 CDR_ES_INDEX: Elasticsearch index for cdr
-DEEPDIVE_URL: 
+DEEPDIVE_URL:
 DEEPDIVE_TOKEN:
 DEEPDIVE_USER:
 DEEPDIVE_REPO:
@@ -46,7 +46,7 @@ def get_cdr_es_port():
 def get_cdr_es_cred():
     return db.getSetting('CDR_ES_CRED')
 def get_cdr_es_index():
-    return db.getSettings('CDR_ES_INDEX','memex-domains')
+    return db.getSetting('CDR_ES_INDEX','memex-domains')
 def get_deepdive_url():
     return db.getSetting('DEEPDIVE_URL','https://api.clearcutcorp.com/docs')
 def get_deepdive_token():
