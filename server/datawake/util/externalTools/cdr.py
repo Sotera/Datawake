@@ -23,7 +23,7 @@ from elasticsearch import Elasticsearch
 import time
 
 def export(domain, url,content, crawl_data):
-    es_url = 'https://%s@%s:%s'%(conf.get_cdr_es_cred(), conf.get_cdr_es_host(), conf.get_cdr_es_port)
+    es_url = 'https://%s@%s:%s'%(conf.get_cdr_es_cred(), conf.get_cdr_es_host(), conf.get_cdr_es_port())
     es = Elasticsearch(es_url)
 
     soup = BeautifulSoup(content)
