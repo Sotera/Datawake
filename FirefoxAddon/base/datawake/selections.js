@@ -32,7 +32,6 @@ function useContextMenu(tab) {
             items: [
                 contextMenu.Item({ label: "Capture Selection", data: "selection", context: contextMenu.SelectionContext()}),
                 contextMenu.Item({ label: "Tag a feature", data: "feedback", context: contextMenu.SelectionContext()}),
-                contextMenu.Item({ label: "InstaWake", data: "geolocate", context: contextMenu.SelectionContext()}),
                 contextMenu.Separator(),
                 contextMenu.Item({ label: "Hide Selections", data: "hide"}),
                 contextMenu.Item({ label: "Show Selections", data: "highlight"}),
