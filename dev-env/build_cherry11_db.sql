@@ -382,18 +382,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `vw_domain_entities`;
 /*!50001 DROP VIEW IF EXISTS `vw_domain_entities`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `vw_domain_entities` (
-  `id` int(11),
-  `name` varchar(300),
-  `description` text,
-  `team_id` int(11),
-  `domainEntityID` int(11),
-  `feature_Type` varchar(100),
-  `feature_Value` varchar(1024)
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
+CREATE VIEW vw_domain_entities AS
+	SELECT	d.id,
+			d.name,
+			d.description,
+			d.team_id,
+			e.domain_entity_id as domainEntityID,
+			e.feature_Type,
+			e.feature_Value
+	FROM datawake_domains as d
+		INNER JOIN datawake_domain_entities as e on d.id = e.domain_id;
 
 --
 -- Temporary table structure for view `vw_team_users`
@@ -401,99 +399,33 @@ SET character_set_client = @saved_cs_client;
 
 DROP TABLE IF EXISTS `vw_team_users`;
 /*!50001 DROP VIEW IF EXISTS `vw_team_users`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `vw_team_users` (
-  `teamID` int(11),
-  `teamName` varchar(100),
-  `userID` int(11),
-  `email` varchar(245)
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
+CREATE VIEW vw_team_users AS
+	SELECT t.id as teamID,
+		t.name as teamName,
+		t.description as teamDescription
+		u.team_user_id as userID,
+		u.email
+	FROM (datawake_teams t
+			join datawake_team_users u on(t.id = u.team_id));
 --
 -- Temporary table structure for view `vw_urls_in_trails`
 --
 
 DROP TABLE IF EXISTS `vw_urls_in_trails`;
 /*!50001 DROP VIEW IF EXISTS `vw_urls_in_trails`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `vw_urls_in_trails` (
-  `ts` bigint(10),
-  `id` int(11),
-  `trail_id` int(11),
-  `team_id` int(11),
-  `userEmail` varchar(245),
-  `url` text,
-  `hits` bigint(21)
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
+CREATE VIEW vw_urls_in_trails AS
+	SELECT unix_timestamp(dd2.ts) as ts,
+		dd2.id,
+		dd1.domain_id
+		dd1.trail_id,
+		dd1.team_id,
+		dd2.userEmail,
+		dd3.name as domainName,
+		dd3.description as domainDescription,
+		dd1.url,
+		count(2) as hits
+	FROM datawake_data as dd1
+	RIGHT JOIN datawake_data as dd2 ON dd1.trail_id = dd2.trail_id and dd1.url = dd2.url
+	RIGHT JOIN datawake_domains dd3 on dd1.domain_id = dd3.id
+	GROUP BY url, ts;
 
---
--- Final view structure for view `vw_domain_entities`
---
-
-/*!50001 DROP TABLE IF EXISTS `vw_domain_entities`*/;
-/*!50001 DROP VIEW IF EXISTS `vw_domain_entities`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vw_domain_entities` AS select `d`.`id` AS `id`,`d`.`name` AS `name`,`d`.`description` AS `description`,`d`.`team_id` AS `team_id`,`e`.`domain_entity_id` AS `domainEntityID`,`e`.`feature_type` AS `feature_Type`,`e`.`feature_value` AS `feature_Value` from (`datawake_domains` `d` join `datawake_domain_entities` `e` on((`d`.`id` = `e`.`domain_id`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vw_team_users`
---
-
-/*!50001 DROP TABLE IF EXISTS `vw_team_users`*/;
-/*!50001 DROP VIEW IF EXISTS `vw_team_users`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vw_team_users` AS select `t`.`id` AS `teamID`,`t`.`name` AS `teamName`,`u`.`team_user_id` AS `userID`,`u`.`email` AS `email` from (`datawake_teams` `t` join `datawake_team_users` `u` on((`t`.`id` = `u`.`team_id`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vw_urls_in_trails`
---
-
-/*!50001 DROP TABLE IF EXISTS `vw_urls_in_trails`*/;
-/*!50001 DROP VIEW IF EXISTS `vw_urls_in_trails`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vw_urls_in_trails` AS select unix_timestamp(`dd2`.`ts`) AS `ts`,`dd2`.`id` AS `id`,`dd1`.`trail_id` AS `trail_id`,`dd1`.`team_id` AS `team_id`,`dd2`.`userEmail` AS `userEmail`,`dd1`.`url` AS `url`,count(2) AS `hits` from (`datawake_data` `dd2` left join `datawake_data` `dd1` on(((`dd1`.`trail_id` = `dd2`.`trail_id`) and (`dd1`.`url` = `dd2`.`url`)))) group by `dd1`.`url`,unix_timestamp(`dd2`.`ts`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2015-07-07 17:26:22

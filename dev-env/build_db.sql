@@ -160,22 +160,27 @@ CREATE TABLE manual_extractor_markup_removals (
 CREATE VIEW vw_team_users AS
 	SELECT t.id as teamID,
 		t.name as teamName,
+		t.description as teamDescription,
 		u.team_user_id as userID,
 		u.email
 	FROM (datawake_teams t
-			join datawake_team_users u on((t.id = u.team_id)))
+			join datawake_team_users u on(t.id = u.team_id))
 ;
 
 CREATE VIEW vw_urls_in_trails AS
 	SELECT unix_timestamp(dd2.ts) as ts,
 		dd2.id,
+		dd1.domain_id,
 		dd1.trail_id,
 		dd1.team_id,
 		dd2.userEmail,
+		dd3.name as domainName,
+		dd3.description as domainDescription,
 		dd1.url,
 		count(2) as hits
 	FROM datawake_data as dd1
 	RIGHT JOIN datawake_data as dd2 ON dd1.trail_id = dd2.trail_id and dd1.url = dd2.url
+	RIGHT JOIN datawake_domains dd3 on dd1.domain_id = dd3.id
 	GROUP BY url, ts
 ;
 
