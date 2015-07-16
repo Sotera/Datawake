@@ -402,7 +402,7 @@ DROP TABLE IF EXISTS `vw_team_users`;
 CREATE VIEW vw_team_users AS
 	SELECT t.id as teamID,
 		t.name as teamName,
-		t.description as teamDescription
+		t.description as teamDescription,
 		u.team_user_id as userID,
 		u.email
 	FROM (datawake_teams t
@@ -416,7 +416,7 @@ DROP TABLE IF EXISTS `vw_urls_in_trails`;
 CREATE VIEW vw_urls_in_trails AS
 	SELECT unix_timestamp(dd2.ts) as ts,
 		dd2.id,
-		dd1.domain_id
+		dd1.domain_id,
 		dd1.trail_id,
 		dd1.team_id,
 		dd2.userEmail,
@@ -429,3 +429,14 @@ CREATE VIEW vw_urls_in_trails AS
 	RIGHT JOIN datawake_domains dd3 on dd1.domain_id = dd3.id
 	GROUP BY url, ts;
 
+DROP TABLE IF EXISTS `vw_datawake_domains`;
+CREATE VIEW vw_datawake_domains AS
+	SELECT 	d.id as domainId,
+			d.name as domainName,
+			d.description as domainDescription,
+			d.team_id as teamId,
+			t.name as teamName,
+			t.description as teamDescription
+	FROM datawake_domains as d
+		INNER JOIN datawake_teams t on d.team_id = t.id	
+;

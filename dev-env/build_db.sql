@@ -158,10 +158,10 @@ CREATE TABLE manual_extractor_markup_removals (
 );
 
 CREATE VIEW vw_team_users AS
-	SELECT t.id as teamID,
+	SELECT t.id as teamId,
 		t.name as teamName,
 		t.description as teamDescription,
-		u.team_user_id as userID,
+		u.team_user_id as teamUserID,
 		u.email
 	FROM (datawake_teams t
 			join datawake_team_users u on(t.id = u.team_id))
@@ -194,4 +194,16 @@ CREATE VIEW vw_domain_entities AS
 			e.feature_Value
 	FROM datawake_domains as d
 		INNER JOIN datawake_domain_entities as e on d.id = e.domain_id
+;
+
+DROP TABLE IF EXISTS `vw_datawake_domains`;
+CREATE VIEW vw_datawake_domains AS
+	SELECT 	d.id as domainId,
+			d.name as domainName,
+			d.description as domainDescription,
+			d.team_id as teamId,
+			t.name as teamName,
+			t.description as teamDescription
+	FROM datawake_domains as d
+		INNER JOIN datawake_teams t on d.team_id = t.id	
 ;
