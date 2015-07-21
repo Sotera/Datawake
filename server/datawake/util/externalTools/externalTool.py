@@ -23,7 +23,7 @@ from pykafka import KafkaException
 import requests
 import time
 
-def export_rest(service_url, service_cred, service_index,domain, cdr, domain_name):
+def export_rest(service_url, service_cred, service_index, domain_id, domain_name, cdr):
 
     headers = {'Authorization': 'Token %s' % conf.get_deepdive_token()}
     payload = {'docid': docid, 'doc_url': url, 'content': text }
@@ -55,7 +55,7 @@ def export_es(service_url, service_cred, service_index,cdr, domain_name):
 
 
 
-def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name,):
+def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email):
     docid = 'dw-%i-%i-%i-%i' %(team_id, domain_id, trail_id, hash(url))
     soup = BeautifulSoup(content)
     # remove scripts and style
@@ -63,6 +63,6 @@ def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name,
         script.extract()
 
     text = soup.get_text(strip=True).encode('ascii', 'ignore')
-    crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name}
+    crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name, 'user-email': user_email}
     return {'url': url, 'timestamp': int(time.time())*1000, 'team': 'sotera', 'crawler': 'datawake', 'content-type': 'full-raw-html', 'raw_content': content, 'crawl_data': crawl_data, 'images':'','videos':''}
 
