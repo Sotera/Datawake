@@ -58,8 +58,15 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
                 connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
+    export_page(url, content, features, team_id, domain_id, trail_id)
+    count = db.getUrlCount(team_id,domain_id,trail_id, url)
+    result = dict(id=id, count=count)
+    return json.dumps(result)
+
+
+def export_page(url, content, entities, team_id, domain_id, trail_id):
     domain_name = db.get_domain_name(domain_id)
-    cdr = externalTool.buildCdr(url, content, features, team_id, domain_id, trail_id, domain_name)
+    cdr = externalTool.buildCdr(url, content, entities, team_id, domain_id, trail_id, domain_name)
 
     for service in db.get_services(domain_id):
         response = False
@@ -70,15 +77,13 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
         elif service['type'] == 'ES':
             response = externalTool.exportKafka(service['url'], service['cred'], service['index'], cdr, domain_name)
 
-        db.service_status()
+        status = 'error'
+        if response:
+            status = 'sent'
+        db.service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
 
-        tangelo.log('Sent %s data to %s-%s' % (domain_name, service['type'], service['index']))
+        tangelo.log('Sent %s data to %s-%s, status: %s' % (domain_name, service['type'], service['index'], status))
         doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
-    count = db.getUrlCount(team_id,domain_id,trail_id, url)
-    result = dict(id=id, count=count)
-    return json.dumps(result)
-
-
 
 @is_in_session
 @has_team

@@ -885,3 +885,18 @@ def get_marked_features(trail_id):
         params = [trail_id]
         rows = dbGetRows(sql, params)
         return map(lambda x: dict(type=x[0], value=x[1]), rows)
+
+def get_services(domain_id):
+    if UseRestAPI:
+        print None
+    else:
+        sql = "select recipient_id, recipient_name, recipient_index, credentials from datawake_xmit_recipient where recipient_domain_id = %S"
+        params = [domain_id]
+        rows = dbGetRows(sql, params)
+        return map(lambda x: dict(id=x[0], name=x[1], index=x[2], cred=x[3]))
+
+# service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
+def service_status(id, type, url, domain_id, team_id, trail_id, status):
+    sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, ts) values(%s,%s,%s,%s,%s,%s,sysdate)'
+    params = [id, type, url, domain_id, team_id, trail_id, status]
+    return dbCommitSQL(sql, params)
