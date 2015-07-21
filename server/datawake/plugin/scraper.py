@@ -30,6 +30,10 @@ from datawake.util.session import helper
 from datawake.util.validate.parameters import required_parameters
 from datawake.extractor import master_extractor as extractors
 
+import tika
+from tika import parser
+
+
 """
     - Record a page visit and extract features
 """
