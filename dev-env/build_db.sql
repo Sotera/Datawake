@@ -157,6 +157,44 @@ CREATE TABLE manual_extractor_markup_removals (
   FOREIGN KEY (trail_id) REFERENCES datawake_trails (id) ON DELETE CASCADE
 );
 
+CREATE TABLE datawake_xmit_recipient (
+  recipient_id int(11) NOT NULL AUTO_INCREMENT,
+  recipient_name varchar(255) DEFAULT NULL,
+  recipient_index varchar(255) DEFAULT NULL,
+  recipient_domain_id int(11) DEFAULT NULL,
+  recipient_team_id int(11) DEFAULT NULL,
+  recipient_trail_id int(11) DEFAULT NULL,
+  credentials varchar(255) DEFAULT NULL,
+  PRIMARY KEY (recipient_id),
+  KEY fkRecDomain (recipient_domain_id),
+  KEY fkRecTeam (recipient_team_id),
+  KEY fkRecTrail (recipient_trail_id),
+  CONSTRAINT fkRecDomain FOREIGN KEY (recipient_domain_id) REFERENCES datawake_domains (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fkRecTeam FOREIGN KEY (recipient_team_id) REFERENCES datawake_teams (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fkRecTrail FOREIGN KEY (recipient_trail_id) REFERENCES datawake_trails (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE datawake_xmit (
+  xmit_id int(11) NOT NULL AUTO_INCREMENT,
+  recipient_id int(11) DEFAULT NULL,
+  service_type varchar(10) DEFAULT NULL,
+  datawake_url varchar(255) DEFAULT NULL,
+  domain_id int(11) DEFAULT NULL,
+  team_id int(11) DEFAULT NULL,
+  trail_id int(11) DEFAULT NULL,
+  ts timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (xmit_id),
+  KEY fkRecipient (recipient_id),
+  KEY fkDomain (domain_id),
+  KEY fkTrail (trail_id),
+  KEY fkTeam (team_id),
+  CONSTRAINT fkDomain FOREIGN KEY (domain_id) REFERENCES datawake_domains (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fkRecipient FOREIGN KEY (recipient_id) REFERENCES datawake_xmit_recipient (recipient_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fkTeam FOREIGN KEY (team_id) REFERENCES datawake_teams (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fkTrail FOREIGN KEY (trail_id) REFERENCES datawake_trails (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
 CREATE VIEW vw_team_users AS
 	SELECT t.id as teamId,
 		t.name as teamName,
@@ -206,4 +244,42 @@ CREATE VIEW vw_datawake_domains AS
 			t.description as teamDescription
 	FROM datawake_domains as d
 		INNER JOIN datawake_teams t on d.team_id = t.id	
+;
+
+CREATE VIEW vw_xmit_recipients AS
+	SELECT	r.recipient_id AS recipientId,
+		r.recipient_name AS recipientName,
+		r.credentials AS recipientCredentials,
+		r.recipient_index AS recipientIndex,
+		x.service_type AS serviceType,
+		r.recipient_domain_id AS recipientDomainId,
+		d.name AS recipientDomain,
+		r.recipient_team_id AS recipientTeamId,
+		t.name AS recipientTeam,
+		r.recipient_trail_id AS recipientTrailId,
+		dt.name AS recipientTrail 
+	FROM datawake_xmit_recipient r
+			join datawake_xmit x on r.recipient_id = x.recipient_id
+			left join datawake_domains d on r.recipient_domain_id = d.id
+			left join datawake_teams t on r.recipient_team_id = t.id
+			left join datawake_trails dt on r.recipient_trail_id = dt.id
+;
+
+CREATE VIEW vw_xmit_log AS
+	SELECT x.xmit_id AS xmitId,
+	x.recipient_id AS recipientId,
+	r.recipient_name AS recipientName,
+	x.service_type AS serviceType,
+	x.datawake_url AS datawakeUrl,
+	x.domain_id AS domainId,
+	d.name AS domainName,
+	x.team_id AS teamId,
+	t.name AS teamName,
+	x.trail_id AS trailId,
+	dt.name AS trailName 
+	FROM datawake_xmit x
+			join datawake_xmit_recipient r on x.recipient_id = r.recipient_id
+			left join datawake_domains d on x.domain_id = d.id
+			left join datawake_teams t on x.team_id = t.id
+			left join datawake_trails dt on x.trail_id = dt.id
 ;
