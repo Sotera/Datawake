@@ -496,7 +496,7 @@ CREATE VIEW vw_xmit_recipients AS
 			left join datawake_teams t on r.recipient_team_id = t.id
 			left join datawake_trails dt on r.recipient_trail_id = dt.id
 ;
-DROP VIEW IF EXISTS `vw_xmit_recipients`;	
+DROP VIEW IF EXISTS `vw_xmit_log`;	
 CREATE VIEW vw_xmit_log AS
 	SELECT x.xmit_id AS xmitId,
 	x.recipient_id AS recipientId,
