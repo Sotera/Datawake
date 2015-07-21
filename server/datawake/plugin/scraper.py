@@ -21,6 +21,7 @@ import datawake.util.db.datawake_mysql as db
 import datawake.util.externalTools.cdr as cdr
 import datawake.util.externalTools.deepdive as deepdive
 import datawake.util.externalTools.dig as dig
+import datawake.util.externalTools.externalTool as externalTool
 from datawake.conf import datawakeconfig as conf
 from datawake.util.dataconnector import factory
 from datawake.util.session.helper import is_in_session
@@ -57,18 +58,22 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
                 connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
+    domain_name = db.get_domain_name(domain_id)
+    cdr = externalTool.buildCdr(url, content, features, team_id, domain_id, trail_id, domain_name)
 
-    if conf.crawl() == 'True':
-        domain = db.get_domain_name(domain_id)
-        tangelo.log("Sending crawls to external services")
+    for service in db.get_services(domain_id):
+        response = False
+        if service['type'] == 'REST':
+            response = externalTool.exportRest(service['url'], service['cred'], service['index'], cdr, domain_name)
+        elif service['type'] == 'KAFKA':
+            response = externalTool.exportKafka(service['url'], service['index'], cdr)
+        elif service['type'] == 'ES':
+            response = externalTool.exportKafka(service['url'], service['cred'], service['index'], cdr, domain_name)
+
+        db.service_status()
+
+        tangelo.log('Sent %s data to %s-%s' % (domain_name, service['type'], service['index']))
         doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
-        crawl_data = {'deepdive-id': doc_id, 'user': userEmail}
-        crawl_data['entities'] = features
-        cdr_payload = cdr.export(domain, url, content, crawl_data)
-        dig.export(domain, cdr_payload)
-    else:
-        tangelo.log("Not sending crawls to external services")
-
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
     return json.dumps(result)
