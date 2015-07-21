@@ -21,6 +21,7 @@ import datawake.util.db.datawake_mysql as db
 import datawake.util.externalTools.cdr as cdr
 import datawake.util.externalTools.deepdive as deepdive
 import datawake.util.externalTools.dig as dig
+import datawake.util.externalTools.externalTool as tools
 from datawake.conf import datawakeconfig as conf
 from datawake.util.dataconnector import factory
 from datawake.util.session.helper import is_in_session
@@ -40,7 +41,7 @@ from tika import parser
 
 
 
-def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
+def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
 
     content = urllib.unquote(content).encode('utf-8')
     url = url.encode('utf-8')
@@ -62,21 +63,40 @@ def scrape_page(team_id,domain_id,trail_id,url,content,userEmail):
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
 
-    if conf.crawl() == 'True':
-        domain = db.get_domain_name(domain_id)
-        tangelo.log("Sending crawls to external services")
-        doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
-        crawl_data = {'deepdive-id': doc_id, 'user': userEmail}
-        crawl_data['entities'] = features
-        cdr_payload = cdr.export(domain, url, content, crawl_data)
-        dig.export(domain, cdr_payload)
-    else:
-        tangelo.log("Not sending crawls to external services")
+    # if conf.crawl() == 'True':
+    #     domain = db.get_domain_name(domain_id)
+    #     tangelo.log("Sending crawls to external services")
+    #     doc_id = deepdive.export(team_id,domain_id,trail_id,url,content)
+    #     crawl_data = {'deepdive-id': doc_id, 'user': user_email}
+    #     crawl_data['entities'] = features
+    #     cdr_payload = cdr.export(domain, url, content, crawl_data)
+    #     dig.export(domain, cdr_payload)
+    # else:
+    #     tangelo.log("Not sending crawls to external services")
+    export_to_services(domain_id, team_id, trail_id, url, content, user_email, features)
 
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
     return json.dumps(result)
 
+def export_to_services(domain_id, team_id, trail_id, url, content, user_email, entities):
+    domain_name = db.get_domain_name(domain_id)
+    cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email)
+    deepdive.export(cdr)
+    for service in db.get_services(domain_id):
+        result = False
+        if service['type'] == 'KAFKA':
+            result = tools.export_kafka(service['url'], service['index'], cdr)
+        elif service['type'] == 'ES':
+            result = tools.export_es(service['url'], service['cred'], service['index'], cdr, domain_name)
+        elif service['type'] == 'REST':
+            result = tools.export_rest(service['url'], service['cred'], service['index'], domain_id, domain_name, cdr)
+        if result:
+            status = 'success'
+        else:
+            status = 'error'
+        db.service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
+        tangelo.log('Submited %s for %s to %s: %s' % (url, domain_name, service['name'], status))
 
 
 @is_in_session
