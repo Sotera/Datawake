@@ -515,7 +515,8 @@ CREATE VIEW vw_xmit_log AS
 	x.team_id AS teamId,
 	t.name AS teamName,
 	x.trail_id AS trailId,
-	dt.name AS trailName 
+	dt.name AS trailName,
+	x.ts as timeStamp
 	FROM datawake_xmit x
 			join datawake_xmit_recipient r on x.recipient_id = r.recipient_id
 			left join datawake_domains d on x.domain_id = d.id
