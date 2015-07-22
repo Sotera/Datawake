@@ -263,7 +263,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_trail_id AS recipientTrailId,
 		dt.name AS recipientTrail 
 	FROM datawake_xmit_recipient r
-			join datawake_xmit x on r.recipient_id = x.recipient_id
+			left join datawake_xmit x on r.recipient_id = x.recipient_id
 			left join datawake_domains d on r.recipient_domain_id = d.id
 			left join datawake_teams t on r.recipient_team_id = t.id
 			left join datawake_trails dt on r.recipient_trail_id = dt.id
