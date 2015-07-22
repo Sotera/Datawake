@@ -383,7 +383,9 @@ CREATE TABLE datawake_xmit_recipient (
   recipient_domain_id int(11) DEFAULT NULL,
   recipient_team_id int(11) DEFAULT NULL,
   recipient_trail_id int(11) DEFAULT NULL,
+  recipient_url varchar(255) DEFAULT NULL,
   credentials varchar(255) DEFAULT NULL,
+  service_type varchar(255) DEFAULT NULL,
   PRIMARY KEY (recipient_id),
   KEY fkRecDomain (recipient_domain_id),
   KEY fkRecTeam (recipient_team_id),
@@ -485,6 +487,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.credentials AS recipientCredentials,
 		r.recipient_index AS recipientIndex,
 		x.service_type AS serviceType,
+		r.recipient_url as recipientURL,
 		r.recipient_domain_id AS recipientDomainId,
 		d.name AS recipientDomain,
 		r.recipient_team_id AS recipientTeamId,
@@ -497,11 +500,13 @@ CREATE VIEW vw_xmit_recipients AS
 			left join datawake_teams t on r.recipient_team_id = t.id
 			left join datawake_trails dt on r.recipient_trail_id = dt.id
 ;
+
 DROP VIEW IF EXISTS `vw_xmit_log`;	
 CREATE VIEW vw_xmit_log AS
 	SELECT x.xmit_id AS xmitId,
 	x.recipient_id AS recipientId,
 	r.recipient_name AS recipientName,
+	r.recipient_url as recipientURL,
 	x.service_type AS serviceType,
 	x.datawake_url AS datawakeUrl,
 	x.xmit_status AS status,
@@ -510,7 +515,8 @@ CREATE VIEW vw_xmit_log AS
 	x.team_id AS teamId,
 	t.name AS teamName,
 	x.trail_id AS trailId,
-	dt.name AS trailName 
+	dt.name AS trailName,
+	x.ts as timeStamp
 	FROM datawake_xmit x
 			join datawake_xmit_recipient r on x.recipient_id = r.recipient_id
 			left join datawake_domains d on x.domain_id = d.id
