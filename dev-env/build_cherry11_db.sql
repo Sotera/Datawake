@@ -485,6 +485,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.credentials AS recipientCredentials,
 		r.recipient_index AS recipientIndex,
 		x.service_type AS serviceType,
+		r.recipient_url as recipientURL,
 		r.recipient_domain_id AS recipientDomainId,
 		d.name AS recipientDomain,
 		r.recipient_team_id AS recipientTeamId,
@@ -497,11 +498,13 @@ CREATE VIEW vw_xmit_recipients AS
 			left join datawake_teams t on r.recipient_team_id = t.id
 			left join datawake_trails dt on r.recipient_trail_id = dt.id
 ;
+
 DROP VIEW IF EXISTS `vw_xmit_log`;	
 CREATE VIEW vw_xmit_log AS
 	SELECT x.xmit_id AS xmitId,
 	x.recipient_id AS recipientId,
 	r.recipient_name AS recipientName,
+	r.recipient_url as recipientURL,
 	x.service_type AS serviceType,
 	x.datawake_url AS datawakeUrl,
 	x.xmit_status AS status,
