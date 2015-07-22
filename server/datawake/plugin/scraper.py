@@ -61,7 +61,7 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
                 tangelo.log(features_in_domain)
                 connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
 
-    id = db.addBrowsePathData(team_id,domain_id,trail_id,url, userEmail)
+    id = db.addBrowsePathData(team_id,domain_id,trail_id,url, user_email)
 
     # if conf.crawl() == 'True':
     #     domain = db.get_domain_name(domain_id)
@@ -73,6 +73,7 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
     #     dig.export(domain, cdr_payload)
     # else:
     #     tangelo.log("Not sending crawls to external services")
+    tangelo.log("Calling export")
     export_to_services(domain_id, team_id, trail_id, url, content, user_email, features)
 
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
@@ -84,6 +85,7 @@ def export_to_services(domain_id, team_id, trail_id, url, content, user_email, e
     cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email)
     deepdive.export(cdr)
     for service in db.get_services(domain_id):
+        tangelo.log("Service: %s"%(service['name']))
         result = False
         if service['type'] == 'KAFKA':
             result = tools.export_kafka(service['url'], service['index'], cdr)

@@ -164,6 +164,8 @@ CREATE TABLE datawake_xmit_recipient (
   recipient_domain_id int(11) DEFAULT NULL,
   recipient_team_id int(11) DEFAULT NULL,
   recipient_trail_id int(11) DEFAULT NULL,
+  recipient_url varchar(255) DEFAULT NULL,
+  service_type varchar(255) DEFAULT NULL,
   credentials varchar(255) DEFAULT NULL,
   PRIMARY KEY (recipient_id),
   KEY fkRecDomain (recipient_domain_id),

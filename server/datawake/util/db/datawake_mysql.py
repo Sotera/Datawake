@@ -890,16 +890,16 @@ def get_services(domain_id):
     if UseRestAPI:
         print None
     else:
-        sql = "select recipient_id, recipient_name, recipient_index, credentials from datawake_xmit_recipient where recipient_domain_id = %S"
+        sql = "select recipient_id, recipient_name, recipient_index, credentials, service_type, url from datawake_xmit_recipient where recipient_domain_id = %s"
         params = [domain_id]
         rows = dbGetRows(sql, params)
-        return map(lambda x: dict(id=x[0], name=x[1], index=x[2], cred=x[3]), rows)
+        return map(lambda x: dict(id=x[0], name=str(x[1]), index=str(x[2]), cred=str(x[3]), type=str(x[4]), url=str(x[5])), rows)
 
 # service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
 def service_status(id, type, url, domain_id, team_id, trail_id, status):
     if UseRestAPI:
         print None
     else:
-        sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, ts) values(%s,%s,%s,%s,%s,%s,sysdate)'
+        sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, xmit_status, ts) values(%s,%s,%s,%s,%s,%s,%s,sysdate())'
         params = [id, type, url, domain_id, team_id, trail_id, status]
         return dbCommitSQL(sql, params)

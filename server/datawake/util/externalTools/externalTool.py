@@ -18,9 +18,10 @@ from bs4 import BeautifulSoup
 from datawake.conf import datawakeconfig as conf
 from elasticsearch import Elasticsearch
 from pykafka import KafkaClient
-from pykafka import KafkaException
+from pykafka.exceptions import KafkaException
 
 import requests
+import tangelo
 import time
 
 def export_rest(service_url, service_cred, service_index, domain_id, domain_name, cdr):
@@ -37,17 +38,21 @@ def export_rest(service_url, service_cred, service_index, domain_id, domain_name
 
 def export_kafka(service_url, service_index, cdr):
     try:
+        tangelo.log("sending kafka to %s %s" % (service_url, service_index))
         client = KafkaClient(hosts=service_url)
+
         topic = client.topics[service_index]
         producer = topic.get_producer()
         producer.produce(cdr)
     except KafkaException, e:
+        tangelo.log_error("error sending kafka",e)
         return False
     return True
 
 
-def export_es(service_url, service_cred, service_index,cdr, domain_name):
+def export_es(service_url, service_cred, service_index, cdr, domain_name):
     es_url = 'https://%s@%s' % (service_cred, service_url)
+    tangelo.log("sending ES at %s" % (service_url))
     es = Elasticsearch(es_url)
     res = es.index(index=service_index, doc_type=domain_name, body=cdr)
     return res['created']

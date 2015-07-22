@@ -20,21 +20,11 @@ import tangelo
 from bs4 import BeautifulSoup
 from datawake.conf import datawakeconfig as conf
 
-def export(team_id,domain_id,trail_id,url,content):
+def export(cdr):
 
-     docid = 'dw-%i-%i-%i-%i' %(team_id, domain_id, trail_id, hash(url))
      dd_url = '%s/%s/%s/'%(conf.get_deepdive_url(), conf.get_deepdive_user(), conf.get_deepdive_repo())
 
-     soup = BeautifulSoup(content)
-     # remove scripts and style
-     for script in soup(["script", "style"]):
-         script.extract()
-
-     text = soup.get_text(strip=True).encode('ascii', 'ignore')
-
      headers = {'Authorization': 'Token %s' % conf.get_deepdive_token()}
-     payload = {'docid': docid, 'doc_url': url, 'content': text }
-     r = requests.post(dd_url, headers=headers, data=payload)
+     r = requests.post(dd_url, headers=headers, data=cdr)
      tangelo.log('Sending page to deepdive at: %s' % r.url)
 
-     return docid
