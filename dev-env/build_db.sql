@@ -165,8 +165,8 @@ CREATE TABLE datawake_xmit_recipient (
   recipient_team_id int(11) DEFAULT NULL,
   recipient_trail_id int(11) DEFAULT NULL,
   recipient_url varchar(255) DEFAULT NULL,
-  service_type varchar(255) DEFAULT NULL,
   credentials varchar(255) DEFAULT NULL,
+  service_type varchar(255) DEFAULT NULL,
   PRIMARY KEY (recipient_id),
   KEY fkRecDomain (recipient_domain_id),
   KEY fkRecTeam (recipient_team_id),
@@ -276,7 +276,7 @@ CREATE VIEW vw_xmit_log AS
 	r.recipient_url as recipientURL,
 	x.service_type AS serviceType,
 	x.datawake_url AS datawakeUrl,
-	x.xmit_status AS status,
+	x.xmit_status AS status,mysql
 	x.domain_id AS domainId,
 	d.name AS domainName,
 	x.team_id AS teamId,
