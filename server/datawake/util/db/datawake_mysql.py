@@ -888,7 +888,7 @@ def get_marked_features(trail_id):
 
 def get_services(domain_id):
     if UseRestAPI:
-        filter_string = '{"where":{"recipient_domain_id":' + domain_id + '}}'
+        filter_string = '{"where":{"recipientDomainId":' + domain_id + '}}'
         services = restGet('DatawakeXmitRecipient', 'filter=' + filter_string)
         retFeatureList = []
         for service in services:
