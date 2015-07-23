@@ -18,22 +18,23 @@ from bs4 import BeautifulSoup
 from datawake.conf import datawakeconfig as conf
 from elasticsearch import Elasticsearch
 from pykafka import KafkaClient
-from pykafka.exceptions import KafkaException
 
 import requests
 import tangelo
 import time
 
 def export_rest(service_url, service_cred, service_index, domain_id, domain_name, cdr):
-
-    headers = {'Authorization': 'Token %s' % conf.get_deepdive_token()}
-    payload = {'docid': docid, 'doc_url': url, 'content': text }
-    r = requests.post(dd_url, headers=headers, data=payload)
-    tangelo.log('Sending page to deepdive at: %s' % r.url)
-    if r.status == 200:
-        return True
-    else:
+    try:
+        headers = {'Authorization': 'Token %s' % conf.get_deepdive_token()}
+        payload = {'docid': docid, 'doc_url': url, 'content': text }
+        r = requests.post(dd_url, headers=headers, data=payload)
+        tangelo.log('Sending page to deepdive at: %s' % r.url)
+        if r.status == 200:
+            return True
+    except Exception as e:
+        tangelo.log_error("error sending via REST to: %s " % service_url, e)
         return False
+    return False
 
 
 def export_kafka(service_url, service_index, cdr):
@@ -44,19 +45,23 @@ def export_kafka(service_url, service_index, cdr):
         topic = client.topics[service_index]
         producer = topic.get_producer()
         producer.produce(cdr)
-    except KafkaException, e:
-        tangelo.log_error("error sending kafka",e)
+    except Exception as e:
+        tangelo.log_error("error sending via kafka to %s" % service_url,e)
         return False
     return True
 
 
 def export_es(service_url, service_cred, service_index, cdr, domain_name):
-    es_url = 'https://%s@%s' % (service_cred, service_url)
-    tangelo.log("sending ES at %s" % (service_url))
-    es = Elasticsearch(es_url)
-    res = es.index(index=service_index, doc_type=domain_name, body=cdr)
-    return res['created']
-
+    try:
+        es_url = 'https://%s@%s' % (service_cred, service_url)
+        tangelo.log("sending ES at %s" % (service_url))
+        es = Elasticsearch(es_url)
+        res = es.index(index=service_index, doc_type=domain_name, body=cdr)
+        return res['created']
+    except Exception as e:
+        tangelo.log_error("error sending via ES to %s" % service_url,e)
+        return False
+    return True
 
 
 

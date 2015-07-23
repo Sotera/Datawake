@@ -52,7 +52,6 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
             if len(features_in_domain) > 0:
                 tangelo.log("INSERTING DOMAIN ENTITIES")
                 tangelo.log(type)
-                tangelo.log(features_in_domain)
                 connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, user_email)
@@ -67,7 +66,7 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
 def export_to_services(domain_id, team_id, trail_id, url, content, user_email, entities):
     domain_name = db.get_domain_name(domain_id)
     cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email)
-    deepdive.export(cdr)
+    # deepdive.export(cdr)
     for service in db.get_services(domain_id):
         tangelo.log("Service: %s"%(service['name']))
         result = False
