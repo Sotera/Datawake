@@ -54,7 +54,7 @@ def export_kafka(service_url, service_index, cdr):
 def export_es(service_url, service_cred, service_index, cdr, domain_name):
     try:
         es_url = 'https://%s@%s' % (service_cred, service_url)
-        tangelo.log("sending ES at %s" % (service_url))
+        tangelo.log("sending ES at %s" % (es_url))
         es = Elasticsearch(es_url)
         res = es.index(index=service_index, doc_type=domain_name, body=cdr)
         return res['created']
