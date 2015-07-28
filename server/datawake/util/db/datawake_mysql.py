@@ -69,7 +69,6 @@ def insertDomainEntities(domain_id, url, feature_type, feature_values):
                                            featureValue=feature_value)))
     return addedEntities
 
-
 def insertEntities(url, feature_type, feature_values):
     addedEntities = []
     for feature_value in feature_values:
@@ -768,10 +767,10 @@ def get_domains(team_id):
         domains = restGet('DatawakeDomains', 'filter=' + filter_string)
         return domains
     else:
+        tangelo.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         sql = "SELECT id,name,description from datawake_domains where team_id = %s"
         rows = dbGetRows(sql, [team_id])
         return map(lambda x: dict(id=x[0], name=x[1], description=x[2]), rows)
-
 
 def hasDomains(team_id, domain_id):
     if UseRestAPI:
@@ -886,26 +885,24 @@ def get_marked_features(trail_id):
         rows = dbGetRows(sql, params)
         return map(lambda x: dict(type=x[0], value=x[1]), rows)
 
-def get_services(domain_id):
-    if UseRestAPI:
-        filter_string = '{"where":{"recipientDomainId":' + domain_id + '}}'
-        services = restGet('DatawakeXmitRecipient', 'filter=' + filter_string)
-        retFeatureList = []
-        for service in services:
-            retFeatureList.append(dict(id=service['recipientId'], name=service['recipientName'], index=service['recipientIndex'], cred=service['credentials'], type=service['serviceType'], url=service['url']))
-        return retFeatureList
-    else:
-        sql = "select recipient_id, recipient_name, recipient_index, credentials, service_type, recipient_url from datawake_xmit_recipient where recipient_domain_id = %s"
-        params = [domain_id]
-        rows = dbGetRows(sql, params)
-        return map(lambda x: dict(id=x[0], name=str(x[1]), index=str(x[2]), cred=str(x[3]), type=str(x[4]), url=str(x[5])), rows)
 
-# service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
-def service_status(id, type, url, domain_id, team_id, trail_id, status):
-    if UseRestAPI:
-        service_status = restPost('DatawakeXmit', dict(recipientId=id, serviceType=type, datawakeUrl=url, domainId=domain_id, teamId=team_id, trailId=trail_id, xmitStatus=status, ts=datetime.datetime.now()))
-        return service_status.id
-    else:
-        sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, xmit_status, ts) values(%s,%s,%s,%s,%s,%s,%s,sysdate())'
-        params = [id, type, url, domain_id, team_id, trail_id, status]
-        return dbCommitSQL(sql, params)
+def get_entities_for_trail(trail_id):
+    sql = '''SELECT wi.feature_value, wi.feature_type, count(1)
+                FROM memex_sotera.datawake_data dd, memex_sotera.general_extractor_web_index wi
+                where wi.url = dd.url
+                and dd.trail_id = %s
+                group by wi.feature_type, wi.feature_value'''
+    params = [trail_id]
+    rows = dbGetRows(sql, params)
+    return map(lambda x: dict(name=x[0], type=x[1], pages=x[2]), rows)
+
+
+def get_prefetch_results(domain_name, trail_name):
+    sql = """ SELECT url, title, rank
+              FROM trail_term_rank
+              WHERE domain = %s and trail = %s
+              ORDER BY rank desc
+          """
+    params = [domain_name, trail_name]
+    rows = dbGetRows(sql, params)
+    return map(lambda x: dict(url=x[0], title=x[1], rank=x[2]), rows)

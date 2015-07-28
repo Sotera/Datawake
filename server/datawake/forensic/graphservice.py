@@ -19,8 +19,8 @@ limitations under the License.
 import json
 
 import tangelo
-
-from datawake.util.db import datawake_mysql
+import datawake.util.dataconnector.factory as factory
+from datawake.util.db import datawake_mysql as db
 from datawake.util.graph import helper as graph_helper
 from datawake.util.session.helper import is_in_session
 from datawake.util.session.helper import has_team
@@ -70,10 +70,32 @@ def getTimeWindow(users, trail=u'*'):
         users = users.split(",")
     else:
         users = []
-    return json.dumps(datawake_mysql.getTimeWindow(org, users, trail))
+    return json.dumps(db.getTimeWindow(org, users, trail))
 
+@is_in_session
+def get_entities(trail_id):
+    tangelo.log('Getting entities for trail: %s' % trail_id)
+    entities = []
 
+    results = db.get_entities_for_trail(trail_id)
+    tangelo.log('Got entities')
+    for result in results:
+        entity = {}
+        split = result['name'].split('->')
+        if len(split) > 1:
+            entity['type'] = split[0]
+            entity['name'] = split[1]
+            entity['pages'] = result['pages']
+        else:
+            entity = result
+        entities.append(entity)
+    return json.dumps(entities)
 
+@is_in_session
+def get_links(domain_name, trail_name):
+    tangelo.log('Getting links for %s:%s'%(domain_name,trail_name))
+    results = db.get_prefetch_results(domain_name, trail_name)
+    return json.dumps(results)
 
 @is_in_session
 @has_team
@@ -136,6 +158,8 @@ get_actions = {
 post_actions = {
     'timewindow': getTimeWindow,
     'get': getGraph,
+    'entities': get_entities,
+    'links': get_links
 }
 
 

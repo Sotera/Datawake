@@ -56,7 +56,7 @@ function formatDuartion(start, end) {
  */
 function change_graph(graph) {
 
-  $("#dialog").dialog().dialog("close");
+  // $("#dialog").dialog().dialog("close");
   console.log("GRAPH")
   console.log(graph)
 
@@ -67,7 +67,7 @@ function change_graph(graph) {
     repulsion = parseInt(repulsion_scale(nodes.length));
   }
   console.log("default repulsion = " + repulsion);
-  $("#forceslider").slider("value", repulsion);
+  // $("#forceslider").slider("value", repulsion);
 
 
   min_timestamp = -1;
@@ -511,7 +511,7 @@ function getExternalLinks(mainDiv, type, id) {
           }
           link = link.replace("$ATTR", encodeURI(queryterm))
 
-          linksDiv.append("a").attr("href", link).attr("target", "_blank").text(linkObj.display)      
+          linksDiv.append("a").attr("href", link).attr("target", "_blank").text(linkObj.display)
           linksDiv.append("br")
         }
       } else {
