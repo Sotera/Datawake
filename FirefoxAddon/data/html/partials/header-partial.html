@@ -16,81 +16,71 @@
     <div class="panel-body">
       <form role="form" class="form-horizontal">
         <div class="row">
-        <div class="form-group form-group-sm col-sm-11">
-          <label for="team_select" class="control-label col-sm-1">Team:</label>
+          <div class="form-group form-group-sm col-sm-11">
+            <label for="team_select" class="control-label col-sm-1">Team:</label>
+            <div class="col-sm-1">
+              <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#teamModal">
+                <i ng-hide="teamSpinner" class="fa fa-plus"></i>
+                <i ng-show="teamSpinner" class="fa fa-refresh fa-spin"></i>
+              </button>
+            </div>
+            <div class="col-sm-10">
+              <select class="form-control" id="team_select" ng-model="selectedTeam" ng-change="teamChanged(selectedTeam);" ng-options="team as team.name for team in teams" data-placeholder="Select a Team"> </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group form-group-sm col-sm-11">
+            <label for="domain_select" class="control-label col-sm-1">Domain:</label>
+            <div class="col-sm-1">
+              <button class="btn btn-primary btn-sm" ng-click="loadDomainManager()" ng-disabled="!(datawake && datawake.team)">
+                <i ng-hide="domainSpinner" class="fa fa-plus"></i>
+                <i ng-show="domainSpinner" class="fa fa-refresh fa-spin"></i>
+              </button>
+            </div>
+            <div class="col-sm-10">
+              <select class="form-control" id="domain_select" ng-model="selectedDomain" ng-change="domainChanged(selectedDomain);" ng-options="domain.name for domain in domains" data-placeholder="Select a Domain"> </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group form-group-sm col-sm-11">
+            <label for="trail_select" class="control-label col-sm-1">Trail:</label>
+            <div class="col-sm-1">
+              <button class="btn btn-primary btn-sm" ng-disabled="!(datawake && datawake.team && datawake.domain)" data-toggle="modal" data-target="#trailModal">
+                <i ng-hide="trailSpinner" class="fa fa-plus"></i>
+                <i ng-show="trailSpinner" class="fa fa-refresh fa-spin"></i>
+              </button>
+            </div>
+            <div class="col-sm-10">
+              <select class="form-control" id="trail_select" ng-model="selectedTrail" ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails" placeholder="Select a previous Trail"> </select>
+            </div>
+          </div>
           <div class="col-sm-1">
-            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#teamModal">
-              <i ng-hide="teamSpinner" class="fa fa-plus"></i>
-              <i ng-show="teamSpinner" class="fa fa-refresh fa-spin"></i>
-            </button>
-          </div>
-          <div class="col-sm-10">
-            <select class="form-control" id="team_select" ng-model="selectedTeam" ng-change="teamChanged(selectedTeam);" ng-options="team as team.name for team in teams" data-placeholder="Select a Team"> </select>
+            <button disabled=true ng-show="!datawake || !datawake.team || !datawake.domain || !datawake.trail" class="btn btn-default">Start</button>
+            <button ng-show="(!datawake.isDatawakeOn) && datawake && datawake.team && datawake.domain && datawake.trail" class="btn btn-success" ng-click="recordingChange(true)">Start</button>
+            <button ng-show="datawake.isDatawakeOn  && datawake && datawake.team && datawake.domain && datawake.trail" class="btn btn-danger" ng-click="recordingChange(false)">Stop</button>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group form-group-sm col-sm-11">
-          <label for="domain_select" class="control-label col-sm-1">Domain:</label>
-          <div class="col-sm-1">
-            <button class="btn btn-primary btn-sm" ng-click="loadDomainManager()" ng-disabled="!(datawake && datawake.team)">
-              <i ng-hide="domainSpinner" class="fa fa-plus"></i>
-              <i ng-show="domainSpinner" class="fa fa-refresh fa-spin"></i>
-            </button>
-          </div>
-          <div class="col-sm-10">
-            <select class="form-control" id="domain_select" ng-model="selectedDomain" ng-change="domainChanged(selectedDomain);" ng-options="domain.name for domain in domains" data-placeholder="Select a Domain"> </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group form-group-sm col-sm-11">
-          <label for="trail_select" class="control-label col-sm-1">Trail:</label>
-          <div class="col-sm-1">
-            <button class="btn btn-primary btn-sm" ng-disabled="!(datawake && datawake.team && datawake.domain)" data-toggle="modal" data-target="#trailModal">
-              <i ng-hide="trailSpinner" class="fa fa-plus"></i>
-              <i ng-show="trailSpinner" class="fa fa-refresh fa-spin"></i>
-            </button>
-          </div>
-          <div class="col-sm-10">
-            <select class="form-control" id="trail_select" ng-model="selectedTrail" ng-change="trailChanged(selectedTrail);" ng-options="trail.name for trail in trails" placeholder="Select a previous Trail"> </select>
-          </div>
-        </div>
-        <div class="col-sm-1">
-          <button disabled=true ng-show="!datawake || !datawake.team || !datawake.domain || !datawake.trail" class="btn btn-default">Start</button>
-          <button ng-show="(!datawake.isDatawakeOn) && datawake && datawake.team && datawake.domain && datawake.trail" class="btn btn-success" ng-click="recordingChange(true)">Start</button>
-          <button ng-show="datawake.isDatawakeOn  && datawake && datawake.team && datawake.domain && datawake.trail" class="btn btn-danger" ng-click="recordingChange(false)">Stop</button>
-        </div>
-      </div>
       </form>
     </div>
   </div>
 </div>
-<div class="row">
-  <table class="table table-bordered">
-
-    <tbody>
-      <tr>
-        <td><b>URL: </b></td>
-        <td style="word-wrap: break-word">{{current_url}}</td>
-      </tr>
-      <tr ng-show="rankingEnabled">
-        <td>
-          <b>URL Ranking:</b>
-        </td>
-        <td>
-          <div id="star_rating"></div>
-          <span id="url_rank_text">{{ranking}} / 10</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <b>Page Visits:</b>
-        </td>
-        <td>
-          {{pageVisits}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class='row'>
+  <form>
+    <div class="form-group">
+      <label for='crawlType'>Crawl Type:</label>
+      <select id='crawlType' class="form-control">
+        <option>This page only</option>
+        <option>Deep Crawl</option>
+        <option>Section Crawl</option>
+        <option>Don't Crawl</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="comments">Comments</label>
+      <textarea id='comments' class='form-control' rows='2'placeholder='Comments'></textarea>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
 </div>
