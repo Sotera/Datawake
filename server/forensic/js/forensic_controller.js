@@ -1,4 +1,4 @@
-var forensicApp = angular.module('forensicApp', ['ui.grid','ui.grid.selection', 'ui.grid.exporter']);
+var forensicApp = angular.module('forensicApp', ['ui.grid','ui.grid.selection', 'ui.grid.exporter', 'ui.grid.resizeColumns']);
 
 forensicApp.controller('ForensicController', function ($scope, $filter) {
     $scope.teams = [];
@@ -6,13 +6,16 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
     $scope.trails = [];
     $scope.linkGrid = {
       columnDefs: [
-        { field: 'url', name: 'URL' },
-        { field: 'title', name: 'Title'},
-        { field: 'rank', name: "Rank" }
+        { name: 'URL', cellTemplate:'<div>' +
+                       '  <a href="{{row.entity.url}}" target="_blank">{{row.entity.url}}</a>' +
+                       '</div>',width: '***'},
+        { field: 'title', name: 'Title', width:'**'},
+        { field: 'rank', name: "Rank", width:'*' }
       ],
+      rowHeight: 40,
       enableGridMenu: true,
       enableSelectAll: true,
-      exporterCsvFilename: 'myFile.csv',
+      exporterCsvFilename: 'prefetch.csv',
       exporterPdfDefaultStyle: {fontSize: 9},
       exporterPdfTableStyle: {margin: [30, 30, 30, 30]},
       exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
@@ -35,13 +38,13 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
     };
     $scope.entityGrid = {
       columnDefs: [
-        { field: 'name', name: "Name" },
-        { field: 'type', name: 'Type' },
-        { field: 'pages', name: 'Pages'}
+        { field: 'name', name: "Name", width:'**' },
+        { field: 'type', name: 'Type', width:'**' },
+        { field: 'pages', name: 'Pages', width:'*'}
       ],
       enableGridMenu: true,
       enableSelectAll: true,
-      exporterCsvFilename: 'myFile.csv',
+      exporterCsvFilename: 'entities.csv',
       exporterPdfDefaultStyle: {fontSize: 9},
       exporterPdfTableStyle: {margin: [30, 30, 30, 30]},
       exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
@@ -62,8 +65,40 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
         $scope.gridApi = gridApi;
       }
     };
-    //$scope.users = [];
-    //$scope.selectedUsers=[];
+    $scope.visitedGrid = {
+      columnDefs: [
+        { name: 'URL', cellTemplate:'<div>' +
+                       '  <a href="{{row.entity.url}}" target="_blank">{{row.entity.url}}</a>' +
+                       '</div>',width:"***" },
+        { field: 'crawl', name: 'Crawl Type', width:'**' },
+        { field: 'comments', name: 'Comments', width:'***' },
+        { field: 'count', name: "Visits", width:'*' }
+      ],
+      rowHeight: 40,
+      enableGridMenu: true,
+      enableSelectAll: true,
+      exporterCsvFilename: 'visited.csv',
+      exporterPdfDefaultStyle: {fontSize: 9},
+      exporterPdfTableStyle: {margin: [30, 30, 30, 30]},
+      exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+      exporterPdfHeader: { text: "My Header", style: 'headerStyle' },
+      exporterPdfFooter: function ( currentPage, pageCount ) {
+        return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
+      },
+      exporterPdfCustomFormatter: function ( docDefinition ) {
+        docDefinition.styles.headerStyle = { fontSize: 22, bold: true };
+        docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
+        return docDefinition;
+      },
+      exporterPdfOrientation: 'portrait',
+      exporterPdfPageSize: 'LETTER',
+      exporterPdfMaxGridWidth: 500,
+      exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
+      onRegisterApi: function(gridApi){
+        $scope.gridApi = gridApi;
+      }
+    };
+
     $scope.colorOptions = getOriginalColorOptions()
 
     $scope.date = {
@@ -385,7 +420,7 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
                 $scope.$apply();
             }
         });
-        var link_request = {domain_name: "memex", trail_name:"pyramid"}
+        var link_request = {domain_name: "memex", trail_name:"ufun"}
         $.ajax({
             type: "POST",
             url: "/datawake/forensic/graphservice/links",
@@ -396,13 +431,28 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
                 console.log("Got links");
                 console.log(incomingData)
                 $scope.linkGrid.data = [].concat(incomingData);
-                $scope.rowLinkCollection = [].concat(incomingData);
                 $scope.$apply();
             },
             error: function() {
                 console.log("Error getting links")
-                $scope.rowLinkCollection = [];
                 $scope.apply();
+            }
+        });
+        var visited_request = {trail_id: $scope.selectedTrail.id}
+        $.ajax({
+            type: "POST",
+            url: "/datawake/forensic/graphservice/visited",
+            data: JSON.stringify(visited_request),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (incomingData) {
+                console.log("Got visited");
+                console.log(incomingData)
+                $scope.visitedGrid.data = [].concat(incomingData);
+                $scope.$apply();
+            },
+            error: function() {
+                console.log("Error getting links")
             }
         });
     }

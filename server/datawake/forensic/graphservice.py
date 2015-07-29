@@ -98,6 +98,12 @@ def get_links(domain_name, trail_name):
     return json.dumps(results)
 
 @is_in_session
+def get_visited(trail_id):
+    tangelo.log('Getting visited links for %s'%trail_id)
+    results = db.getBrowsePathUrls(trail_id)
+    return json.dumps(results)
+
+@is_in_session
 @has_team
 @has_domain
 @has_trail
@@ -159,7 +165,8 @@ post_actions = {
     'timewindow': getTimeWindow,
     'get': getGraph,
     'entities': get_entities,
-    'links': get_links
+    'links': get_links,
+    'visited': get_visited
 }
 
 

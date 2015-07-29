@@ -270,9 +270,9 @@ def addBrowsePathData(team_id, domain_id, trail_id, url, userEmail):
 
 
 def getBrowsePathUrls(trail_id):
-    sql = "SELECT url,count(1) from datawake_data where trail_id = %s GROUP BY url"
+    sql = "SELECT url, crawl_type, comments, count(1) from datawake_data where trail_id = %s GROUP BY url, crawl_type, comments"
     rows = dbGetRows(sql, [trail_id])
-    return map(lambda x: dict(url=x[0], count=x[1]), rows)
+    return map(lambda x: dict(url=x[0], crawl=x[1], comments=x[2], count=x[3]), rows)
 
 
 def getVisitedUrlsInTrailForTimeRange(trail_id, startdate, enddate, userEmails=[]):
