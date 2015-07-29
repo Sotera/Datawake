@@ -452,7 +452,9 @@ function launchDatawakePanel(){
         });
     });
 
-
+    mainPanel.port.on("comments",function(crawlData){
+        saveComments(crawlData)
+    })
 
     mainPanel.show({position: datawakeButton});
 
@@ -626,6 +628,11 @@ function setUrlRank(rank_data) {
             console.debug("Successfully set rank..");
         }
     });
+}
+
+function saveComments(crawlData) {
+  var url = addOnPrefs.datawakeDeploymentUrl + "/comments/set";
+  requestHelper.post(url, JSON.stringify(crawlData));
 }
 
 

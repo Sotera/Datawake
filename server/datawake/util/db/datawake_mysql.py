@@ -647,6 +647,10 @@ def getTrailsWithUserCounts(org):
     return map(lambda x: {'domain': x[0], 'trail': x[1], 'userCount': x[2], 'records': x[3]}, rows)
 
 
+
+def setComments(trail_id, url, crawl_type, comments):
+    sql = """update datawake_data set crawl_type = %s, comments = %s where trail_id=%s and url=%s"""
+    dbCommitSQL(sql,[crawl_type, comments, trail_id, url])
 ####   URL RANKS   ####
 
 
@@ -884,6 +888,30 @@ def get_marked_features(trail_id):
         params = [trail_id]
         rows = dbGetRows(sql, params)
         return map(lambda x: dict(type=x[0], value=x[1]), rows)
+
+def get_services(domain_id):
+    if UseRestAPI:
+        filter_string = '{"where":{"recipientDomainId":' + domain_id + '}}'
+        services = restGet('DatawakeXmitRecipient', 'filter=' + filter_string)
+        retFeatureList = []
+        for service in services:
+            retFeatureList.append(dict(id=service['recipientId'], name=service['recipientName'], index=service['recipientIndex'], cred=service['credentials'], type=service['serviceType'], url=service['url']))
+        return retFeatureList
+    else:
+        sql = "select recipient_id, recipient_name, recipient_index, credentials, service_type, recipient_url from datawake_xmit_recipient where recipient_domain_id = %s"
+        params = [domain_id]
+        rows = dbGetRows(sql, params)
+        return map(lambda x: dict(id=x[0], name=str(x[1]), index=str(x[2]), cred=str(x[3]), type=str(x[4]), url=str(x[5])), rows)
+
+# service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
+def service_status(id, type, url, domain_id, team_id, trail_id, status):
+    if UseRestAPI:
+        service_status = restPost('DatawakeXmit', dict(recipientId=id, serviceType=type, datawakeUrl=url, domainId=domain_id, teamId=team_id, trailId=trail_id, xmitStatus=status, ts=datetime.datetime.now()))
+        return service_status.id
+    else:
+        sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, xmit_status, ts) values(%s,%s,%s,%s,%s,%s,%s,sysdate())'
+        params = [id, type, url, domain_id, team_id, trail_id, status]
+        return dbCommitSQL(sql, params)
 
 
 def get_entities_for_trail(trail_id):
