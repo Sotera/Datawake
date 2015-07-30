@@ -27,6 +27,7 @@
 
   <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link href=css/daterangepicker-bs3.css rel=stylesheet>
+  <link href="css/sotera.webgraph.css" rel="stylesheet">
   <link rel="shortcut icon" href="images/waveicon38.png">
 
   <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
@@ -136,35 +137,40 @@
     <!-- end button stuff in toolbar -->
   </div>
   <div class="container-fluid">
-    <div class="row">
-      <h3>DataWake Forensic Viewer: SEC:Microcap:HEME</h3>
-    </div>
-    <div class="row">
-      <div id="node_graph" class="col-md-5"></div>
-      <div id="dialog" title="Highlighted Vertices" />
-      <div id="link-dialog" title="Vertex Details" />
+    <div class="row no-gutter">
+      <div id="node_graph" class="col-md-6"></div>
       <div class="col-md-3">
         <svg id="legend" height='300px' style="pointer-events:none;"></svg>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <caption>Extracted Entities</caption>
         <div id="entityGrid" ui-grid="entityGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
-        <caption>Visited Sites</caption>
-        <div id="visitedGrid" ui-grid="visitedGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
+
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+          <a href="#visited" role="tab" data-toggle="tab">
+             Visited Pages
+          </a>
+        </li>
+        <li><a href="#prefetch" role="tab" data-toggle="tab">
+          Prefetch Suggested Sites
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade active in col-md-11" id="visited">
+          <div id="visitedGrid" ui-grid="visitedGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
+        </div>
+        <div class="tab-pane col-md-11" id="prefetch">
+          <div id="linkGrid" ui-grid="linkGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <caption>Prefetch Suggested Sites</caption>
-        <div id="linkGrid" ui-grid="linkGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
-      <div>
-    </div>
-    <div id="dialog" title="Highlighted Vertices" />
-    <div id="link-dialog" title="Vertex Details" />
+      <div class="tab-content">
+        <div id="dialog" title="Highlighted Vertices" />
+        <div id="link-dialog" title="Vertex Details" />
 </body>
 
 
