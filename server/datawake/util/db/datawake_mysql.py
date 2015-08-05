@@ -771,10 +771,10 @@ def get_domains(team_id):
         domains = restGet('DatawakeDomains', 'filter=' + filter_string)
         return domains
     else:
-        tangelo.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         sql = "SELECT id,name,description from datawake_domains where team_id = %s"
         rows = dbGetRows(sql, [team_id])
         return map(lambda x: dict(id=x[0], name=x[1], description=x[2]), rows)
+
 
 def hasDomains(team_id, domain_id):
     if UseRestAPI:
@@ -914,17 +914,7 @@ def service_status(id, type, url, domain_id, team_id, trail_id, status):
         return dbCommitSQL(sql, params)
 
 
-def get_entities_for_trail(trail_id):
-    sql = '''SELECT wi.feature_value, wi.feature_type, count(1)
-                FROM memex_sotera.datawake_data dd, memex_sotera.general_extractor_web_index wi
-                where wi.url = dd.url
-                and dd.trail_id = %s
-                group by wi.feature_type, wi.feature_value'''
-    params = [trail_id]
-    rows = dbGetRows(sql, params)
-    return map(lambda x: dict(name=x[0], type=x[1], pages=x[2]), rows)
-
-
+# TODO bwhiteman fix this to use REST
 def get_prefetch_results(domain_name, trail_name):
     sql = """ SELECT url, title, rank
               FROM trail_term_rank

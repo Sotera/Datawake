@@ -33,7 +33,7 @@ forensic view.
 entityDataConnector = factory.get_entity_data_connector()
 
 def getBrowsePathEdges(trail_id,startdate,enddate,userlist=[]):
-    print 'getBrowsePathEdges(',startdate,',',enddate,',',userlist,')'
+    tangelo.log('getBrowsePathEdges(%s,%s,%s)'%(startdate, enddate, userlist))
 
     rows = datawake_mysql.getVisitedUrlsInTrailForTimeRange(trail_id,startdate,enddate,userlist)
 
@@ -88,7 +88,6 @@ def getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,
 
     browsePathGraph = getBrowsePathEdges(trail_id,startdate,enddate,userlist)
     urls = browsePathGraph['nodes'].keys()
-
 
     # for every url in the browse path get all extracted entities
     results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id,urls,adjTypes)

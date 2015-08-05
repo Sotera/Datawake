@@ -8,9 +8,9 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
       columnDefs: [
         { name: 'URL', cellTemplate:'<div>' +
                        '  <a href="{{row.entity.url}}" target="_blank">{{row.entity.url}}</a>' +
-                       '</div>',width: '***'},
-        { field: 'title', name: 'Title', width:'**'},
-        { field: 'rank', name: "Rank", width:'*' }
+                       '</div>',width: '50%'},
+        { field: 'title', name: 'Title', width:'30%'},
+        { field: 'rank', name: "Rank", width:'20%' }
       ],
       rowHeight: 40,
       enableGridMenu: true,
@@ -411,7 +411,6 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
                 console.log("Got entities");
                 console.log(incomingData)
                 $scope.entityGrid.data = [].concat(incomingData);
-                $scope.rowEntityCollection = [].concat(incomingData);
                 $scope.$apply();
             },
             error: function() {

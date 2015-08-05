@@ -140,15 +140,14 @@
     <div class="row no-gutter">
       <div id="node_graph" class="col-md-6"></div>
       <div class="col-md-3">
-        <svg id="legend" height='300px' style="pointer-events:none;"></svg>
+        <svg id="legend" height='400px' style="pointer-events:none;"></svg>
       </div>
       <div class="col-md-3">
         <caption>Extracted Entities</caption>
-        <div id="entityGrid" ui-grid="entityGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
+        <div id="entityGrid" ui-grid="entityGrid" ui-grid-resize-columns ui-grid-exporter ui-grid-selection class="grid"></div>
       </div>
     </div>
     <div class="row">
-
       <ul class="nav nav-tabs" role="tablist">
         <li class="active">
           <a href="#visited" role="tab" data-toggle="tab">
@@ -161,11 +160,11 @@
         </li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane fade active in col-md-11" id="visited">
-          <div id="visitedGrid" ui-grid="visitedGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
+        <div class="tab-pane active in col-md-11" id="visited">
+          <div id="visitedGrid" ui-grid="visitedGrid" ui-grid-resize-columns ui-grid-exporter ui-grid-selection class="grid"></div>
         </div>
-        <div class="tab-pane col-md-11" id="prefetch">
-          <div id="linkGrid" ui-grid="linkGrid" ui-grid-resize-column ui-grid-exporter ui-grid-selection class="grid"></div>
+        <div class="tab-pane in col-md-11" id="prefetch">
+          <div id="linkGrid" ui-grid="linkGrid" ui-grid-resize-columns ui-grid-exporter ui-grid-selection class="grid"></div>
         </div>
       </div>
       <div class="tab-content">

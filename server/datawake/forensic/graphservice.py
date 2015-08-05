@@ -75,21 +75,29 @@ def getTimeWindow(users, trail=u'*'):
 @is_in_session
 def get_entities(trail_id):
     tangelo.log('Getting entities for trail: %s' % trail_id)
-    entities = []
+    entities = {}
+    entityList = []
+    urls = []
+    rows = db.getBrowsePathUrls(trail_id)
+    for row in rows:
+        urls.append(row['url'])
 
-    results = db.get_entities_for_trail(trail_id)
+    entity_data_connector = factory.get_entity_data_connector()
+    results = entity_data_connector.get_extracted_entities_from_urls(urls)
+
     tangelo.log('Got entities')
+
     for result in results:
-        entity = {}
-        split = result['name'].split('->')
-        if len(split) > 1:
-            entity['type'] = split[0]
-            entity['name'] = split[1]
-            entity['pages'] = result['pages']
-        else:
-            entity = result
-        entities.append(entity)
-    return json.dumps(entities)
+        for entityType in results[result]:
+            for entityName in results[result][entityType]:
+                if entityName in entities:
+                    entities[entityName]['pages'] = entities[entityName]['pages'] + 1
+                else:
+                    entities[entityName] = {'type': entityType, 'pages':1}
+    # TODO either figure out how how map the data or do this differently
+    for entity in entities:
+        entityList.append({'name': entity, 'type': entities[entity]['type'], 'pages': entities[entity]['pages']})
+    return json.dumps(entityList)
 
 @is_in_session
 def get_links(domain_name, trail_name):
