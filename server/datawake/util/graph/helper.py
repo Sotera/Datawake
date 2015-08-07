@@ -19,8 +19,9 @@ import igraph
 import tangelo
 import time
 import datawake.util.dataconnector.factory as factory
-from datawake.util.db import datawake_mysql
 import tldextract
+from datawake.util.db import datawake_mysql
+from urlparse import urlparse
 
 
 """
@@ -33,7 +34,7 @@ forensic view.
 entityDataConnector = factory.get_entity_data_connector()
 
 def getBrowsePathEdges(trail_id,startdate,enddate,userlist=[]):
-    print 'getBrowsePathEdges(',startdate,',',enddate,',',userlist,')'
+    tangelo.log('getBrowsePathEdges(%s,%s,%s)'%(startdate, enddate, userlist))
 
     rows = datawake_mysql.getVisitedUrlsInTrailForTimeRange(trail_id,startdate,enddate,userlist)
 
@@ -89,9 +90,15 @@ def getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,
     browsePathGraph = getBrowsePathEdges(trail_id,startdate,enddate,userlist)
     urls = browsePathGraph['nodes'].keys()
 
+    # blacklist of pages to not graph data from
+    searchPages = ['www.google.com','search.yahoo.com','www.bing.com','www.yahoo.com']
+    cleanUrls = []
+    for url in urls:
+        if urlparse(url).netloc not in searchPages:
+            cleanUrls.append(url)
 
     # for every url in the browse path get all extracted entities
-    results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id,urls,adjTypes)
+    results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id,cleanUrls,adjTypes)
 
 
     nodes = browsePathGraph['nodes']
