@@ -90,15 +90,7 @@ def getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,
     browsePathGraph = getBrowsePathEdges(trail_id,startdate,enddate,userlist)
     urls = browsePathGraph['nodes'].keys()
 
-    # blacklist of pages to not graph data from
-    searchPages = ['www.google.com','search.yahoo.com','www.bing.com','www.yahoo.com']
-    cleanUrls = []
-    for url in urls:
-        if urlparse(url).netloc not in searchPages:
-            cleanUrls.append(url)
-
-    # for every url in the browse path get all extracted entities
-    results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id,cleanUrls,adjTypes)
+    results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id, urls, adjTypes)
 
 
     nodes = browsePathGraph['nodes']

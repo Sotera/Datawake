@@ -26,6 +26,7 @@ MITIE_HOME: mitie home
 DW_GOOGLE_CLIENT_IDS: list of client ids used for google user authentication
 DW_MOCK_AUTH:  If set actual user authentication is bypassed for browser plugins. (for dev / demos only)
 DW_MOCK_FORENSIC_AUTH:  If set actual user authentication is bypassed for forensic views. (for dev / demos only)
+EXTRACTION_BLACKLIST: comma seperated list of pages to blacklist
 """
 
 VERSION_NUMBER="0.7-SNAPSHOT"
@@ -73,6 +74,7 @@ def get_client_ids():
 
 def get_mock_auth():
     return db.getSetting('DW_MOCK_AUTH', 1)
+
 def get_mock_forensic_auth():
     return db.getSetting('DW_MOCK_FORENSIC_AUTH', 1)
 
@@ -108,3 +110,9 @@ def get_external_links():
             return EXTERNAL_LINKS
         except:
             raise ValueError("if DW_LINK_NAMES or DW_LINK_VALUES are set, both must be set and of equal length")
+
+def get_extraction_blacklist():
+    blacklist = db.getSetting('EXTRACTION_BLACKLIST')
+    if blacklist:
+        return blacklist.split(',')
+    return []

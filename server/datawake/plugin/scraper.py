@@ -20,6 +20,7 @@ import urllib
 import datawake.util.db.datawake_mysql as db
 import datawake.util.externalTools.deepdive as deepdive
 import datawake.util.externalTools.externalTool as tools
+import datawake.conf.datawakeconfig as config
 from datawake.util.dataconnector import factory
 from datawake.util.session.helper import is_in_session
 from datawake.util.session.helper import has_team
@@ -27,6 +28,7 @@ from datawake.util.session.helper import has_domain
 from datawake.util.session import helper
 from datawake.util.validate.parameters import required_parameters
 from datawake.extractor import master_extractor as extractors
+from urlparse import urlparse
 
 
 """
@@ -41,23 +43,29 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
     url = url.encode('utf-8')
 
     connector = factory.get_entity_data_connector()
-    (features,errors) = extractors.extractAll(content)
-    for error in errors:
-        tangelo.log("FEATURE EXTRACTION ERROR: "+error)
 
-    for type,values in features.iteritems():
-        connector.insert_entities(url,type,values)
-        if len(values) > 0:
-            features_in_domain = connector.get_domain_entity_matches(domain_id,type,values)
-            if len(features_in_domain) > 0:
-                tangelo.log("INSERTING DOMAIN ENTITIES")
-                tangelo.log(type)
-                connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
+    # blacklist of pages to not extract data from
+    blacklist = config.get_extraction_blacklist()
+    if urlparse(url).netloc not in blacklist:
+        (features,errors) = extractors.extractAll(content)
+        for error in errors:
+            tangelo.log("FEATURE EXTRACTION ERROR: "+error)
+
+        for type,values in features.iteritems():
+            connector.insert_entities(url,type,values)
+            if len(values) > 0:
+                features_in_domain = connector.get_domain_entity_matches(domain_id,type,values)
+                if len(features_in_domain) > 0:
+                    tangelo.log("INSERTING DOMAIN ENTITIES")
+                    tangelo.log(type)
+                    connector.insert_domain_entities(str(domain_id),url, type, features_in_domain)
+        # we also don't want to export blacklisted pages.
+        tangelo.log("Calling export")
+        export_to_services(domain_id, team_id, trail_id, url, content, user_email, features)
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, user_email)
 
-    tangelo.log("Calling export")
-    export_to_services(domain_id, team_id, trail_id, url, content, user_email, features)
+
 
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
