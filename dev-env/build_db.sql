@@ -71,6 +71,8 @@ CREATE TABLE datawake_data (
   team_id INT,
   domain_id INT,
   trail_id INT,
+  crawl_type VARCHAR(255),
+  comments VARCHAR(1000),
   PRIMARY KEY(id),
   FOREIGN KEY (team_id) REFERENCES datawake_teams(id) ON DELETE CASCADE,
   FOREIGN KEY (domain_id) REFERENCES datawake_domains(id) ON DELETE CASCADE,
@@ -246,7 +248,7 @@ CREATE VIEW vw_datawake_domains AS
 			t.name as teamName,
 			t.description as teamDescription
 	FROM datawake_domains as d
-		INNER JOIN datawake_teams t on d.team_id = t.id	
+		INNER JOIN datawake_teams t on d.team_id = t.id
 ;
 
 CREATE VIEW vw_xmit_recipients AS
@@ -261,7 +263,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_team_id AS recipientTeamId,
 		t.name AS recipientTeam,
 		r.recipient_trail_id AS recipientTrailId,
-		dt.name AS recipientTrail 
+		dt.name AS recipientTrail
 	FROM datawake_xmit_recipient r
 			left join datawake_xmit x on r.recipient_id = x.recipient_id
 			left join datawake_domains d on r.recipient_domain_id = d.id
@@ -283,7 +285,7 @@ CREATE VIEW vw_xmit_log AS
 	t.name AS teamName,
 	x.trail_id AS trailId,
 	dt.name AS trailName,
-	x.ts as timeStamp 
+	x.ts as timeStamp
 	FROM datawake_xmit x
 			join datawake_xmit_recipient r on x.recipient_id = r.recipient_id
 			left join datawake_domains d on x.domain_id = d.id
