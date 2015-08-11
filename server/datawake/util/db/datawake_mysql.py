@@ -31,7 +31,7 @@ import datetime
 from datawake.conf import dbconfig as dbconfig
 
 
-UseRestAPI = False
+UseRestAPI = True
 # StrongLoopHostname = 'localhost'
 StrongLoopHostname = dbconfig.LOOPBACK_PORT_3001_TCP_ADDR
 # StrongLoopPort = '5500'
@@ -48,8 +48,8 @@ Interface to datawake relational database tables (mysql)
 def getSetting(setting, defaultval=''):
     value = defaultval;
     if UseRestAPI:
-        filter_string = '{"where":{"setting":' + setting + '}}'
-        domains = restGet('datawake_settings', 'filter=' + filter_string)
+        filter_string = '{"where":{"setting":"' + setting + '"}}'
+        domains = restGet('DatawakeSettings', 'filter=' + filter_string)
         if domains[0]:
             value = domains[0]['value']
     else:
@@ -235,15 +235,27 @@ def restGet(route, query_string=''):
 def restPost(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
-        res = httpSession.post('http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route,
-                               data=post_buffer,
-                               headers={'content-type': 'application/json'})
+        url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
+        res = httpSession.post(url, data=post_buffer, headers={'content-type': 'application/json'})
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
         return ret_val
-    except:
-        print sys.exc_info()[0]
+    except Exception as e:
+        tangelo.log_error("Error posting data", e)
+        return -1
 
+def restPut(route, postDict):
+    try:
+        post_buffer = json.dumps(postDict)
+        url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
+        res = httpSession.put(url, data=post_buffer, headers={'content-type': 'application/json'})
+        ret_val = lambda: None
+        ret_val.__dict__ = json.loads(res.text)
+        tangelo.log(json.loads(res.text))
+        return ret_val
+    except Exception as e:
+        tangelo.log_error("Error putting data", e)
+        return -1
 
 # ###   BROWSE PATH SCRAPE  ###
 
@@ -253,14 +265,15 @@ def restPost(route, postDict):
 #
 def addBrowsePathData(team_id, domain_id, trail_id, url, userEmail):
     if UseRestAPI:
+        ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
         added_data = restPost('DatawakeData',
-                              dict(id=0, url=url, domainId=domain_id, trailId=trail_id, useremail=userEmail,
+                              dict(id=0,ts=ts,url=url, domainId=domain_id, trailId=trail_id, useremail=userEmail,
                                    teamId=team_id))
         try:
             ret_val = added_data.id
             return ret_val
-        except:
-            print sys.exc_info()[0]
+        except Exception as e:
+            tangelo.log_error("error adding Browse Path Data", e)
             return -1
     else:
         sql = "INSERT INTO datawake_data (url,userEmail,team_id,domain_id,trail_id) VALUES (%s,%s,%s,%s,%s) "
@@ -268,7 +281,7 @@ def addBrowsePathData(team_id, domain_id, trail_id, url, userEmail):
         lastId = dbCommitSQL(sql, params)
         return lastId
 
-
+# TODO REST End Point
 def getBrowsePathUrls(trail_id):
     sql = "SELECT url, crawl_type, comments, count(1) from datawake_data where trail_id = %s GROUP BY url, crawl_type, comments"
     rows = dbGetRows(sql, [trail_id])
@@ -647,10 +660,18 @@ def getTrailsWithUserCounts(org):
     return map(lambda x: {'domain': x[0], 'trail': x[1], 'userCount': x[2], 'records': x[3]}, rows)
 
 
-
 def setComments(trail_id, url, crawl_type, comments):
-    sql = """update datawake_data set crawl_type = %s, comments = %s where trail_id=%s and url=%s"""
-    dbCommitSQL(sql,[crawl_type, comments, trail_id, url])
+    if UseRestAPI:
+        filter_string = '{"where":{"and":[{"trailId":"' + str(trail_id) + '"},{"url":"' + url + '"}]}}'
+        results = restGet('DatawakeData', 'filter=' + filter_string)
+        for result in results:
+            id = result['id']
+            ts = result['ts']
+            createdTrail = restPut('DatawakeData',
+                dict(id=id, ts=ts, crawlType=crawl_type, comments=comments))
+    else:
+        sql = """update datawake_data set crawl_type = %s, comments = %s where trail_id=%s and url=%s"""
+        dbCommitSQL(sql,[crawl_type, comments, trail_id, url])
 ####   URL RANKS   ####
 
 
@@ -811,7 +832,7 @@ def remove_domain(domain_id):
 
 def get_domain_name(domain_id):
     if UseRestAPI:
-        filter_string = '{"where":{"id":' + domain_id + '}}'
+        filter_string = '{"where":{"id":"' + str(domain_id) + '"}}'
         domains = restGet('DatawakeDomains', 'filter=' + filter_string)
         if domains[0]:
             return domains[0]['name']
@@ -891,11 +912,12 @@ def get_marked_features(trail_id):
 
 def get_services(domain_id):
     if UseRestAPI:
-        filter_string = '{"where":{"recipientDomainId":' + domain_id + '}}'
+        filter_string = '{"where":{"recipientDomainId":"' + str(domain_id) + '"}}'
         services = restGet('DatawakeXmitRecipient', 'filter=' + filter_string)
         retFeatureList = []
         for service in services:
-            retFeatureList.append(dict(id=service['recipientId'], name=service['recipientName'], index=service['recipientIndex'], cred=service['credentials'], type=service['serviceType'], url=service['url']))
+            tangelo.log(service)
+            # retFeatureList.append(dict(id=service['recipientId'], name=service['recipientName'], index=service['recipientIndex'], cred=service['credentials'], type=service['serviceType'], url=service['url']))
         return retFeatureList
     else:
         sql = "select recipient_id, recipient_name, recipient_index, credentials, service_type, recipient_url from datawake_xmit_recipient where recipient_domain_id = %s"
@@ -916,11 +938,16 @@ def service_status(id, type, url, domain_id, team_id, trail_id, status):
 
 # TODO bwhiteman fix this to use REST
 def get_prefetch_results(domain_name, trail_name):
-    sql = """ SELECT url, title, rank
-              FROM trail_term_rank
-              WHERE domain = %s and trail = %s
-              ORDER BY rank desc
-          """
-    params = [domain_name, trail_name]
-    rows = dbGetRows(sql, params)
-    return map(lambda x: dict(url=x[0], title=x[1], rank=x[2]), rows)
+    if UseRestAPI:
+        filter_string = '{"where":{"and":[{"domainName":"' + domain_name + '"},{"trailName":' + trail_name + '}]}}'
+        results = restGet('TrailTermRank', 'filter=' + filter_string)
+        return results
+    else:
+        sql = """ SELECT url, title, rank
+                  FROM trail_term_rank
+                  WHERE domain = %s and trail = %s
+                  ORDER BY rank desc
+              """
+        params = [domain_name, trail_name]
+        rows = dbGetRows(sql, params)
+        return map(lambda x: dict(url=x[0], title=x[1], rank=x[2]), rows)
