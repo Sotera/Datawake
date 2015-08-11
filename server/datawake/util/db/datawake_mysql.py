@@ -283,9 +283,14 @@ def addBrowsePathData(team_id, domain_id, trail_id, url, userEmail):
 
 # TODO REST End Point
 def getBrowsePathUrls(trail_id):
-    sql = "SELECT url, crawl_type, comments, count(1) from datawake_data where trail_id = %s GROUP BY url, crawl_type, comments"
-    rows = dbGetRows(sql, [trail_id])
-    return map(lambda x: dict(url=x[0], crawl=x[1], comments=x[2], count=x[3]), rows)
+    if UseRestAPI:
+        filter_string = '{"where":{"trailId":' + str(trail_id) + '}}'
+        results = restGet('VwBrowseCounts', 'filter=' + filter_string)
+        return results
+    else:
+        sql = "SELECT url, crawl_type, comments, count(1) from datawake_data where trail_id = %s GROUP BY url, crawl_type, comments"
+        rows = dbGetRows(sql, [trail_id])
+        return map(lambda x: dict(url=x[0], crawl=x[1], comments=x[2], count=x[3]), rows)
 
 
 def getVisitedUrlsInTrailForTimeRange(trail_id, startdate, enddate, userEmails=[]):
@@ -306,7 +311,7 @@ def getVisitedUrlsInTrailForTimeRange(trail_id, startdate, enddate, userEmails=[
         ret_val = []
         for visited_url in visited_urls:
             ret_val_element = dict(ts=visited_url['ts'], url=visited_url['url'], hits=visited_url['hits'],
-                                   userEmail=visited_url['useremail'])
+                                   userEmail=visited_url['userEmail'])
             ret_val.append(ret_val_element)
         return ret_val
     else:
@@ -939,8 +944,8 @@ def service_status(id, type, url, domain_id, team_id, trail_id, status):
 # TODO bwhiteman fix this to use REST
 def get_prefetch_results(domain_name, trail_name):
     if UseRestAPI:
-        filter_string = '{"where":{"and":[{"domainName":"' + domain_name + '"},{"trailName":' + trail_name + '}]}}'
-        results = restGet('TrailTermRank', 'filter=' + filter_string)
+        filter_string = '{"where":{"and":[{"domain":"' + domain_name + '"},{"trail":' + trail_name + '}]}}'
+        results = restGet('TrailTermRanks', 'filter=' + filter_string)
         return results
     else:
         sql = """ SELECT url, title, rank

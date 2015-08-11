@@ -198,6 +198,18 @@ CREATE TABLE datawake_xmit (
   CONSTRAINT fkTrail FOREIGN KEY (trail_id) REFERENCES datawake_trails (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+CREATE TABLE IF NOT EXISTS trail_term_rank (
+  org VARCHAR(300),
+  domain varchar(300),
+  trail varchar(100),
+  url varchar(1024),
+  title varchar(1024),
+  rank DOUBLE,
+  pageRank INT,
+  removed INT DEFAULT 0,
+  index(org(300), domain(300), trail(100), url(255))
+);
+
 
 CREATE VIEW vw_team_users AS
 	SELECT t.id as teamId,
@@ -291,3 +303,14 @@ CREATE VIEW vw_xmit_log AS
                         left join datawake_teams t on x.team_id = t.id
                         left join datawake_trails dt on x.trail_id = dt.id
 ;
+
+CREATE VIEW vw_browse_count AS
+	SELECT url,
+    crawl_type,
+    comments,
+    trail_id,
+    count(1)
+    FROM datawake_data
+    GROUP BY url,
+    crawl_type,
+    comments;

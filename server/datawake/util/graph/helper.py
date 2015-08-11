@@ -74,6 +74,8 @@ def getBrowsePathEdges(trail_id,startdate,enddate,userlist=[]):
     # set group name from each node
     for key,value in nodes.iteritems():
         domain = 'n/a'
+        if key is None:
+            continue
         if '//' in key:  domain =  key.split('/')[2]
         value['groupName'] = domain
 
@@ -367,6 +369,8 @@ def processEdges(rawEdges,nodeDict={}):
             #type = value['type']
             #if ':' in key:
             #    type = key[:key.index(':')]
+            if key is None:
+                continue
             groupName = value['groupName']
             if groupName not in groups:
                 groups[groupName] = curr_group
