@@ -584,7 +584,7 @@ def getActiveUsers(org):
 def addTrail(team_id, domain_id, name, description, userEmail):
     if UseRestAPI:
         createdTrail = restPost('DatawakeTrails',
-                                dict(name=name, description=description, teamId=team_id, domainId=domain_id,
+                                dict(id=0, name=name, description=description, teamId=team_id, domainId=domain_id,
                                      createdBy=userEmail))
         tangelo.log(createdTrail)
         return createdTrail.id
