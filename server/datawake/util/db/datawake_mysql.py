@@ -261,8 +261,9 @@ def restPost(route, postDict):
 #
 def addBrowsePathData(team_id, domain_id, trail_id, url, userEmail):
     if UseRestAPI:
+        ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
         added_data = restPost('DatawakeData',
-                              dict(id=0, url=url, domainId=domain_id, trailId=trail_id, useremail=userEmail,
+                              dict(id=0, ts=ts, url=url, domainId=domain_id, trailId=trail_id, useremail=userEmail,
                                    teamId=team_id))
         try:
             ret_val = added_data.id
