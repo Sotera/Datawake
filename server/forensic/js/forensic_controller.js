@@ -419,7 +419,7 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
                 $scope.$apply();
             }
         });
-        var link_request = {domain_name: "memex", trail_name:"ufun"}
+        var link_request = {domain_name: $scope.selectedDomain.name, trail_name: $scope.selectedTrail.name}
         $.ajax({
             type: "POST",
             url: "/datawake/forensic/graphservice/links",
