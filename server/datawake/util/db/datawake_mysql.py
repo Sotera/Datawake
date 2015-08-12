@@ -100,7 +100,7 @@ def getDomainEntityMatches(domain_id, values, type):
 
 
 def getExtractedDomainEntitiesFromUrls(domain_id, urls, type):
-    joinedUrls = '","'.join(urls)
+    joinedUrls = urllib.quote_plus('","'.join(urls))
     if (type is None):
         filter_string = '{"where":{"and":[{"url":{"inq":["' + joinedUrls + '"]}},{"domainId":"' + str(
             domain_id) + '"}]}}'
@@ -230,34 +230,46 @@ def restGet(route, query_string=''):
             # query_string = urllib.quote_plus(query_string)
             url += '?' + query_string
         res = httpSession.get(url)
+        res.raise_for_status()
         return json.loads(res.text)
-    except:
-        print sys.exc_info()[0]
+    except requests.exceptions.HTTPError as e:
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
+    except Exception as e:
+        tangelo.log_error("Error getting data",e)
+        return {}
 
 
 def restPost(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
         url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
-        res = httpSession.post(url, data=post_buffer, headers={'content-type': 'application/json'})
+        res = httpSession.post(url,
+                               data=post_buffer,
+                               headers={'content-type': 'application/json'})
         res.raise_for_status()
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
         return ret_val
+    except requests.exceptions.HTTPError as e:
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
     except Exception as e:
-        tangelo.log_error("Error posting data", e)
-        tangelo.log_error(res.text)
-        return -1
+        tangelo.log_error("Error posting data",e)
+        return {}
 
 def restPut(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
         url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
         res = httpSession.put(url, data=post_buffer, headers={'content-type': 'application/json'})
+        res.raise_for_status()
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
-
         return ret_val
+    except requests.exceptions.HTTPError as e:
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
     except Exception as e:
         tangelo.log_error("Error putting data", e)
         return -1
@@ -490,7 +502,7 @@ def addTeam(name, description, userEmail):
 
 def hasTeamAccess(email, team_id):
     if UseRestAPI:
-        filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"id":' + str(team_id) + '}]}}'
+        filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"teamId":' + str(team_id) + '}]}}'
         teams = restGet('VwTeamUsers', 'filter=' + filter_string)
         return len(teams) > 0
     else:
@@ -723,7 +735,7 @@ def rankUrl(team_id, domain_id, trail_id, userEmail, url, rank):
 def getUrlRank(trail_id, userEmail, url):
     if UseRestAPI:
         filter_string = '{"where":{"and":[{"trailId":' + str(trail_id) + '},{"useremail":"' + str(
-            userEmail) + '"},{"url":"' + str(url) + '"}]}}'
+            userEmail) + '"},{"url":"' + urllib.quote_plus(url) + '"}]}}'
         urlRanks = restGet('DatawakeUrlRanks', 'filter=' + filter_string)
         if len(urlRanks) == 0:
             return 0
@@ -891,7 +903,7 @@ def add_manual_feature(trail_id, userEmail, url, raw_text, feature_type, feature
 
 def get_manual_features(trail_id, url):
     if UseRestAPI:
-        filter_string = '{"where":{"and":[{"url":"' + str(url) + '"},{"trailId":' + str(trail_id) + '}]}}'
+        filter_string = '{"where":{"and":[{"url":"' + urllib.quote_plus(url) + '"},{"trailId":' + str(trail_id) + '}]}}'
         features = restGet('ManualExtractorMarkupAdditions', 'filter=' + filter_string)
         retFeatureList = []
         for feature in features:
@@ -927,7 +939,7 @@ def get_marked_features(trail_id):
 def get_services(domain_id):
     if UseRestAPI:
         filter_string = '{"where":{"recipientDomainId":"' + str(domain_id) + '"}}'
-        services = restGet('DatawakeXmitRecipient', 'filter=' + filter_string)
+        services = restGet('DatawakeXmitRecipients', 'filter=' + filter_string)
         retFeatureList = []
         for service in services:
             tangelo.log(service)
@@ -954,7 +966,7 @@ def service_status(id, type, url, domain_id, team_id, trail_id, status):
 # TODO bwhiteman fix this to use REST
 def get_prefetch_results(domain_name, trail_name):
     if UseRestAPI:
-        filter_string = '{"where":{"and":[{"domain":"' + domain_name + '"},{"trail":' + trail_name + '}]}}'
+        filter_string = '{"where":{"and":[{"domain":"' + domain_name + '"},{"trail":"' + trail_name + '"}]}}'
         results = restGet('TrailTermRanks', 'filter=' + filter_string)
         return results
     else:
