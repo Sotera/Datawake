@@ -231,7 +231,9 @@ def restGet(route, query_string=''):
         return json.loads(res.text)
     except Exception as e:
         tangelo.log_error("Error getting data",e)
-        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        tangelo.log_error("URL: %s"%url)
+        if res:
+            tangelo.log_error("Error Message: %s"%res.text)
         return {}
 
 
