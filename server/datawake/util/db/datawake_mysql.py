@@ -492,7 +492,7 @@ def addTeam(name, description, userEmail):
 
 def hasTeamAccess(email, team_id):
     if UseRestAPI:
-        filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"id":' + str(team_id) + '}]}}'
+        filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"teamId":' + str(team_id) + '}]}}'
         teams = restGet('VwTeamUsers', 'filter=' + filter_string)
         return len(teams) > 0
     else:
