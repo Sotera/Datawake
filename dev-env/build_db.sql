@@ -222,7 +222,7 @@ CREATE VIEW vw_team_users AS
 ;
 
 CREATE VIEW vw_urls_in_trails AS
-	SELECT unix_timestamp(dd2.ts) as ts,
+	SELECT dd2.ts as ts,
 		dd2.id,
 		dd1.domain_id,
 		dd1.trail_id,
