@@ -63,17 +63,20 @@ def getSetting(setting, defaultval=''):
 
 def insertDomainEntities(domain_id, url, feature_type, feature_values):
     addedEntities = []
+    ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
     for feature_value in feature_values:
         addedEntities.append(restPost('DomainExtractorWebIndices',
                                       dict(id=0, domainId=domain_id, url=url, featureType=feature_type,
-                                           featureValue=feature_value)))
+                                           featureValue=feature_value, ts=ts)))
     return addedEntities
+
 
 def insertEntities(url, feature_type, feature_values):
     addedEntities = []
+    ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
     for feature_value in feature_values:
         addedEntities.append(restPost('GeneralExtractorWebIndices',
-                                      dict(id=0, url=url, featureType=feature_type, featureValue=feature_value)))
+                                      dict(id=0, url=url, featureType=feature_type, featureValue=feature_value, ts=ts)))
     return addedEntities
 
 
@@ -110,7 +113,7 @@ def getExtractedDomainEntitiesFromUrls(domain_id, urls, type):
     ret_val = []
     for extractedJsonEntity in extractedJsonEntities:
         extractedEntity = lambda: None
-        extractedEntity.__dict__ = extractedJsonEntity
+        extractedEntity.__dict__ = json.loads(extractedJsonEntity)
         ret_val.append(extractedEntity)
     return ret_val
 
@@ -227,31 +230,24 @@ def restGet(route, query_string=''):
             # query_string = urllib.quote_plus(query_string)
             url += '?' + query_string
         res = httpSession.get(url)
-        res.raise_for_status()
         return json.loads(res.text)
-    except Exception as e:
-        tangelo.log_error("Error getting data",e)
-        tangelo.log_error("URL: %s"%url)
-        if res:
-            tangelo.log_error("Error Message: %s"%res.text)
-        return {}
+    except:
+        print sys.exc_info()[0]
 
 
 def restPost(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
         url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
-        res = httpSession.post(url,
-                               data=post_buffer,
-                               headers={'content-type': 'application/json'})
+        res = httpSession.post(url, data=post_buffer, headers={'content-type': 'application/json'})
         res.raise_for_status()
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
         return ret_val
     except Exception as e:
-        tangelo.log_error("Error posting data",e)
-        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
-        return {}
+        tangelo.log_error("Error posting data", e)
+        tangelo.log_error(res.text)
+        return -1
 
 def restPut(route, postDict):
     try:
@@ -312,11 +308,13 @@ def getVisitedUrlsInTrailForTimeRange(trail_id, startdate, enddate, userEmails=[
             filter_string = '{"where":{"and":[{"useremail":{"inq":["' + joinedValues + '"]}}, {"ts":{"between":["' + startdateJson + '","' + enddateJson + '"]}},'
             filter_string += '{"trailId":"' + str(trail_id) + '"}]}}'
         else:
+            # filter_string = '{"where":{"trailId":"' + str(trail_id) + '"}}'
             filter_string = '{"where":{"and":[{"ts":{"between":["' + startdateJson + '","' + enddateJson + '"]}},'
             filter_string += '{"trailId":"' + str(trail_id) + '"}]}}'
 
-        visited_urls = restGet('VwUrlsInTrails')
-        # visited_urls = restGet('VwUrlsInTrails', 'filter=' + filter_string)
+        # visited_urls = restGet('VwUrlsInTrails')
+        tangelo.log("filter: %s"%filter_string)
+        visited_urls = restGet('VwUrlsInTrails', 'filter=' + filter_string)
         ret_val = []
         for visited_url in visited_urls:
             ret_val_element = dict(ts=visited_url['ts'], url=visited_url['url'], hits=visited_url['hits'],
@@ -492,7 +490,7 @@ def addTeam(name, description, userEmail):
 
 def hasTeamAccess(email, team_id):
     if UseRestAPI:
-        filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"teamId":' + str(team_id) + '}]}}'
+        filter_string = '{"where":{"and":[{"email":"' + str(email) + '"},{"id":' + str(team_id) + '}]}}'
         teams = restGet('VwTeamUsers', 'filter=' + filter_string)
         return len(teams) > 0
     else:
@@ -944,7 +942,8 @@ def get_services(domain_id):
 # service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
 def service_status(id, type, url, domain_id, team_id, trail_id, status):
     if UseRestAPI:
-        service_status = restPost('DatawakeXmit', dict(recipientId=id, serviceType=type, datawakeUrl=url, domainId=domain_id, teamId=team_id, trailId=trail_id, xmitStatus=status, ts=datetime.datetime.now()))
+        ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
+        service_status = restPost('DatawakeXmit', dict(recipientId=id, serviceType=type, datawakeUrl=url, domainId=domain_id, teamId=team_id, trailId=trail_id, xmitStatus=status, ts=ts))
         return service_status.id
     else:
         sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, xmit_status, ts) values(%s,%s,%s,%s,%s,%s,%s,sysdate())'
