@@ -227,13 +227,13 @@ def restGet(route, query_string=''):
         if len(query_string) > 0:
             # query_string = urllib.quote_plus(query_string)
             url += '?' + query_string
-        tangelo.log(url)
         res = httpSession.get(url)
-        tangelo.log(res.status_code)
-        tangelo.log(res.text)
+        res.raise_for_status()
         return json.loads(res.text)
-    except:
-        print sys.exc_info()[0]
+    except Exception as e:
+        tangelo.log_error("Error getting data",e)
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
 
 
 def restPost(route, postDict):
@@ -242,11 +242,14 @@ def restPost(route, postDict):
         res = httpSession.post('http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route,
                                data=post_buffer,
                                headers={'content-type': 'application/json'})
+        res.raise_for_status()
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
         return ret_val
-    except:
-        print sys.exc_info()[0]
+    except Exception as e:
+        tangelo.log_error("Error posting data",e)
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
 
 
 # ###   BROWSE PATH SCRAPE  ###
