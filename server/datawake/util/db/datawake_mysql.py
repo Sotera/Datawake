@@ -239,7 +239,8 @@ def restGet(route, query_string=''):
 def restPost(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
-        res = httpSession.post('http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route,
+        url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
+        res = httpSession.post(url,
                                data=post_buffer,
                                headers={'content-type': 'application/json'})
         res.raise_for_status()
