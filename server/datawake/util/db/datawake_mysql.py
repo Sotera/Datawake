@@ -564,9 +564,10 @@ def getActiveUsers(org):
 #
 def addTrail(team_id, domain_id, name, description, userEmail):
     if UseRestAPI:
+        created = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
         createdTrail = restPost('DatawakeTrails',
                                 dict(id=0, name=name, description=description, teamId=team_id, domainId=domain_id,
-                                     createdBy=userEmail))
+                                     createdBy=userEmail, created=created))
         return createdTrail.id
     else:
         sql = "INSERT INTO datawake_trails (team_id,domain_id,name,description,created_by) values (%s,%s,%s,%s,%s)"
