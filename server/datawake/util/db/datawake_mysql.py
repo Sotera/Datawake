@@ -48,8 +48,8 @@ Interface to datawake relational database tables (mysql)
 def getSetting(setting, defaultval=''):
     value = defaultval;
     if UseRestAPI:
-        filter_string = '{"where":{"setting":' + setting + '}}'
-        domains = restGet('datawake_settings', 'filter=' + filter_string)
+        filter_string = '{"where":{"setting":"' + setting + '"}}'
+        domains = restGet('DatawakeSettings', 'filter=' + filter_string)
         if domains[0]:
             value = domains[0]['value']
     else:
@@ -294,7 +294,7 @@ def getVisitedUrlsInTrailForTimeRange(trail_id, startdate, enddate, userEmails=[
         ret_val = []
         for visited_url in visited_urls:
             ret_val_element = dict(ts=visited_url['ts'], url=visited_url['url'], hits=visited_url['hits'],
-                                   userEmail=visited_url['useremail'])
+                                   userEmail=visited_url['userEmail'])
             ret_val.append(ret_val_element)
         return ret_val
     else:
@@ -808,7 +808,7 @@ def remove_domain(domain_id):
 
 def get_domain_name(domain_id):
     if UseRestAPI:
-        filter_string = '{"where":{"id":' + domain_id + '}}'
+        filter_string = '{"where":{"id":"' + str(domain_id) + '"}}'
         domains = restGet('DatawakeDomains', 'filter=' + filter_string)
         if domains[0]:
             return domains[0]['name']
@@ -888,7 +888,7 @@ def get_marked_features(trail_id):
 
 def get_services(domain_id):
     if UseRestAPI:
-        filter_string = '{"where":{"recipientDomainId":' + domain_id + '}}'
+        filter_string = '{"where":{"recipientDomainId":"' + str(domain_id) + '"}}'
         services = restGet('DatawakeXmitRecipient', 'filter=' + filter_string)
         retFeatureList = []
         for service in services:
