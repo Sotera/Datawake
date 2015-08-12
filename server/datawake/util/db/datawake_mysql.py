@@ -227,22 +227,29 @@ def restGet(route, query_string=''):
             # query_string = urllib.quote_plus(query_string)
             url += '?' + query_string
         res = httpSession.get(url)
+        res.raise_for_status()
         return json.loads(res.text)
-    except:
-        print sys.exc_info()[0]
+    except Exception as e:
+        tangelo.log_error("Error getting data",e)
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
 
 
 def restPost(route, postDict):
     try:
         post_buffer = json.dumps(postDict)
         url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
-        res = httpSession.post(url, data=post_buffer, headers={'content-type': 'application/json'})
+        res = httpSession.post(url,
+                               data=post_buffer,
+                               headers={'content-type': 'application/json'})
+        res.raise_for_status()
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
         return ret_val
     except Exception as e:
-        tangelo.log_error("Error posting data", e)
-        return -1
+        tangelo.log_error("Error posting data",e)
+        tangelo.log_error("URL: %s Error Message: %s"%(url, res.text))
+        return {}
 
 def restPut(route, postDict):
     try:
@@ -251,7 +258,7 @@ def restPut(route, postDict):
         res = httpSession.put(url, data=post_buffer, headers={'content-type': 'application/json'})
         ret_val = lambda: None
         ret_val.__dict__ = json.loads(res.text)
-        tangelo.log(json.loads(res.text))
+
         return ret_val
     except Exception as e:
         tangelo.log_error("Error putting data", e)
@@ -575,8 +582,9 @@ def getActiveUsers(org):
 def addTrail(team_id, domain_id, name, description, userEmail):
     if UseRestAPI:
         createdTrail = restPost('DatawakeTrails',
-                                dict(id=0, name=name, description=description, teamId=team_id, domainId=domain_id,
+                                dict(name=name, description=description, teamId=team_id, domainId=domain_id,
                                      createdBy=userEmail))
+        tangelo.log(createdTrail)
         return createdTrail.id
     else:
         sql = "INSERT INTO datawake_trails (team_id,domain_id,name,description,created_by) values (%s,%s,%s,%s,%s)"
