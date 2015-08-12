@@ -227,7 +227,10 @@ def restGet(route, query_string=''):
         if len(query_string) > 0:
             # query_string = urllib.quote_plus(query_string)
             url += '?' + query_string
+        tangelo.log(url)
         res = httpSession.get(url)
+        tangelo.log(res.status_code)
+        tangelo.log(res.text)
         return json.loads(res.text)
     except:
         print sys.exc_info()[0]
