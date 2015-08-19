@@ -50,7 +50,7 @@ def getSetting(setting, defaultval=''):
     if UseRestAPI:
         filter_string = '{"where":{"setting":"' + setting + '"}}'
         domains = restGet('DatawakeSettings', 'filter=' + filter_string)
-        if domains[0]:
+        if domains:
             value = domains[0]['value']
     else:
         sql = "SELECT value from datawake_settings WHERE setting = %s"
