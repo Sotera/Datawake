@@ -52,6 +52,9 @@ LOCK TABLES `datawake_data` WRITE;
 /*!40000 ALTER TABLE `datawake_data` DISABLE KEYS */;
 INSERT INTO `datawake_data` VALUES (27,'2014-09-09 00:35:49','http://www.rubmaps.com/erotic-massage-rose-garden-spa-los-angeles-ca-8875','john.doe@nomail.none',1,5,19),(28,'2014-09-09 00:36:05','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=cherry110510%40gmail.com','john.doe@nomail.none',1,5,19),(29,'2014-09-09 00:36:23','http://myproviderguide.com/phone/626-344-9893','john.doe@nomail.none',1,5,19),(30,'2014-09-09 00:36:36','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=cherry110510%40gmail.com','john.doe@nomail.none',1,5,19),(31,'2014-09-09 00:37:46','http://www.theeroticreview.com/reviews/show.asp?id=227534','john.doe@nomail.none',1,5,19),(32,'2014-09-09 00:38:00','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=cherry110510%40gmail.com','john.doe@nomail.none',1,5,19),(33,'2014-09-09 00:38:37','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=6263449893','john.doe@nomail.none',1,5,19),(34,'2014-09-09 00:38:54','http://www.rubmaps.com/erotic-massage-rose-garden-spa-los-angeles-ca-8875','john.doe@nomail.none',1,5,19);
 /*!40000 ALTER TABLE `datawake_data` ENABLE KEYS */;
+ALTER TABLE `memex_sotera`.`datawake_data`
+ADD COLUMN `crawl_type` VARCHAR(255) NULL AFTER `trail_id`,
+ADD COLUMN `comments` VARCHAR(1000) NULL AFTER `crawl_type`;
 UNLOCK TABLES;
 
 --
@@ -459,7 +462,7 @@ CREATE VIEW vw_team_users AS
 DROP VIEW IF EXISTS `vw_urls_in_trails`;
 /*!50001 DROP VIEW IF EXISTS `vw_urls_in_trails`*/;
 CREATE VIEW vw_urls_in_trails AS
-	SELECT unix_timestamp(dd2.ts) as ts,
+	SELECT dd2.ts as ts,
 		dd2.id,
 		dd1.domain_id,
 		dd1.trail_id,

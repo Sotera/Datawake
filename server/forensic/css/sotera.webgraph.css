@@ -10,13 +10,13 @@ body {
 #control-panel {
   background-color: lightgray;
 }
-    
+
 #graph {
  position: fixed;
  top: 0px;
 }
-    
-    
+
+
 .node {
   stroke: #fff;
   stroke-width: 1.5px;
@@ -28,7 +28,7 @@ body {
   stroke: #bbb;
 }
 
-    
+
 .result_thead, .result_tbody { display: block; }
 
 
@@ -106,4 +106,9 @@ body {
 }
 .checkbox-inline.no_indent:last-child {
   margin-right: 0;
+}
+
+.no-gutter > [class*='col-'] {
+    padding-right:0;
+    padding-left:0;
 }

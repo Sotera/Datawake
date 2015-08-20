@@ -27,7 +27,7 @@ CREATE TABLE datawake_team_users (
   FOREIGN KEY (team_id) REFERENCES datawake_teams (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ;
 
-CREATE TABLE datawake_domains (
+CREATE TABLE `datawake_domains` (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(300) DEFAULT NULL,
   description text,
@@ -35,8 +35,8 @@ CREATE TABLE datawake_domains (
   PRIMARY KEY (id),
   UNIQUE KEY name (name,team_id),
   KEY team_id (team_id),
-  FOREIGN KEY (team_id) REFERENCES datawake_teams (id) ON DELETE CASCADE
-);
+  CONSTRAINT datawake_domains_ibfk_1 FOREIGN KEY (team_id) REFERENCES datawake_teams (id) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 CREATE TABLE datawake_domain_entities (
   domain_entity_id INT NOT NULL AUTO_INCREMENT,
@@ -71,6 +71,8 @@ CREATE TABLE datawake_data (
   team_id INT,
   domain_id INT,
   trail_id INT,
+  crawl_type VARCHAR(255),
+  comments VARCHAR(1000),
   PRIMARY KEY(id),
   FOREIGN KEY (team_id) REFERENCES datawake_teams(id) ON DELETE CASCADE,
   FOREIGN KEY (domain_id) REFERENCES datawake_domains(id) ON DELETE CASCADE,
@@ -115,9 +117,8 @@ CREATE TABLE domain_extractor_web_index (
   feature_value varchar(1024) DEFAULT NULL,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  UNIQUE KEY uniqueFeature (url(300), feature_type, feature_value(100)),
-  KEY domain_id (domain_id,url(300))
-) ;
+  KEY uniqueFeature (url(300),feature_type,feature_value(100))
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
 
 CREATE TABLE general_extractor_web_index (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -126,9 +127,9 @@ CREATE TABLE general_extractor_web_index (
   feature_value varchar(1024) DEFAULT NULL,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  UNIQUE KEY uniqueFeature (url(300), feature_type, feature_value(100)),
+  KEY uniqueFeature (url(300),feature_type,feature_value(100)),
   KEY url (url(300))
-) ;
+) ENGINE=InnoDB AUTO_INCREMENT=147920 DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE manual_extractor_markup_additions (
@@ -197,6 +198,18 @@ CREATE TABLE datawake_xmit (
   CONSTRAINT fkTrail FOREIGN KEY (trail_id) REFERENCES datawake_trails (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+CREATE TABLE IF NOT EXISTS trail_term_rank (
+  org VARCHAR(300),
+  domain varchar(300),
+  trail varchar(100),
+  url varchar(1024),
+  title varchar(1024),
+  rank DOUBLE,
+  pageRank INT,
+  removed INT DEFAULT 0,
+  index(org(300), domain(300), trail(100), url(255))
+);
+
 
 CREATE VIEW vw_team_users AS
 	SELECT t.id as teamId,
@@ -209,7 +222,7 @@ CREATE VIEW vw_team_users AS
 ;
 
 CREATE VIEW vw_urls_in_trails AS
-	SELECT unix_timestamp(dd2.ts) as ts,
+	SELECT dd2.ts as ts,
 		dd2.id,
 		dd1.domain_id,
 		dd1.trail_id,
@@ -246,7 +259,7 @@ CREATE VIEW vw_datawake_domains AS
 			t.name as teamName,
 			t.description as teamDescription
 	FROM datawake_domains as d
-		INNER JOIN datawake_teams t on d.team_id = t.id	
+		INNER JOIN datawake_teams t on d.team_id = t.id
 ;
 
 CREATE VIEW vw_xmit_recipients AS
@@ -261,7 +274,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_team_id AS recipientTeamId,
 		t.name AS recipientTeam,
 		r.recipient_trail_id AS recipientTrailId,
-		dt.name AS recipientTrail 
+		dt.name AS recipientTrail
 	FROM datawake_xmit_recipient r
 			left join datawake_xmit x on r.recipient_id = x.recipient_id
 			left join datawake_domains d on r.recipient_domain_id = d.id
@@ -270,23 +283,34 @@ CREATE VIEW vw_xmit_recipients AS
 ;
 
 CREATE VIEW vw_xmit_log AS
-	SELECT x.xmit_id AS xmitId,
-	x.recipient_id AS recipientId,
-	r.recipient_name AS recipientName,
-	r.recipient_url as recipientURL,
-	x.service_type AS serviceType,
-	x.datawake_url AS datawakeUrl,
-	x.xmit_status AS status,mysql
-	x.domain_id AS domainId,
-	d.name AS domainName,
-	x.team_id AS teamId,
-	t.name AS teamName,
-	x.trail_id AS trailId,
-	dt.name AS trailName,
-	x.ts as timeStamp 
-	FROM datawake_xmit x
-			join datawake_xmit_recipient r on x.recipient_id = r.recipient_id
-			left join datawake_domains d on x.domain_id = d.id
-			left join datawake_teams t on x.team_id = t.id
-			left join datawake_trails dt on x.trail_id = dt.id
+        SELECT x.xmit_id AS xmitId,
+        x.recipient_id AS recipientId,
+        r.recipient_name AS recipientName,
+        r.recipient_url as recipientURL,
+        x.service_type AS serviceType,
+        x.datawake_url AS datawakeUrl,
+        x.xmit_status AS status,
+        x.domain_id AS domainId,
+        d.name AS domainName,
+        x.team_id AS teamId,
+        t.name AS teamName,
+        x.trail_id AS trailId,
+        dt.name AS trailName,
+        x.ts as timeStamp
+        FROM datawake_xmit x
+                        join datawake_xmit_recipient r on x.recipient_id = r.recipient_id
+                        left join datawake_domains d on x.domain_id = d.id
+                        left join datawake_teams t on x.team_id = t.id
+                        left join datawake_trails dt on x.trail_id = dt.id
 ;
+
+CREATE VIEW vw_browse_count AS
+	SELECT url,
+    crawl_type,
+    comments,
+    trail_id,
+    count(1)
+    FROM datawake_data
+    GROUP BY url,
+    crawl_type,
+    comments;

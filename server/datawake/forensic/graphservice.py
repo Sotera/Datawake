@@ -19,8 +19,8 @@ limitations under the License.
 import json
 
 import tangelo
-
-from datawake.util.db import datawake_mysql
+import datawake.util.dataconnector.factory as factory
+from datawake.util.db import datawake_mysql as db
 from datawake.util.graph import helper as graph_helper
 from datawake.util.session.helper import is_in_session
 from datawake.util.session.helper import has_team
@@ -70,10 +70,46 @@ def getTimeWindow(users, trail=u'*'):
         users = users.split(",")
     else:
         users = []
-    return json.dumps(datawake_mysql.getTimeWindow(org, users, trail))
+    return json.dumps(db.getTimeWindow(org, users, trail))
 
+@is_in_session
+def get_entities(trail_id):
+    tangelo.log('Getting entities for trail: %s' % trail_id)
+    entities = {}
+    entityList = []
+    urls = []
+    rows = db.getBrowsePathUrls(trail_id)
+    for row in rows:
+        urls.append(row['url'])
 
+    entity_data_connector = factory.get_entity_data_connector()
+    results = entity_data_connector.get_extracted_entities_from_urls(urls)
 
+    tangelo.log('Got entities')
+
+    for result in results:
+        for entityType in results[result]:
+            for entityName in results[result][entityType]:
+                if entityName in entities:
+                    entities[entityName]['pages'] = entities[entityName]['pages'] + 1
+                else:
+                    entities[entityName] = {'type': entityType, 'pages':1}
+    # TODO either figure out how how map the data or do this differently
+    for entity in entities:
+        entityList.append({'name': entity, 'type': entities[entity]['type'], 'pages': entities[entity]['pages']})
+    return json.dumps(entityList)
+
+@is_in_session
+def get_links(domain_name, trail_name):
+    tangelo.log('Getting links for %s:%s'%(domain_name,trail_name))
+    results = db.get_prefetch_results(domain_name, trail_name)
+    return json.dumps(results)
+
+@is_in_session
+def get_visited(trail_id):
+    tangelo.log('Getting visited links for %s'%trail_id)
+    results = db.getBrowsePathUrls(trail_id)
+    return json.dumps(results)
 
 @is_in_session
 @has_team
@@ -136,6 +172,9 @@ get_actions = {
 post_actions = {
     'timewindow': getTimeWindow,
     'get': getGraph,
+    'entities': get_entities,
+    'links': get_links,
+    'visited': get_visited
 }
 
 

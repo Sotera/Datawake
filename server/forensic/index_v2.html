@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html ng-app="forensicApp">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>DataWake Forensic</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+  <script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
+  <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <script src=js/sotera.webgraph.v1.js></script>
+  <script src=js/attribute_graph.js></script>
+  <script src=js/date_widget.js></script>
+  <script src=js/underscore-min.js></script>
+  <script src=js/moment.min.js></script>
+  <script src=js/daterangepicker.js></script>
+  <script src=js/angular-daterangepicker.min.js></script>
+  <script src=js/forensic_controller.js></script>
+
+  <script src=/plugin/tangelo/tangelo.min.js></script>
+  <script src=/plugin/config/config.js></script>
+  <script src=/plugin/ui/controlPanel.js></script>
+  <script src=/plugin/ui/svgColorLegend.js></script>
+
+
+  <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href=css/daterangepicker-bs3.css rel=stylesheet>
+  <link href="css/sotera.webgraph.css" rel="stylesheet">
+  <link rel="shortcut icon" href="images/waveicon38.png">
+
+  <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+  <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+  <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+  <link rel="styleSheet" href="//cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.1/ui-grid.min.css" />
+  <script src="//cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.1/ui-grid.min.js"></script>
+</head>
+
+<body id="forensic-body" ng-controller="ForensicController">
+  <div class="container-fluid navbar navbar-default navbar-fixed-top">
+    <div class=navbar-header style="margin-left: 10px">
+      <a class="navbar-brand">
+        <span>
+          <IMG SRC="images/waveicon38.png" style="width:25px;height:25px">
+        </span>
+        Datawake
+        <span id="forensic_version"></span>
+      </a>
+
+      <form>
+        <!--Date Picker Button-->
+        <div class="btn-group">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle" date-range-picker class="form-control date-picker" type="text" ng-model="date">Date
+          </button>
+        </div>
+        <!--Team Select Button-->
+        <div class="btn-group">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Team: {{selectedTeam.name}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" id="team_select">
+            <li ng-repeat="team in teams" ng-click="teamChanged(team)" class="pointer" ng-class="{selected : team === selectedTeam}">
+              {{team.name}}
+            </li>
+          </ul>
+        </div>
+        <!--User Selection Button backup  -->
+        <div class="btn-group" id="selectUsers">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Users
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" ng-click="$event.stopPropagation()">
+            <li>
+              <select id="user_select" multiple="multiple"></select>
+            </li>
+          </ul>
+        </div>
+        <!--Domain Selection Button-->
+        <div class="btn-group">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Domain: {{selectedDomain.name}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" id="domain_select">
+            <li ng-repeat="domain in domains" ng-click="domainChanged(domain)" class="pointer" ng-class="{selected : domain === selectedDomain}">
+              {{domain.name}}
+            </li>
+          </ul>
+        </div>
+        <!--Trail Selection Button-->
+        <div class="btn-group">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Trail: {{selectedTrail.name}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" id="trail_select">
+            <li ng-repeat="trail in trails" ng-click="trailChanged(trail)" class="pointer" ng-class="{selected : trail === selectedTrail}">
+              {{trail.name}}
+            </li>
+          </ul>
+        </div>
+        <!--Graph Type to Draw Menu Button-->
+        <div class="btn-group">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Graph Type: {{selectedGraphView}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" id="graph_select" style="width: 300px">
+            <li ng-repeat="view in views" ng-click="graphViewChanged(view)" class="pointer" ng-class="{selected : view === selectedGraphView}">
+              {{view}}
+            </li>
+          </ul>
+        </div>
+        <!--Graph Coloring Menu Button-->
+        <div class="btn-group">
+          <button type="button" data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Coloring
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" id="graph_coloring">
+            <li ng-repeat="colorOption in colorOptions" ng-click="graphColoringChanged(colorOption)" class="pointer" ng-class="{selected : colorOption === selectedGraphColoring}">
+              {{colorOption.text}}
+            </li>
+          </ul>
+        </div>
+        <!--Draw Graph Button-->
+        <div class="btn-group">
+          <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail || !selectedGraphView" class="btn btn-success btn-sm" ng-click="drawGraph()">
+            <span class="glyphicon glyphicon-edit"></span> Draw Graph
+          </button>
+        </div>
+        <!--Domain Dive Button-->
+        <div class="btn-group">
+          <button ng-disabled="!graphDrawn" class="btn btn-success btn-sm" ng-click="domainDive()">
+            <span class="glyphicon glyphicon-search"></span> Domain Dive
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- end button stuff in toolbar -->
+  </div>
+  <div class="container-fluid">
+    <div class="row no-gutter">
+      <div id="node_graph" class="col-md-6"></div>
+      <div class="col-md-3">
+        <svg id="legend" height='400px' style="pointer-events:none;"></svg>
+      </div>
+      <div class="col-md-3">
+        <caption>Extracted Entities</caption>
+        <div id="entityGrid" ui-grid="entityGrid" ui-grid-resize-columns ui-grid-exporter ui-grid-selection class="grid"></div>
+      </div>
+    </div>
+    <div class="row">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+          <a href="#visited" role="tab" data-toggle="tab">
+             Visited Pages
+          </a>
+        </li>
+        <li><a href="#prefetch" role="tab" data-toggle="tab">
+          Prefetch Suggested Sites
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active in col-md-11" id="visited">
+          <div id="visitedGrid" ui-grid="visitedGrid" ui-grid-resize-columns ui-grid-exporter ui-grid-selection class="grid"></div>
+        </div>
+        <div class="tab-pane in col-md-11" id="prefetch">
+          <div id="linkGrid" ui-grid="linkGrid" ui-grid-resize-columns ui-grid-exporter ui-grid-selection class="grid"></div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div id="dialog" title="Highlighted Vertices" />
+        <div id="link-dialog" title="Vertex Details" />
+</body>
+
+
+</html>

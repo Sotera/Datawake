@@ -69,15 +69,14 @@ def add_trail(team_id,domain_id,name,description=''):
 
     # create and then return the new trail
     try:
-        newTrailId = db.addTrail(team_id,domain_id,name, description, user.get_email())
-        newTrail = dict(id=newTrailId,name=name,description=description)
-        tangelo.log(newTrail)
-        return json.dumps(newTrail)
+        newTrailId = db.addTrail(team_id,domain_id,name, description, user.get_email())        
     except Exception as e:
         tangelo.log(e)
         tangelo.http_status(501)
         return "Failed to create trail. This trail name may already be used."
-
+    newTrail = dict(id=newTrailId,name=name,description=description)
+    tangelo.log(newTrail)
+    return json.dumps(newTrail)
 
 
 post_actions = {

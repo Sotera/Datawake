@@ -74,6 +74,8 @@ def getBrowsePathEdges(trail_id,startdate,enddate,userlist=[]):
     # set group name from each node
     for key,value in nodes.iteritems():
         domain = 'n/a'
+        if key is None:
+            continue
         if '//' in key:  domain =  key.split('/')[2]
         value['groupName'] = domain
 
@@ -91,7 +93,6 @@ def getBrowsePathAndAdjacentEdgesWithLimit(domain_id,trail_id,startdate,enddate,
     urls = browsePathGraph['nodes'].keys()
 
     results = entityDataConnector.get_extracted_entities_with_domain_check(domain_id, urls, adjTypes)
-
 
     nodes = browsePathGraph['nodes']
     edges = browsePathGraph['edges']
@@ -359,6 +360,8 @@ def processEdges(rawEdges,nodeDict={}):
             #type = value['type']
             #if ':' in key:
             #    type = key[:key.index(':')]
+            if key is None:
+                continue
             groupName = value['groupName']
             if groupName not in groups:
                 groups[groupName] = curr_group

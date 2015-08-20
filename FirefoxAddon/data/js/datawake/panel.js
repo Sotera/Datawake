@@ -13,6 +13,7 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
     $scope.teamSpinner = true;
     $scope.domainSpinner = true;
     $scope.trailSpinner = true;
+    $scope.crawlData  = {};
     $scope.extracted_tools = [];
     $scope.datawake = addon.options.datawakeInfo;
     $scope.current_url = addon.options.current_url;
@@ -347,6 +348,14 @@ panelApp.controller("PanelCtrl", function ($scope, $document) {
 
     $scope.openForensicView = function(){
         addon.port.emit("forensic-view")
+    }
+
+    $scope.saveComments = function(crawlData, url){
+      console.log(crawlData);
+      console.log(url);
+      crawlData.url = url;
+      crawlData.trail_id = $scope.datawake.trail.id;
+      addon.port.emit("comments", crawlData);
     }
 
     addon.port.emit("init");
