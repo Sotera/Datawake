@@ -535,3 +535,15 @@ CREATE VIEW vw_xmit_log AS
 			left join datawake_teams t on x.team_id = t.id
 			left join datawake_trails dt on x.trail_id = dt.id
 ;
+
+DROP VIEW IF EXISTS `vw_browse_count`;
+CREATE VIEW vw_browse_count AS
+	SELECT url,
+    crawl_type,
+    comments,
+    trail_id,
+    count(1) as count
+    FROM datawake_data
+    GROUP BY url,
+    crawl_type,
+    comments;
