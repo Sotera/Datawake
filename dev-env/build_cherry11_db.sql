@@ -51,10 +51,10 @@ CREATE TABLE `datawake_data` (
 LOCK TABLES `datawake_data` WRITE;
 /*!40000 ALTER TABLE `datawake_data` DISABLE KEYS */;
 INSERT INTO `datawake_data` VALUES (27,'2014-09-09 00:35:49','http://www.rubmaps.com/erotic-massage-rose-garden-spa-los-angeles-ca-8875','john.doe@nomail.none',1,5,19),(28,'2014-09-09 00:36:05','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=cherry110510%40gmail.com','john.doe@nomail.none',1,5,19),(29,'2014-09-09 00:36:23','http://myproviderguide.com/phone/626-344-9893','john.doe@nomail.none',1,5,19),(30,'2014-09-09 00:36:36','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=cherry110510%40gmail.com','john.doe@nomail.none',1,5,19),(31,'2014-09-09 00:37:46','http://www.theeroticreview.com/reviews/show.asp?id=227534','john.doe@nomail.none',1,5,19),(32,'2014-09-09 00:38:00','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=cherry110510%40gmail.com','john.doe@nomail.none',1,5,19),(33,'2014-09-09 00:38:37','https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=6263449893','john.doe@nomail.none',1,5,19),(34,'2014-09-09 00:38:54','http://www.rubmaps.com/erotic-massage-rose-garden-spa-los-angeles-ca-8875','john.doe@nomail.none',1,5,19);
-/*!40000 ALTER TABLE `datawake_data` ENABLE KEYS */;
-ALTER TABLE `memex_sotera`.`datawake_data`
+ALTER TABLE `datawake_data`
 ADD COLUMN `crawl_type` VARCHAR(255) NULL AFTER `trail_id`,
 ADD COLUMN `comments` VARCHAR(1000) NULL AFTER `crawl_type`;
+/*!40000 ALTER TABLE `datawake_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -487,10 +487,10 @@ CREATE VIEW vw_datawake_domains AS
 			t.name as teamName,
 			t.description as teamDescription
 	FROM datawake_domains as d
-		INNER JOIN datawake_teams t on d.team_id = t.id	
+		INNER JOIN datawake_teams t on d.team_id = t.id
 ;
 
-DROP VIEW IF EXISTS `vw_xmit_recipients`;		
+DROP VIEW IF EXISTS `vw_xmit_recipients`;
 CREATE VIEW vw_xmit_recipients AS
 	SELECT	r.recipient_id AS recipientId,
 		r.recipient_name AS recipientName,
@@ -504,7 +504,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_team_id AS recipientTeamId,
 		t.name AS recipientTeam,
 		r.recipient_trail_id AS recipientTrailId,
-		dt.name AS recipientTrail 
+		dt.name AS recipientTrail
 	FROM datawake_xmit_recipient r
 			left join datawake_xmit x on r.recipient_id = x.recipient_id
 			left join datawake_domains d on r.recipient_domain_id = d.id
@@ -512,7 +512,7 @@ CREATE VIEW vw_xmit_recipients AS
 			left join datawake_trails dt on r.recipient_trail_id = dt.id
 ;
 
-DROP VIEW IF EXISTS `vw_xmit_log`;	
+DROP VIEW IF EXISTS `vw_xmit_log`;
 CREATE VIEW vw_xmit_log AS
 	SELECT x.xmit_id AS xmitId,
 	x.recipient_id AS recipientId,

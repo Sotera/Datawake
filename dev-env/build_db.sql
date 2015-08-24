@@ -312,7 +312,7 @@ CREATE VIEW vw_browse_count AS
     crawl_type,
     comments,
     trail_id,
-    count(1)
+    count(1) as count
     FROM datawake_data
     GROUP BY url,
     crawl_type,
