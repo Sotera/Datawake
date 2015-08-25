@@ -62,10 +62,10 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
         # we also don't want to export blacklisted pages.
         tangelo.log("Calling export")
         export_to_services(domain_id, team_id, trail_id, url, content, user_email, features)
+    else:
+        tangelo.log("Url: %s IN blacklist"%url)
 
     id = db.addBrowsePathData(team_id,domain_id,trail_id,url, user_email)
-
-
 
     count = db.getUrlCount(team_id,domain_id,trail_id, url)
     result = dict(id=id, count=count)
@@ -76,20 +76,19 @@ def export_to_services(domain_id, team_id, trail_id, url, content, user_email, e
     cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email)
     # deepdive.export(cdr)
     for service in db.get_services(domain_id):
-        tangelo.log("Service: %s"%(service['name']))
         result = False
-        if service['type'] == 'KAFKA':
+        if service['serviceType'] == 'KAFKA':
             result = tools.export_kafka(service, cdr)
-        elif service['type'] == 'ES':
+        elif service['serviceType'] == 'ES':
             result = tools.export_es(service, cdr, domain_name)
-        elif service['type'] == 'REST':
-            result = tools.export_rest(service['url'], service['cred'], service['index'], domain_id, domain_name, cdr)
+        elif service['serviceType'] == 'REST':
+            result = tools.export_rest(service, domain_id, domain_name, cdr)
         if result:
             status = 'success'
         else:
             status = 'error'
-        db.service_status(service['id'], service['type'], url, domain_id, team_id, trail_id, status)
-        tangelo.log('Submited %s for %s to %s: %s' % (url, domain_name, service['name'], status))
+        db.service_status(service['recipientId'], service['serviceType'], url, domain_id, team_id, trail_id, status)
+        tangelo.log('Submited %s for %s to %s: %s' % (url, domain_name, service['recipientName'], status))
 
 
 @is_in_session
@@ -100,9 +99,6 @@ def export_to_services(domain_id, team_id, trail_id, url, content, user_email, e
 def full_page_scrape(team_id,domain_id, trail_id, html, url):
     user = helper.get_user()
     return scrape_page(team_id,domain_id,trail_id,url,html,user.get_email())
-
-
-
 
 
 post_actions = {

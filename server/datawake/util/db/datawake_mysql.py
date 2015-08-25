@@ -940,10 +940,7 @@ def get_services(domain_id):
         filter_string = '{"where":{"recipientDomainId":"' + str(domain_id) + '"}}'
         services = restGet('DatawakeXmitRecipients', 'filter=' + filter_string)
         retFeatureList = []
-        for service in services:
-            tangelo.log(service)
-            # retFeatureList.append(dict(id=service['recipientId'], name=service['recipientName'], index=service['recipientIndex'], cred=service['credentials'], type=service['serviceType'], url=service['url']))
-        return retFeatureList
+        return services
     else:
         sql = "select recipient_id, recipient_name, recipient_index, credentials, service_type, recipient_url from datawake_xmit_recipient where recipient_domain_id = %s"
         params = [domain_id]
@@ -954,8 +951,9 @@ def get_services(domain_id):
 def service_status(id, type, url, domain_id, team_id, trail_id, status):
     if UseRestAPI:
         ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
-        service_status = restPost('DatawakeXmit', dict(recipientId=id, serviceType=type, datawakeUrl=url, domainId=domain_id, teamId=team_id, trailId=trail_id, xmitStatus=status, ts=ts))
-        return service_status.id
+        service_status = restPost('DatawakeXmits', dict(xmitId=0, recipientId=id, serviceType=type, datawakeUrl=url, domainId=domain_id, teamId=team_id, trailId=trail_id, xmitStatus=status, ts=ts))
+        tangelo.log(service_status)
+        return service_status.xmitId
     else:
         sql = 'insert into datawake_xmit (recipient_id, service_type, datawake_url, domain_id, team_id, trail_id, xmit_status, ts) values(%s,%s,%s,%s,%s,%s,%s,sysdate())'
         params = [id, type, url, domain_id, team_id, trail_id, status]
