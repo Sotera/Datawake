@@ -79,9 +79,9 @@ def export_to_services(domain_id, team_id, trail_id, url, content, user_email, e
         tangelo.log("Service: %s"%(service['name']))
         result = False
         if service['type'] == 'KAFKA':
-            result = tools.export_kafka(service['url'], service['index'], cdr)
+            result = tools.export_kafka(service, cdr)
         elif service['type'] == 'ES':
-            result = tools.export_es(service['url'], service['cred'], service['index'], cdr, domain_name)
+            result = tools.export_es(service, cdr, domain_name)
         elif service['type'] == 'REST':
             result = tools.export_rest(service['url'], service['cred'], service['index'], domain_id, domain_name, cdr)
         if result:
