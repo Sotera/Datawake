@@ -496,7 +496,7 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_name AS recipientName,
 		r.credentials AS recipientCredentials,
 		r.recipient_index AS recipientIndex,
-		x.service_type AS serviceType,
+		r.service_type AS serviceType,
 		r.recipient_protocol AS recipientProtocol,
 		r.recipient_url as recipientURL,
 		r.recipient_domain_id AS recipientDomainId,
