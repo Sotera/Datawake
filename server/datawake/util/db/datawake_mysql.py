@@ -113,19 +113,17 @@ def getExtractedDomainEntitiesFromUrls(domain_id, urls, type):
     ret_val = []
     for extractedJsonEntity in extractedJsonEntities:
         extractedEntity = lambda: None
-        extractedEntity.__dict__ = json.loads(extractedJsonEntity)
+        extractedEntity.__dict__ = extractedJsonEntity
         ret_val.append(extractedEntity)
     return ret_val
 
 
 def getExtractedEntitiesFromUrls(urls, type):
-    joinedUrls = '","'.join(urls)
-    joinedUrls = urllib.quote_plus(joinedUrls)
+    joinedUrls = urllib.quote_plus('","'.join(urls))
     if (type is None):
         filter_string = '{"where":{"url":{"inq":["' + joinedUrls + '"]}}}'
     else:
         filter_string = '{"where":{"and":[{"url":{"inq":["' + joinedUrls + '"]}},{"featureType":"' + str(type) + '"}]}}'
-
     extractedJsonEntities = restGet('GeneralExtractorWebIndices', 'filter=' + filter_string)
     ret_val = []
     for extractedJsonEntity in extractedJsonEntities:
@@ -224,6 +222,7 @@ def restGetCount(route, query_string):
 
 
 def restGet(route, query_string=''):
+    tangelo.log_info("Table: %s, query string: %s"%(route,query_string))
     try:
         url = 'http://' + StrongLoopHostname + ':' + StrongLoopPort + '/api/' + route
         if len(query_string) > 0:
