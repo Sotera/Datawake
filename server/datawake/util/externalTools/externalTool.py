@@ -72,6 +72,9 @@ def export_es(service, cdr, domain_name):
             cred = service['credentials'] + '@'
         es_url = '%s://%s%s' % (protocol, cred, service['recipientUrl'])
         tangelo.log("sending ES at %s" % (es_url))
+        tangelo.log("index: %s"%service['recipientIndex'])
+        tangelo.log("doc_type: %s"%domain_name)
+        tangelo.log("cdr: %s"%cdr)
         es = Elasticsearch(es_url)
         res = es.index(index=service['recipientIndex'], doc_type=domain_name, body=cdr)
         return res['created']
