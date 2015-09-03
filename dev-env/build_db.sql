@@ -165,6 +165,7 @@ CREATE TABLE datawake_xmit_recipient (
   recipient_domain_id int(11) DEFAULT NULL,
   recipient_team_id int(11) DEFAULT NULL,
   recipient_trail_id int(11) DEFAULT NULL,
+  recipient_protocol varchar(10) DEFAULT NULL,
   recipient_url varchar(255) DEFAULT NULL,
   credentials varchar(255) DEFAULT NULL,
   service_type varchar(255) DEFAULT NULL,
@@ -267,7 +268,8 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_name AS recipientName,
 		r.credentials AS recipientCredentials,
 		r.recipient_index AS recipientIndex,
-		x.service_type AS serviceType,
+		r.service_type AS serviceType,
+    		r.recipient_protocol AS recipientProtocol,
 		r.recipient_url as recipientURL,
 		r.recipient_domain_id AS recipientDomainId,
 		d.name AS recipientDomain,
@@ -286,6 +288,7 @@ CREATE VIEW vw_xmit_log AS
         SELECT x.xmit_id AS xmitId,
         x.recipient_id AS recipientId,
         r.recipient_name AS recipientName,
+        r.recipient_protocol as recipientProtocol,
         r.recipient_url as recipientURL,
         x.service_type AS serviceType,
         x.datawake_url AS datawakeUrl,
@@ -309,7 +312,7 @@ CREATE VIEW vw_browse_count AS
     crawl_type,
     comments,
     trail_id,
-    count(1)
+    count(1) as count
     FROM datawake_data
     GROUP BY url,
     crawl_type,
