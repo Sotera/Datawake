@@ -212,6 +212,7 @@ CREATE TABLE `datawake_trails` (
   `domain_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `domain_id` (`domain_id`,`name`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   KEY `team_id` (`team_id`),
   CONSTRAINT `datawake_trails_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `datawake_teams` (`id`) ON DELETE CASCADE,
   CONSTRAINT `datawake_trails_ibfk_2` FOREIGN KEY (`domain_id`) REFERENCES `datawake_domains` (`id`) ON DELETE CASCADE
