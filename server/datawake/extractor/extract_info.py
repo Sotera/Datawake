@@ -9,6 +9,7 @@ import extractor
 import eatiht.v2 as v2
 import os
 import re
+import string
 import sys
 from datawake.conf import datawakeconfig as conf
 
