@@ -194,7 +194,7 @@ CREATE TABLE datawake_xmit (
   KEY fkTrail (trail_id),
   KEY fkTeam (team_id),
   CONSTRAINT fkDomain FOREIGN KEY (domain_id) REFERENCES datawake_domains (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT fkRecipient FOREIGN KEY (recipient_id) REFERENCES datawake_xmit_recipient (recipient_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fkRecipient FOREIGN KEY (recipient_id) REFERENCES datawake_xmit_recipient (recipient_id) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT fkTeam FOREIGN KEY (team_id) REFERENCES datawake_teams (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT fkTrail FOREIGN KEY (trail_id) REFERENCES datawake_trails (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
@@ -278,7 +278,6 @@ CREATE VIEW vw_xmit_recipients AS
 		r.recipient_trail_id AS recipientTrailId,
 		dt.name AS recipientTrail
 	FROM datawake_xmit_recipient r
-			left join datawake_xmit x on r.recipient_id = x.recipient_id
 			left join datawake_domains d on r.recipient_domain_id = d.id
 			left join datawake_teams t on r.recipient_team_id = t.id
 			left join datawake_trails dt on r.recipient_trail_id = dt.id
