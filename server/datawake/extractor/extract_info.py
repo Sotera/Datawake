@@ -9,6 +9,9 @@ import re
 import sys, os
 import extractor
 from datawake.conf import datawakeconfig as conf
+import cStringIO
+import eatiht.v2 as v2
+import tangelo
 
 # import MITIE
 MITIE_HOME = conf.get_mitie_home();
@@ -46,12 +49,14 @@ class ExtractInfo(extractor.Extractor):
 
     def extract(self, url, status, headers, flags, body, timestamp, source):
 
-        soup = BeautifulSoup(body)
-        # remove scripts and style
-        for script in soup(["script", "style"]):
-            script.extract()
-
-        text = soup.get_text().encode('ascii', 'ignore')
+        contentStream = cStringIO.StringIO(body)
+        text = v2.extract(contentStream).encode('utf-8')
+        # soup = BeautifulSoup(body)
+        # # remove scripts and style
+        # for script in soup(["script", "style"]):
+        #     script.extract()
+        #
+        # text = soup.get_text().encode('ascii', 'ignore')
 
         tokens = tokenize(text)
         entities = self.ner.extract_entities(tokens)
@@ -61,6 +66,7 @@ class ExtractInfo(extractor.Extractor):
             range = e[0]
             tag = e[1]
             entity_text = " ".join(tokens[i] for i in range)
+            tangelo.log_info("%s -> %s" % (tag, entity_text))
             if len(entity_text) < MIN_LEN:
                 continue
             txt = tag + ' -> ' + entity_text
