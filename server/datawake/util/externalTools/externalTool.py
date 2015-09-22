@@ -57,7 +57,7 @@ def export_kafka(service, cdr):
         producer = topic.get_producer()
         producer.produce(cdr)
     except Exception as e:
-        tangelo.log_error("error sending via kafka to %s" % recipientUrl,e)
+        tangelo.log_error("error sending via kafka to %s" % service['recipientUrl'],e)
         return False
     return True
 
