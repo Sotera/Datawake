@@ -19,6 +19,12 @@ This is the Forensic View after performing a Domain Dive. Notice that the smalle
 green nodes are now surrounded by small brown nodes. Those are web pages that we
 have previously looked at that contain those phone numbers and/or email addresses.
 
+# DataWake Manager
+The DataWake manager gives users the ability to manage users, domains, and
+settings. Additionally, the application can be configured to export all page
+content and extracted information to RESTFul service, Elasticsearch, or Kafka.
+
+![DataWake-Manager](../img/manager.png)
 
 # DataWake Prefetch
 Datawake prefetch allows a user to define entities and initiate a crawl of all websites
