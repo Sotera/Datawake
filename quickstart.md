@@ -7,7 +7,7 @@ permalink: /quick-start/
 # Table of Contents
 
 - [Introduction](#introduction)
-- [	Installation utilizing the Demo Virtual Machine (Datawake VM)](#installation-utilizing-the-demo-virtual-machine-datawake-vm)
+- [Installation utilizing the Demo Virtual Machine (Datawake VM)](#installation-utilizing-the-demo-virtual-machine-datawake-vm)
 - [Installation utilizing an Amazon EC2 Instance)](#installation-utilizing-an-amazon-ec2-instance)
 - [Running Datawake](#running-datawake)
 
