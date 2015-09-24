@@ -31,10 +31,11 @@ The Datawake Manager uses a separate login and is available at:
 
 #	Installation utilizing the Demo Virtual Machine (Datawake VM)
 There are a few prerequisites required to run Datawake in a VM on your machine.  These include the following:  
-* Virtual Box
-* The “UbuntuSimpleDatwake” Demo Virtual Machine (a headless Ubuntu 14.04 server VM)
-* The Datawake Installation script (available via a public Amazon S3 share)
-* The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)
+
+* Virtual Box  
+* The “UbuntuSimpleDatwake” Demo Virtual Machine (a headless Ubuntu 14.04 server VM)  
+* The Datawake Installation script (available via a public Amazon S3 share)  
+* The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)  
 
 ## Installing Virtual Box and the Datawake Virtual Machine (Datawake VM)
 Perform the following steps to install, configure, and start Datawake in the Demo VM.  
@@ -186,4 +187,4 @@ Your Datawake Demo is now functional.
 
 More detailed instructions on how to use Datawake are provided in the [Datawake User Guide](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx)
 
-**Update-2**
+**Update-3**

@@ -16,3 +16,7 @@ repository_url: https://github.com/Sotera/Datawake
 show_downloads: true
 zip_url: https://github.com/Sotera/Datawake/zipball/master
 tar_url: https://github.com/Sotera/Datawake/tarball/master
+
+markdown: kramdown
+kramdown:
+  input: GFM # Enable GitHub Flavored Markdown (fenced code blocks)
