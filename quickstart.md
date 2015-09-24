@@ -39,28 +39,26 @@ There are a few prerequisites required to run Datawake in a VM on your machine. 
 
 ## Installing Virtual Box and the Datawake Virtual Machine (Datawake VM)
 Perform the following steps to install, configure, and start Datawake in the Demo VM.  
+
 * Copy the two Datawake Demo Virtual Machine .vbox and .vdi files to a folder in your local VirtualBox VMs folder  
 [Datawake VBOX](https://s3.amazonaws.com/soterastuff/simple_datawake/UbuntuSimpleDatawake/UbuntuSimpleDatawake.vbox)  
 [Datawake VDI](https://s3.amazonaws.com/soterastuff/simple_datawake/UbuntuSimpleDatawake/UbuntuSimpleDatawake.vdi)  
 * In VirtualBox select “Machine, Add” and browse to the location of the UbuntuSimpleDatawake.vbox file you just downloaded.  
 * Start the VM. The user and password are “datawake”,”password”.   
 
-The following steps need to be performed to install and configure the Datawake Docker Containers.
+The following steps need to be performed to install and configure the Datawake Docker Containers.  
+
 * Using VirtualBox, start the Linux virtual machine created in the previous section.
 *	When it has booted up, hit Enter to get to a prompt.
 *	Get the Datawake setup script  
 
 ```shell
 $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl  
-
 Modify the file permissions to make it executable  
-
 $ chmod 700 datawake.pl  
-
 Execute the script  
-
- ./datawake.pl  
- ```  
+./datawake.pl  
+```  
 *	Executing the script will install Docker on the VM.  When the script finishes, you need to log off the current user and log back in so Docker is usable.  
 *	After logging off and back on, execute the script again to complete the Datawake installation.  This will download the Docker images, create the Datawake Containers, and start them.  This script is also used to start the Datawake containers whenever a VM is rebooted.  
 ``` shell
@@ -89,10 +87,12 @@ Execute the script
   * Select "Install Add-on from File".
 
 ---
+
 # Installation utilizing an Amazon EC2 Instance
 Though Docker can be configured to run on Mac and Windows it can require significant time and effort to configure and debug, hence the recommendation that it be run natively on Linux or via VirtualBox and the Datawake VM. In the case where you wish to share a Datawake Demo instance with team members you probably will not want to run the VM.  If you have an Amazon EC2 account you can easily set up a Datawake Demo stack there.    
 
 There are a few prerequisites required to run Datawake on Amazon’s EC2 stack.  These include the following:  
+
 *	An SSH client such as PuTTY (http://www.putty.org)  
 *	An account with Amazon and the ability to set up EC2 Virtual Servers  
 *	The Datawake Installation script (available via a public Amazon S3 share)  
@@ -119,7 +119,7 @@ Configuring a base Ubuntu EC2 Server
 ### Perform the following steps to install and configure Datawake and the Datawake Docker Containers on the new instance.  
 *	Using the SSH client connect to the newly created Linux EC2 instance.  The IP Address is shown on the Instances page of the Amazon EC2 Console.  You may also need to configure your SSH/Terminal app to use your matching security key file when connecting.
 *	Once connected Create the Datawake user by running the following commands:
-``` shell
+``` shell  
 sudo useradd -m -d /home/datawake -N -G adm,cdrom,sudo,dip,plugdev -s /bin/bash datawake  
 sudo passwd datawake  
 (enter the word ‘password’ when prompted for the password)  
@@ -187,4 +187,4 @@ Your Datawake Demo is now functional.
 
 More detailed instructions on how to use Datawake are provided in the [Datawake User Guide](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx)
 
-**Update-3**
+**Update-4**
