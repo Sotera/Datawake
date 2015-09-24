@@ -48,7 +48,7 @@ The following steps need to be performed to install and configure the Datawake D
 * Using VirtualBox, start the Linux virtual machine created in the previous section.  
 *	When it has booted up, hit Enter to get to a prompt.  
 *	Get the Datawake setup script  
- ```shell
+```shell
 $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl  
 Modify the file permissions to make it executable  
 $ chmod 700 datawake.pl  
