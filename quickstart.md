@@ -7,7 +7,7 @@ permalink: /quick-start/
 # Table of Contents
 
 - [Introduction](#introduction)
-- [Installation utilizing the Demo Virtual Machine (Datawake VM)](#installation-utilizing-the-demo-virtual-machine-datawake-vm)
+- [Installation utilizing the Demo Virtual Machine](#installation-utilizing-the-demo-virtual-machine)
 - [Installation utilizing an Amazon EC2 Instance)](#installation-utilizing-an-amazon-ec2-instance)
 - [Running Datawake](#running-datawake)
 
@@ -29,7 +29,7 @@ The Datawake Manager uses a separate login and is available at:
     http://[localhost or machine IP Address]:3002/
  ---
 
-#	Installation utilizing the Demo Virtual Machine (Datawake VM)
+#	Installation utilizing the Demo Virtual Machine
 There are a few prerequisites required to run Datawake in a VM on your machine.  These include the following:  
 
 * Virtual Box  
@@ -37,7 +37,7 @@ There are a few prerequisites required to run Datawake in a VM on your machine. 
 * The Datawake Installation script (available via a public Amazon S3 share)  
 * The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)  
 
-## Installing Virtual Box and the Datawake Virtual Machine (Datawake VM)
+## Installing Virtual Box and the Datawake Virtual Machine
 Perform the following steps to install, configure, and start Datawake in the Demo VM.  
 
 * Copy the two Datawake Demo Virtual Machine .vbox and .vdi files to a folder in your local VirtualBox VMs folder  
@@ -52,7 +52,7 @@ The following steps need to be performed to install and configure the Datawake D
 *	When it has booted up, hit Enter to get to a prompt.
 *	Get the Datawake setup script  
 
-```shell
+```bash
 $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl  
 Modify the file permissions to make it executable  
 $ chmod 700 datawake.pl  
@@ -61,11 +61,11 @@ Execute the script
 ```  
 *	Executing the script will install Docker on the VM.  When the script finishes, you need to log off the current user and log back in so Docker is usable.  
 *	After logging off and back on, execute the script again to complete the Datawake installation.  This will download the Docker images, create the Datawake Containers, and start them.  This script is also used to start the Datawake containers whenever a VM is rebooted.  
-``` shell
+```bash
 ./datawake.pl
 ```  
 *	After the Datawake content has downloaded, your containers should be running (you can verify by typing docker ps).  Keep in mind that each time you restart the VM you will need to execute the script again to start the Datawake Containers.  
-``` shell
+```bash
 ./datawake.pl
 ```  
 *	Executing “docker ps” will show you all running Docker containers. When complete you should see the following six  containers:  
@@ -120,7 +120,7 @@ Configuring a base Ubuntu EC2 Server
 *	Using the SSH client connect to the newly created Linux EC2 instance.  The IP Address is shown on the Instances page of the Amazon EC2 Console.  You may also need to configure your SSH/Terminal app to use your matching security key file when connecting.
 *	Once connected Create the Datawake user by running the following commands:
 
-``` shell  
+```bash
 sudo useradd -m -d /home/datawake -N -G adm,cdrom,sudo,dip,plugdev -s /bin/bash datawake  
 sudo passwd datawake  
 (enter the word ‘password’ when prompted for the password)  
@@ -132,21 +132,25 @@ $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl
 Modify the file permissions to make it executable  
 $ chmod 700 datawake.pl  
 Execute the script  
-$ ./datawake.pl  
-```  
+$ ./datawake.pl
+```
+
 * Executing the script will install Docker on the VM.  
 * When the script finishes, you need to log off the current user and log back in so Docker is usable.  
   * drop from the datawake user back to the Ubuntu account  
 
-``` shell
+```bash
 CTRL+D  
 su datawake  
-```  
+```
+
 *	Execute the script again to complete the Datawake installation.  This will download the Docker images, create the Datawake Containers, and start them.  This script is also used to start the Datawake containers whenever a VM is rebooted.  
-``` shell
-cd ~  
+
+```bash
+$ cd ~   
 ./datawake.pl  
 ```  
+
 *	After the Datawake content has downloaded, your containers will be started. Keep in mind that each time you restart the VM, you will need to execute the script again by typing “./datawake.pl” to start the Datawake Containers.  
 *	Executing “docker ps” will show you all running Docker containers. When complete you should see the following six  containers:  
   * data-container  
@@ -178,7 +182,7 @@ cd ~
 
 # Running Datawake
 To run Datawake your system or VM must have Docker and the Datawake Container installed and the six Docker containers must be running.  Once these conditions have been met, open your Firefox Browser.  
-*	Click the Datawake Widget icon ![datawake-icon](img/waveicon16.png) in the top right corner of the Firefox browser.  
+*	Click the Datawake Widget icon ![datawake-icon](../img/waveicon16.png) in the top right corner of the Firefox browser.  
 *	Click the “Sign in” button.  Once signed Datawake can start trailing your activity.    
 *	Click the Datawake Widget button again. Select “CWhite” from the Team dropdown. Then select an existing Domain.  
 *	You may pick an existing Trail or create a new one by clicking the “+” button and entering a Trail Name and Description.  
@@ -190,4 +194,4 @@ Your Datawake Demo is now functional.
 
 More detailed instructions on how to use Datawake are provided in the [Datawake User Guide](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx)
 
-**Update-5**
+**Update-6**

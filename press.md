@@ -3,8 +3,9 @@ layout: page
 title: In The Press
 permalink: /press/
 ---
-![Press](img/press.png)
+![Press](../img/press.png)
 
+# Press coverage of Sotera's DataWake
 [New search engine exposes the "dark web"]( http://www.cbsnews.com/videos/new-search-engine-exposes-the-dark-web/){:target="_blank"}
 
 [Sotera's DataWake Browser supports DARPA MEMEX contract to fight Human Trafficking by exposing deep web activity]( http://www.prnewswire.com/news-releases/soteras-datawake-browser-supports-darpa-memex-contract-to-fight-human-trafficking-by-exposing-deep-web-activity-300061991.html){:target="_blank"}
