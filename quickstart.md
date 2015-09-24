@@ -49,11 +49,11 @@ The following steps need to be performed to install and configure the Datawake D
 *	When it has booted up, hit Enter to get to a prompt.  
 *	Get the Datawake setup script  
  ```shell
- $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl
+$ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl  
 Modify the file permissions to make it executable  
-$ chmod 700 datawake.pl
+$ chmod 700 datawake.pl  
 Execute the script  
- ./datawake.pl
+ ./datawake.pl  
  ```  
 *	Executing the script will install Docker on the VM.  When the script finishes, you need to log off the current user and log back in so Docker is usable.  
 *	After logging off and back on, execute the script again to complete the Datawake installation.  This will download the Docker images, create the Datawake Containers, and start them.  This script is also used to start the Datawake containers whenever a VM is rebooted.  
@@ -164,7 +164,8 @@ cd ~
 *	Alter the Forensic View Deployment Address to utilize your EC2 Instance’s IP Address by changing the word “localhost” to the EC2 IP (no port should be included in this URL)
 *	Alter the Datawake Deployment IP Address to utilize your EC2 Instance’s IP Address by changing the word “localhost” to the EC2 IP (no port should be included in this URL)
 *	Set the Datawake Deployment Address PORT to 80
-*	Close and re-open Firefox to insure that the plugin initializes these settings.
+*	Close and re-open Firefox to insure that the plugin initializes these settings.  
+
 ---
 # Running Datawake
 To run Datawake your system or VM must have Docker and the Datawake Container installed and the six Docker containers must be running.  Once these conditions have been met, open your Firefox Browser.  
