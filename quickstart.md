@@ -30,11 +30,11 @@ The Datawake Manager uses a separate login and is available at:
  ---
 
 #	Installation utilizing the Demo Virtual Machine (Datawake VM)
-There are a few prerequisites required to run Datawake in a VM on your machine.  These include the following:
-* Virtual Box  
-* The “UbuntuSimpleDatwake” Demo Virtual Machine (a headless Ubuntu 14.04 server VM)  
-* The Datawake Installation script (available via a public Amazon S3 share)  
-* The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)  
+There are a few prerequisites required to run Datawake in a VM on your machine.  These include the following:  
+* Virtual Box
+* The “UbuntuSimpleDatwake” Demo Virtual Machine (a headless Ubuntu 14.04 server VM)
+* The Datawake Installation script (available via a public Amazon S3 share)
+* The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)
 
 ## Installing Virtual Box and the Datawake Virtual Machine (Datawake VM)
 Perform the following steps to install, configure, and start Datawake in the Demo VM.  
@@ -44,15 +44,20 @@ Perform the following steps to install, configure, and start Datawake in the Dem
 * In VirtualBox select “Machine, Add” and browse to the location of the UbuntuSimpleDatawake.vbox file you just downloaded.  
 * Start the VM. The user and password are “datawake”,”password”.   
 
-The following steps need to be performed to install and configure the Datawake Docker Containers.  
-* Using VirtualBox, start the Linux virtual machine created in the previous section.  
-*	When it has booted up, hit Enter to get to a prompt.  
+The following steps need to be performed to install and configure the Datawake Docker Containers.
+* Using VirtualBox, start the Linux virtual machine created in the previous section.
+*	When it has booted up, hit Enter to get to a prompt.
 *	Get the Datawake setup script  
+
 ```shell
 $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl  
+
 Modify the file permissions to make it executable  
+
 $ chmod 700 datawake.pl  
+
 Execute the script  
+
  ./datawake.pl  
  ```  
 *	Executing the script will install Docker on the VM.  When the script finishes, you need to log off the current user and log back in so Docker is usable.  
@@ -181,4 +186,4 @@ Your Datawake Demo is now functional.
 
 More detailed instructions on how to use Datawake are provided in the [Datawake User Guide](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx)
 
-**Update-1**
+**Update-2**
