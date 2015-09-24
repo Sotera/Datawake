@@ -7,4 +7,4 @@ More information including build information can be found at our [Github Page](h
 
 DataWake is part of the [DARPA Memex Open Catalog](http://opencatalog.darpa.mil/MEMEX.html)
 
-For more information, please email [memex@soteradefense.com](memex@soteradefense.com).
+For more information, please email [memex@soteradefense.com](mailto:'memex@soteradefense.com').
