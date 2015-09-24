@@ -22,21 +22,21 @@ Should you prefer a local installation the containers can be installed in your l
 
 Running Datawake requires that the user first Sign On using the Firefox Plugin, after which the Datawake Forensic Viewer is available at:  
 
-     http://[localhost or machine IP Address]:8080/forensic  
+    http://[localhost or machine IP Address]:8080/forensic  
 
 The Datawake Manager uses a separate login and is available at:  
 
-	   http://[localhost or machine IP Address]:3002/
+    http://[localhost or machine IP Address]:3002/
  ---
 
-##	Installation utilizing the Demo Virtual Machine (Datawake VM)
+#	Installation utilizing the Demo Virtual Machine (Datawake VM)
 There are a few prerequisites required to run Datawake in a VM on your machine.  These include the following:
 * Virtual Box  
 * The “UbuntuSimpleDatwake” Demo Virtual Machine (a headless Ubuntu 14.04 server VM)  
 * The Datawake Installation script (available via a public Amazon S3 share)  
 * The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)  
 
-# Installing Virtual Box and the Datawake Virtual Machine (Datawake VM)
+## Installing Virtual Box and the Datawake Virtual Machine (Datawake VM)
 Perform the following steps to install, configure, and start Datawake in the Demo VM.  
 * Copy the two Datawake Demo Virtual Machine .vbox and .vdi files to a folder in your local VirtualBox VMs folder  
 [Datawake VBOX](https://s3.amazonaws.com/soterastuff/simple_datawake/UbuntuSimpleDatawake/UbuntuSimpleDatawake.vbox)  
@@ -50,13 +50,9 @@ The following steps need to be performed to install and configure the Datawake D
 *	Get the Datawake setup script  
  ```shell
  $ wget https://s3.amazonaws.com/soterastuff/simple_datawake/datawake.pl
- ```  
-*	Modify the file permissions to make it executable  
-``` shell
+Modify the file permissions to make it executable  
 $ chmod 700 datawake.pl
-```  
-*	Execute the script  
-``` shell
+Execute the script  
  ./datawake.pl
  ```  
 *	Executing the script will install Docker on the VM.  When the script finishes, you need to log off the current user and log back in so Docker is usable.  
@@ -76,7 +72,7 @@ $ chmod 700 datawake.pl
   * webapp  
   * tangelo  
 
-# Installing the Firefox Plugin
+## Installing the Firefox Plugin
 *	Get the [Datawake Firefox “Plugin” Add-on](https://s3.amazonaws.com/soterastuff/simple_datawake/dwfirefox.xpi).   
 * Double-click on the .xpi file that was downloaded and click install when prompted.
 *	To manually install the Firefox Plugin:
@@ -85,9 +81,9 @@ $ chmod 700 datawake.pl
   * Select "Add-ons".
   * Click on the Gear icon.
   * Select "Install Add-on from File".
-  * Browse to the downloaded add-on.  Or simply double-click on the .xpi file that was downloaded and click install when prompted.  
+
 ---
-## Installation utilizing an Amazon EC2 Instance
+# Installation utilizing an Amazon EC2 Instance
 Though Docker can be configured to run on Mac and Windows it can require significant time and effort to configure and debug, hence the recommendation that it be run natively on Linux or via VirtualBox and the Datawake VM. In the case where you wish to share a Datawake Demo instance with team members you probably will not want to run the VM.  If you have an Amazon EC2 account you can easily set up a Datawake Demo stack there.    
 
 There are a few prerequisites required to run Datawake on Amazon’s EC2 stack.  These include the following:  
@@ -97,7 +93,7 @@ There are a few prerequisites required to run Datawake on Amazon’s EC2 stack. 
 *	The Datawake Demo Docker containers (available via DockerHub and installed via supplied script)  
 *	The Datawake Firefox “Plugin” Add-on (available via a public Amazon S3 share)  
 
-# Setting up & Configuring the EC2 Instance
+## Setting up & Configuring the EC2 Instance
 Perform the following steps to install, configure, and start Datawake on an Amazon EC2 instance.
 Configuring a base Ubuntu EC2 Server  
 
@@ -152,7 +148,7 @@ cd ~
   *	webapp  
   *	tangelo  
 
-# Installing the Firefox Plugin
+## Installing the Firefox Plugin
 *	Get the [Datawake Firefox “Plugin” Add-on](https://s3.amazonaws.com/soterastuff/simple_datawake/dwfirefox.xpi).   
 * Double-click on the .xpi file that was downloaded and click install when prompted.
 *	To manually install the Firefox Plugin:
@@ -170,7 +166,7 @@ cd ~
 *	Set the Datawake Deployment Address PORT to 80
 *	Close and re-open Firefox to insure that the plugin initializes these settings.
 ---
-## Running Datawake
+# Running Datawake
 To run Datawake your system or VM must have Docker and the Datawake Container installed and the six Docker containers must be running.  Once these conditions have been met, open your Firefox Browser.  
 *	Click the Datawake Widget icon ![datawake-icon](img/waveicon16.png) in the top right corner of the Firefox browser.  
 *	Click the “Sign in” button.  Once signed Datawake can start trailing your activity.    
