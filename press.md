@@ -3,6 +3,7 @@ layout: page
 title: In The Press
 permalink: /press/
 ---
+![Press](img/press.png)
 
 [New search engine exposes the "dark web"]( http://www.cbsnews.com/videos/new-search-engine-exposes-the-dark-web/){:target="_blank"}
 

@@ -119,6 +119,7 @@ Configuring a base Ubuntu EC2 Server
 ### Perform the following steps to install and configure Datawake and the Datawake Docker Containers on the new instance.  
 *	Using the SSH client connect to the newly created Linux EC2 instance.  The IP Address is shown on the Instances page of the Amazon EC2 Console.  You may also need to configure your SSH/Terminal app to use your matching security key file when connecting.
 *	Once connected Create the Datawake user by running the following commands:
+
 ``` shell  
 sudo useradd -m -d /home/datawake -N -G adm,cdrom,sudo,dip,plugdev -s /bin/bash datawake  
 sudo passwd datawake  
@@ -136,6 +137,7 @@ $ ./datawake.pl
 * Executing the script will install Docker on the VM.  
 * When the script finishes, you need to log off the current user and log back in so Docker is usable.  
   * drop from the datawake user back to the Ubuntu account  
+
 ``` shell
 CTRL+D  
 su datawake  
@@ -173,6 +175,7 @@ cd ~
 *	Close and re-open Firefox to insure that the plugin initializes these settings.  
 
 ---
+
 # Running Datawake
 To run Datawake your system or VM must have Docker and the Datawake Container installed and the six Docker containers must be running.  Once these conditions have been met, open your Firefox Browser.  
 *	Click the Datawake Widget icon ![datawake-icon](img/waveicon16.png) in the top right corner of the Firefox browser.  
@@ -187,4 +190,4 @@ Your Datawake Demo is now functional.
 
 More detailed instructions on how to use Datawake are provided in the [Datawake User Guide](https://s3.amazonaws.com/soterastuff/Datawake_Demo/DW-USER-GUIDE.docx)
 
-**Update-4**
+**Update-5**
