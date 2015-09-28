@@ -3,6 +3,15 @@ The DataWake project consists of various server and database technologies that a
 
 Additionally, the application can be configured to export all page contents and extracted information to RESTFul services, Elasticsearch, or Kafka.
 
+## Companion projects
+### Necessary for building
+* [DataWake Manager](https://github.com/Sotera/DatawakeManager-WebApp) User management and settings
+* [DataWake Manager-Loopback](https://github.com/Sotera/DatawakeManager-Loopback) Data layer
+* [DataWake Depot](https://github.com/Sotera/DatawakeDepot) Server configuration
+### Other projects
+* [DataWake Prefetch](https://github.com/Sotera/datawake-prefetch) Streaming search with scraping and entity extraction of all results.
+* [Firmament](https://github.com/Sotera/firmament) Provides a simplified configuration of interconnected Docker containers.
+
 More information including build information can be found at our [Github Page](http://sotera.github.com/Datawake).
 
 DataWake is part of the [DARPA Memex Open Catalog](http://opencatalog.darpa.mil/MEMEX.html)
