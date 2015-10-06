@@ -533,7 +533,16 @@ forensicApp.controller('ForensicController', function ($scope, $filter) {
     get_teams();
     list_graphs();
 
+    $scope.exportTrail = function() {
+        var trailId = $scope.selectedTrail.id;
+        console.log('Export JSON')
+        window.open("../datawake/plugin/export?trail_id="+trailId, '_blank', '');
+    };
+
+
 });
+
+
 
 
 // add a function to convert a date to an iso string
