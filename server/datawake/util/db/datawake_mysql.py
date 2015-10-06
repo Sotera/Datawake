@@ -576,7 +576,6 @@ def createTeam(name, description, emails=[]):
 def get_team(domain_id):
     filter_string = '{"where":{"id":' + str(domain_id) + '}}'
     domain = restGet('DatawakeDomains', 'filter=' + filter_string)[0]
-    tangelo.log(domain)
 
     filter_string = '{"where":{"id":' + str(domain['teamId']) + '}}'
     team = restGet('DatawakeTeams', 'filter=' + filter_string)
