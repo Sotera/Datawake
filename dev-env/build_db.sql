@@ -58,6 +58,7 @@ CREATE TABLE datawake_trails (
   domain_id int(11) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY domain_id (domain_id,name),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   KEY team_id (team_id),
   FOREIGN KEY (team_id) REFERENCES datawake_teams (id) ON DELETE CASCADE,
   FOREIGN KEY (domain_id) REFERENCES datawake_domains (id) ON DELETE CASCADE
@@ -216,7 +217,7 @@ CREATE VIEW vw_team_users AS
 	SELECT t.id as teamId,
 		t.name as teamName,
 		t.description as teamDescription,
-		u.team_user_id as teamUserID,
+		u.team_user_id as userID,
 		u.email
 	FROM (datawake_teams t
 			join datawake_team_users u on(t.id = u.team_id))
