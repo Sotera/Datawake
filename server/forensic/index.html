@@ -211,6 +211,12 @@
         <div class="btn-group">
     	      <button  ng-disabled="!graphDrawn" class="btn btn-success btn-sm" ng-click="domainDive()"><span class="glyphicon glyphicon-search"></span> Domain Dive</button>
         </div>
+        <!--Export Trail Button-->
+        <div class="btn-group">
+            <button ng-disabled="!selectedTeam || !selectedDomain || !selectedTrail" class="btn btn-success btn-sm" ng-click="exportTrail()">
+                <span class="glyphicon glyphicon-download"></span>Export
+            </button>
+        </div>
       </form>
    </div>
 <!-- end button stuff in toolbar -->

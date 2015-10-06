@@ -573,6 +573,15 @@ def createTeam(name, description, emails=[]):
         return (team_id, name)
 
 
+def get_team(domain_id):
+    filter_string = '{"where":{"id":' + str(domain_id) + '}}'
+    domain = restGet('DatawakeDomains', 'filter=' + filter_string)[0]
+
+    filter_string = '{"where":{"id":' + str(domain['teamId']) + '}}'
+    team = restGet('DatawakeTeams', 'filter=' + filter_string)
+    return team[0]
+
+
 #
 # Return users within an org who have been active on at least one trail
 # returns a list of dicts, {name:_, id:_}
@@ -603,13 +612,18 @@ def addTrail(team_id, domain_id, name, description, userEmail):
 
 
 def getTrailData(trail_id):
-    sql = "select id,name,description from datawake_trails where id = %s"
-    rows = dbGetRows(sql, [trail_id])
-    if len(rows) < 1:
-        return {}
+    if UseRestAPI:
+        filter_string = '{"where":{"id":' + str(trail_id) + '}}'
+        trail = restGet('DatawakeTrails/%s' % trail_id)
+        return trail
     else:
-        x = rows[0]
-        return dict(id=x[0], name=x[1], description=x[2])
+        sql = "select id,name,description from datawake_trails where id = %s"
+        rows = dbGetRows(sql, [trail_id])
+        if len(rows) < 1:
+            return {}
+        else:
+            x = rows[0]
+            return dict(id=x[0], name=x[1], description=x[2])
 
 
 #
