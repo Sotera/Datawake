@@ -15,13 +15,14 @@ Copyright 2014 Sotera Defense Solutions, Inc.
 """
 
 from bs4 import BeautifulSoup
-from datawake.conf import datawakeconfig as conf
 from elasticsearch import Elasticsearch
 from pykafka import KafkaClient
-
+from datetime import datetime
+import hashlib
 import requests
 import tangelo
-import time
+import json
+from tika import parser
 
 
 def export_rest(service, domain_id, domain_name, cdr):
@@ -31,7 +32,7 @@ def export_rest(service, domain_id, domain_name, cdr):
             protocol = service['recipientProtocol']
         url = '%s://%s' % (protocol, service['recipientUrl'])
 
-        user =  ''
+        user = ''
         password = ''
         if service['credentials']:
             creds = service['credentials'].split(':')
@@ -57,7 +58,7 @@ def export_kafka(service, cdr):
         producer = topic.get_producer()
         producer.produce(cdr)
     except Exception as e:
-        tangelo.log_error("error sending via kafka to %s" % service['recipientUrl'],e)
+        tangelo.log_error("error sending via kafka to %s" % service['recipientUrl'], e)
         return False
     return True
 
@@ -72,27 +73,35 @@ def export_es(service, cdr, domain_name):
             cred = service['credentials'] + '@'
         es_url = '%s://%s%s' % (protocol, cred, service['recipientUrl'])
         tangelo.log("sending ES at %s" % (es_url))
-        tangelo.log("index: %s"%service['recipientIndex'])
-        tangelo.log("doc_type: %s"%domain_name)
-        tangelo.log("cdr: %s"%cdr)
+        tangelo.log("index: %s" % service['recipientIndex'])
+        tangelo.log("doc_type: %s" % domain_name)
+        tangelo.log("cdr: %s" % cdr)
         es = Elasticsearch(es_url)
         res = es.index(index=service['recipientIndex'], doc_type=domain_name, body=cdr)
         return res['created']
     except Exception as e:
         tangelo.log(e)
-        tangelo.log_error("error sending via ES to %s" % service['recipientUrl'],e)
+        tangelo.log_error("error sending via ES to %s" % service['recipientUrl'], e)
         return False
     return True
 
 
-
 def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email):
-    docid = 'dw-%i-%i-%i-%i' %(team_id, domain_id, trail_id, hash(url))
+    crawl_time = datetime.now()
+    id = hashlib.sha256('%s-%s' % (url, datetime.strftime(crawl_time, '%Y%m%d%H%M%s'))).hexdigest().upper()
+    docid = 'dw-%i-%i-%i-%i' % (team_id, domain_id, trail_id, hash(url))
     soup = BeautifulSoup(content)
     # remove scripts and style
     for script in soup(["script", "style"]):
         script.extract()
 
     text = soup.get_text(strip=True).encode('ascii', 'ignore')
-    crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name, 'user-email': user_email}
-    return {'url': url, 'timestamp': int(time.time())*1000, 'team': 'sotera', 'crawler': 'datawake', 'content-type': 'full-raw-html', 'raw_content': content, 'crawl_data': crawl_data, 'images':'','videos':''}
+
+    parsed = parser.from_buffer(content)
+
+    crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name,
+                  'domain_id': domain_id, 'user-email': user_email, 'team_id': team_id, 'trail_id': trail_id}
+    return json.dumps(dict(_id=id, _parent='', content_typ='text/html', crawl_data=crawl_data, crawler='datawake',
+                           team='sotera', extracted_metadata=parsed['metadata'], extracted_text=parsed['content'],
+                           raw_content=content, timestamp=datetime.strftime(crawl_time, '%Y%m%d%H%M%s'), url=url,
+                           version=2.0))
