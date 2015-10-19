@@ -100,8 +100,8 @@ def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name,
     parsed = parser.from_buffer(content)
 
     crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name,
-                  'user-email': user_email}
+                  'domain_id': domain_id, 'user-email': user_email, 'team_id': team_id, 'trail_id': trail_id}
     return json.dumps(dict(_id=id, _parent='', content_typ='text/html', crawl_data=crawl_data, crawler='datawake',
-                team='sotera', extracted_metadata=parsed['metadata'], extracted_text=parsed['content'],
-                raw_content=content, timestamp=datetime.strftime(crawl_time, '%Y%m%d%H%M%s'), url=url,
-                version=2.0))
+                           team='sotera', extracted_metadata=parsed['metadata'], extracted_text=parsed['content'],
+                           raw_content=content, timestamp=datetime.strftime(crawl_time, '%Y%m%d%H%M%s'), url=url,
+                           version=2.0))
