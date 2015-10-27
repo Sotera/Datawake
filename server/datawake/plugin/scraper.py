@@ -74,13 +74,14 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
 def export_to_services(domain_id, team_id, trail_id, url, content, user_email, entities):
     domain_name = db.get_domain_name(domain_id)
     cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email)
+    id = tools.create_id(url)
     # deepdive.export(cdr)
     for service in db.get_services(domain_id):
         result = False
         if service['serviceType'] == 'KAFKA':
             result = tools.export_kafka(service, cdr)
         elif service['serviceType'] == 'ES':
-            result = tools.export_es(service, cdr, domain_name)
+            result = tools.export_es(service, cdr, id, domain_name)
         elif service['serviceType'] == 'REST':
             result = tools.export_rest(service, domain_id, domain_name, cdr)
         if result:

@@ -63,7 +63,7 @@ def export_kafka(service, cdr):
     return True
 
 
-def export_es(service, cdr, domain_name):
+def export_es(service, cdr, id, domain_name):
     try:
         protocol = 'http'
         cred = ''
@@ -77,7 +77,7 @@ def export_es(service, cdr, domain_name):
         tangelo.log("doc_type: %s" % domain_name)
         tangelo.log("cdr: %s" % cdr)
         es = Elasticsearch(es_url)
-        res = es.index(index=service['recipientIndex'], doc_type=domain_name, body=cdr)
+        res = es.index(index=service['recipientIndex'], doc_type=domain_name, id=id, body=cdr)
         return res['created']
     except Exception as e:
         tangelo.log(e)
@@ -85,6 +85,10 @@ def export_es(service, cdr, domain_name):
         return False
     return True
 
+def create_id(url):
+    crawl_time = datetime.now()
+    id = hashlib.sha256('%s-%s' % (url, datetime.strftime(crawl_time, '%Y%m%d%H%M%s'))).hexdigest().upper()
+    return id
 
 def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email):
     crawl_time = datetime.now()
@@ -101,7 +105,7 @@ def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name,
 
     crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name,
                   'domain_id': domain_id, 'user-email': user_email, 'team_id': team_id, 'trail_id': trail_id}
-    return json.dumps(dict(_id=id, _parent='', content_typ='text/html', crawl_data=crawl_data, crawler='datawake',
+    return json.dumps(dict(_parent='', content_typ='text/html', crawl_data=crawl_data, crawler='datawake',
                            team='sotera', extracted_metadata=parsed['metadata'], extracted_text=parsed['content'],
                            raw_content=content, timestamp=datetime.strftime(crawl_time, '%Y%m%d%H%M%s'), url=url,
                            version=2.0))
