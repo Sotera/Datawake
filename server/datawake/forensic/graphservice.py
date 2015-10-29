@@ -154,9 +154,9 @@ def getGraph(team_id,domain_id,trail_id,view, startdate=u'', enddate=u'', users=
         graph = graph_helper.getBrowsePathAndAdjacentBitcoinEdgesWithLimit(domain_id,trail_id,startdate,enddate,1,users)
         return json.dumps(graph_helper.processEdges(graph['edges'], graph['nodes']))
 
-    if view == 'OculusForensicRequest':
-        rows = graph_helper.getOculusForensicGraph(org,startdate,enddate,userlist,trail,domain)
-        return json.dumps(rows)
+    # if view == 'OculusForensicRequest':
+    #     rows = graph_helper.getOculusForensicGraph(org,startdate,enddate,userlist,trail,domain)
+    #     return json.dumps(rows)
 
     if view == 'browse path - with text selections':
         graph = graph_helper.getBrowsePathWithTextSelections(trail_id, startdate, enddate,users)
