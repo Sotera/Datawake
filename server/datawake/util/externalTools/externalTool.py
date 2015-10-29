@@ -51,14 +51,16 @@ def export_rest(service, domain_id, domain_name, cdr):
 
 def export_kafka(service, cdr):
     try:
-        tangelo.log("sending kafka to %s %s" % (service['recipientUrl'], service['recipientIndex']))
+        tangelo.log("sending kafka to %s %s" %
+                    (service['recipientUrl'], service['recipientIndex']))
         client = KafkaClient(hosts=service['recipientUrl'])
 
         topic = client.topics[service['recipientIndex']]
         producer = topic.get_producer()
         producer.produce(cdr)
     except Exception as e:
-        tangelo.log_error("error sending via kafka to %s" % service['recipientUrl'], e)
+        tangelo.log_error("error sending via kafka to %s" %
+                          service['recipientUrl'], e)
         return False
     return True
 
@@ -77,22 +79,28 @@ def export_es(service, cdr, id, domain_name):
         tangelo.log("doc_type: %s" % domain_name)
         tangelo.log("cdr: %s" % cdr)
         es = Elasticsearch(es_url)
-        res = es.index(index=service['recipientIndex'], doc_type=domain_name, id=id, body=cdr)
+        res = es.index(index=service['recipientIndex'],
+                       doc_type=domain_name, id=id, body=cdr)
         return res['created']
     except Exception as e:
         tangelo.log(e)
-        tangelo.log_error("error sending via ES to %s" % service['recipientUrl'], e)
+        tangelo.log_error("error sending via ES to %s" %
+                          service['recipientUrl'], e)
         return False
     return True
 
+
 def create_id(url):
     crawl_time = datetime.now()
-    id = hashlib.sha256('%s-%s' % (url, datetime.strftime(crawl_time, '%Y%m%d%H%M%s'))).hexdigest().upper()
+    id = hashlib.sha256(
+        '%s-%s' % (url, datetime.strftime(crawl_time, '%Y%m%d%H%M%s'))).hexdigest().upper()
     return id
 
-def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email):
+
+def build_cdr(url, content, entities, team_id, domain_id, trail_id, team_name, domain_name, trail_name, user_email):
     crawl_time = datetime.now()
-    id = hashlib.sha256('%s-%s' % (url, datetime.strftime(crawl_time, '%Y%m%d%H%M%s'))).hexdigest().upper()
+    id = hashlib.sha256(
+        '%s-%s' % (url, datetime.strftime(crawl_time, '%Y%m%d%H%M%s'))).hexdigest().upper()
     docid = 'dw-%i-%i-%i-%i' % (team_id, domain_id, trail_id, hash(url))
     soup = BeautifulSoup(content)
     # remove scripts and style
@@ -103,9 +111,8 @@ def build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name,
 
     parsed = parser.from_buffer(content)
 
-    crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'domain-name': domain_name,
-                  'domain_id': domain_id, 'user-email': user_email, 'team_id': team_id, 'trail_id': trail_id}
-    return json.dumps(dict(_parent='', content_typ='text/html', crawl_data=crawl_data, crawler='datawake',
-                           team='sotera', extracted_metadata=parsed['metadata'], extracted_text=parsed['content'],
-                           raw_content=content, timestamp=datetime.strftime(crawl_time, '%Y%m%d%H%M%s'), url=url,
-                           version=2.0))
+    crawl_data = {'docid': docid, 'entities': entities, 'full-text': text, 'team_id': team_id, 'team_name': team_name,
+                  'domain_id': domain_id, 'domain_name': domain_name, 'trail_id': trail_id, 'trail_name': trail_name, 'user-email': user_email}
+    return json.dumps(dict(_parent='', content_typ='text/html', crawl_data=crawl_data, crawler='datawake', team='sotera',
+        extracted_metadata=parsed['metadata'], extracted_text=parsed['content'], raw_content=content,
+        timestamp=datetime.strftime(crawl_time, '%Y%m%d%H%M%s'), url=url, version=2.0))

@@ -73,7 +73,9 @@ def scrape_page(team_id,domain_id,trail_id,url,content,user_email):
 
 def export_to_services(domain_id, team_id, trail_id, url, content, user_email, entities):
     domain_name = db.get_domain_name(domain_id)
-    cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, domain_name, user_email)
+    trail_name = db.get_trail_name(trail_id)
+    team_name = db.get_team_name(team_id)
+    cdr = tools.build_cdr(url, content, entities, team_id, domain_id, trail_id, team_name, domain_name, trail_name, user_email)
     id = tools.create_id(url)
     # deepdive.export(cdr)
     for service in db.get_services(domain_id):

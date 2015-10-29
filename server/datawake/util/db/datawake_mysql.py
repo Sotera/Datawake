@@ -879,6 +879,28 @@ def get_domain_name(domain_id):
         rows = dbGetRows(sql, [domain_id])
         return rows[0][0]
 
+def get_team_name(team_id):
+    if UseRestAPI:
+        filter_string = '{"where":{"id":"' + str(team_id) + '"}}'
+        domains = restGet('DatawakeTeams', 'filter=' + filter_string)
+        if domains[0]:
+            return domains[0]['name']
+    else:
+        sql = "SELECT name from datawake_teams where id = %s"
+        rows = dbGetRows(sql, [team_id])
+        return rows[0][0]
+
+def get_trail_name(trail_id):
+    if UseRestAPI:
+        filter_string = '{"where":{"id":"' + str(trail_id) + '"}}'
+        domains = restGet('DatawakeTrails', 'filter=' + filter_string)
+        if domains[0]:
+            return domains[0]['name']
+    else:
+        sql = "SELECT name from datawake_trails where id = %s"
+        rows = dbGetRows(sql, [trail_id])
+        return rows[0][0]
+
 
 # Feature extraction additions and removals
 
