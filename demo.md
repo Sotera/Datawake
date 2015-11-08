@@ -5,8 +5,6 @@ permalink: /demo/
 ---
 
 # Demo environment
-We have a demo environment available on EC2. To try out the DataWake plugin, [downlod it here](../plugin/datawakefirefoxaddon-demo.xpi). [Installation instructions can be found here](../quick-start#installing-the-firefox-plugin).
+We have a demo environment available on EC2. To try out the DataWake plugin, [download it here](http://datawake-depot.org). [Installation instructions can be found here](../quick-start#installing-the-firefox-plugin).
 
-Once signed in with the plugin, you can visit the [Forensic Viewer](http://52.0.211.45/forensic)
-
-You can also visit the [DataWake Manager](http://52.0.211.45:3002)
+For login credentials contact the DataWake team at [memex@soteradefense.com](mailto:memex@soteradefense.com)
