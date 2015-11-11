@@ -17,23 +17,14 @@ _These instruction will assume that you have, Git, Node.js installed, mongoDB ru
 Open a terminal
 ```  
 npm install -g bower grunt  
-
 git clone https://github.com/Sotera/DatawakeDepot.git  
-
 cd DatawakeDepot  
-
 npm install  
-
 grunt build --force  
-
 grunt build --force  
-
 cd browser-plugins/firefox/  
-
 ./_runFF.sh  
-
 cd ../..  
-
 node server/server.js  
 ```  
 The DataWake application is now running on [localhost:3000](http://localhost:3000). If you go to that page in Firefox, you will see a button on the bottom of the page "Get Datawake Plugin!". Click on this button and follow the Firfox prompts to install the plugin.
