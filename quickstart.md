@@ -18,7 +18,7 @@ _These instruction will assume that you have, Git, Node.js installed, mongoDB ru
 Open a terminal
 
 ```bash
-$ npm install -g bower grunt  
+$ npm install -g bower grunt-cli  
 $ git clone https://github.com/Sotera/DatawakeDepot.git  
 $ cd DatawakeDepot  
 $ npm install  
