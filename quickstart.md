@@ -39,7 +39,7 @@ Password: admin
 # Development Installation <a id="devinstallation">
 __Download VM from S3 and Install in Virtualbox__
  
-The Dev VM is located at _https://console.aws.amazon.com/s3/home?region=us-east-1&bucket=soterastuff&prefix=Datawake_Dev/_ .  The file is called _NovDevVM.tar.gz_.  Unzip this file to your Virtualbox VMs directory wherever you configured it when you set up Virtualbox.  This should create a ‘_UbuntuDev-August_’ folder.  Launch Virtualbox and choose Add from the Machine menu.  Point it to the vbox file in the folder we just created.  Now you should be able to start the VM.  Login into Ubuntu using the ‘_Datawake Dev Acct_’  and ‘_password_’ for the password.
+The Dev VM is located on the Sotera Datawake [Amazon S3](https://console.aws.amazon.com/s3/home?region=us-east-1&bucket=soterastuff&prefix=Datawake_Dev/).  The file is called _NovDevVM.tar.gz_.  Unzip this file to your Virtualbox VMs directory wherever you configured it when you set up Virtualbox.  This should create a ‘_UbuntuDev-August_’ folder.  Launch Virtualbox and choose Add from the Machine menu.  Point it to the vbox file in the folder we just created.  Now you should be able to start the VM.  Login into Ubuntu using the ‘_Datawake Dev Acct_’  and ‘_password_’ for the password.
  
 __Updating the Datawake Depot Files__
  
@@ -51,4 +51,4 @@ __Running Datawake__
  
 Launch Webstorm from the Applications location or the icon in the upper toolbar of Ubuntu.  Once Webstorm starts up, it will likely take a few minutes indexing the files.  When the Green “bug” icon in the top right of the toolbar will light up, click on this and it should start the server and launch your browser taking you to the Depot login page.  Use ‘_admin@admin.com_’ as the user and ‘_admin_’ as the password, then click _Login_.  You’re all set now.
  
-To work with Trails, you will need to run from Firefox (so you have access to the toolbar plugin).  To get to the Depot page in Firefox, simply type ‘_http://localhost:3000/#/login_’ in the address bar and hit enter.  If the toolbar is already installed, you can click on the _Login_ button in the toolbar plugin instead, and this will take you to the login page for Datawake Depot.
+To work with Trails, you will need to run from Firefox (so you have access to the toolbar plugin).  To get to the Depot page in Firefox, simply type _http://localhost:3000/#/login_ in the address bar and hit enter.  If the toolbar is already installed, you can click on the _Login_ button in the toolbar plugin instead, and this will take you to the login page for Datawake Depot.
