@@ -11,7 +11,7 @@ description: > # this means to ignore newlines until "baseurl:"
 
 url: "http://sotera.github.io"
 github_username:  Sotera
-repository_url: https://github.com/Sotera/Datawake
+repository_url: https://github.com/Sotera/DatawakeDepot
 
 show_downloads: true
 zip_url: https://github.com/Sotera/Datawake/zipball/master
