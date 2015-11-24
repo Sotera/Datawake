@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Video Demonstrations
+title: Video Demos
 permalink: /videos/
 ---
 
