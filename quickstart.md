@@ -18,16 +18,15 @@ _These instruction will assume that you have, Git, Node.js installed, mongoDB ru
 Open a terminal
 
 ```bash
-$ npm install -g bower grunt-cli jpm 
+$ sudo npm install -g jpm 
+(create a ~/src directory and change to it)
 $ git clone https://github.com/Sotera/DatawakeDepot.git  
 $ cd DatawakeDepot  
 $ npm install  
-$ grunt build --force  
-$ grunt build --force  
 $ cd browser-plugins/firefox/  
 $ ./_runFF.sh  
 $ cd ../..  
-$ node server/server.js  
+$ nohup node server/server.js  
 ```
   
 The Datawake application is now running on [localhost:3000](http://localhost:3000). If you go to that page in Firefox, you will see a button on the bottom of the page "Get Datawake Plugin!". Click on this button and follow the Firefox prompts to install the plugin.  Once the plugin is installed, click the ‘Login’ button in the toolbar.  This opens a new login page, type the credentials below, and log in.
@@ -44,7 +43,7 @@ __Updating the Datawake Depot Files__
  
 Open Terminal from the desktop.  We’ll need to make sure Mongo is running, so type: ‘_sudo /etc/init.d/mongodb start_’ then hit enter.  You will be prompted to supply the password for the sudo user.  Type ‘_password_’ and hit enter.  You should see an “_OK_” message regarding the startup state of Mongo.
  
-Next, navigate to ‘_/src/DatawakeDepot_’ and type: ‘_git pull_’.  This will pull down the latest DatawakeDepot code from Github.  Then type: ‘_npm install_’.  This will take a little bit of time as npm installs and configures the necessary components.  Once it’s done, type: ‘_grunt build --force_’.  This will build the Datawake components and their dependencies.  The process takes a minute or so.  Finally, type: ‘_lb-ng server/server.js client/app/js/lb-services.js_’.  This should finish rather quickly compared to the other commands.  Once you’re back at a system prompt, you can close the terminal and move on.
+Next, navigate to ‘_/src/DatawakeDepot_’ and type: ‘_git pull_’.  This will pull down the latest DatawakeDepot code from Github.  Then type: ‘_npm install_’.  This will take a little bit of time as npm installs and configures the necessary components.  Finally, type: ‘_lb-ng server/server.js client/app/js/lb-services.js_’.  This should finish rather quickly compared to the other commands.  Once you’re back at a system prompt, you can close the terminal and move on.
  
 __Running Datawake__
  
