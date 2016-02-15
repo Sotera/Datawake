@@ -12,17 +12,25 @@ permalink: /quick-start/
 # Introduction <a id="introduction"></a>
 Datawake consists of a [Node.js](https://nodejs.org/en/) Express application, a [Firefox](https://www.mozilla.org/en-US/firefox/new/) plugin, and a [mongoDB](https://www.mongodb.org/) database.
 
-_These instruction will assume that you have, Git, Node.js installed, mongoDB running locally on port 27017 and that you are installing on a *nix based system._
+_These instruction will assume that you have mongoDB running locally on port 27017 and that you are installing on a *nix based system._
 
 # Local Installation <a id="installation"></a>
 Open a terminal
 
 ```bash
+$ wget https://github.com/jreeme/firmament/raw/master/install-scripts/prep-ubuntu14.04.sh
+(Change the permissions to run it)
+$ sudo chmod 700 prep-ubuntu14.04.sh
+(Add all necessary prereqs to the system)
+$ sudo su
+$ ./prep_ubuntu14.04.sh
+$ exit
 $ sudo npm install -g jpm 
 (create a ~/src directory and change to it)
 $ git clone https://github.com/Sotera/DatawakeDepot.git  
 $ cd DatawakeDepot  
-$ npm install  
+$ npm install
+$ lb-ng server/server.js client/app/js/lb-services.js
 $ cd browser-plugins/firefox/  
 $ ./_runFF.sh  
 $ cd ../..  
