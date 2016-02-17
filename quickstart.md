@@ -81,7 +81,9 @@ This installs any missing dependencies Firmament needs to continue
 
 ~/firmament$ f m b SUG-spr2016.json
 
-This will build the necessary Docker containers for the project, checkout, build & configure them, and start them up.  If for some reason the build process reports something went wrong…simply rerun the last step.  When complete, running ‘docker ps –a’ should show two containers running.
+This will build the necessary Docker containers for the project, checkout, build & configure them, 
+and start them up.  If for some reason the build process reports something went wrong…simply rerun
+the last step.  When complete, running ‘docker ps –a’ should show two containers running.
 ```
 
 Restarting Containers
