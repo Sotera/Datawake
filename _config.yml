@@ -3,7 +3,7 @@ title: Datawake
 baseurl: "/Datawake"
 safe: true
 lsi: false
-highlighter: pygments
+highlighter: rouge
 email: memex@soteradefense.com
 website: http://www.soteradefense.com
 description: > # this means to ignore newlines until "baseurl:"
