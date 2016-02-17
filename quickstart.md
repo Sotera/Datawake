@@ -18,7 +18,7 @@ _These instruction will assume that you have mongoDB running locally on port 270
 # Local Installation <a id="installation"></a>
 Open a terminal
 
-```xml
+```fcd_read
 $ wget https://github.com/jreeme/firmament/raw/master/install-scripts/prep-ubuntu14.04.sh
 (Change the permissions to run it)
 $ sudo chmod 700 prep-ubuntu14.04.sh
