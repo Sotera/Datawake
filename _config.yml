@@ -17,6 +17,6 @@ show_downloads: true
 zip_url: https://github.com/Sotera/Datawake/zipball/master
 tar_url: https://github.com/Sotera/Datawake/tarball/master
 
-markdown: redcarpet
+markdown: kramdown
 redcarpet:
   extensions: ["smart", "tables", "no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data"]
