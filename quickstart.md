@@ -47,7 +47,7 @@ Password: admin
 This installation can work on any system where you have Docker installed and available.  However, it is recommended that this be run on a dedicated Ubuntu 14.04 system.  This can be anything from a local VM to an EC2 instance, local VM install being the easiest option.  Since the host operating system and its configuration options are varied, we will proceed with instructions for installing on Ubuntu.  You may adapt the process as desired if deploying to other operating systems.
 
 On the Ubuntu system, open a terminal window and perform the following:
-```bash
+```
 ~$ wget https://github.com/jreeme/firmament/raw/master/install-scripts/prep-ubuntu14.04.sh
 
 We need to change the permissions on this file to run it
@@ -61,7 +61,7 @@ Now we add all necessary pre-reqs to the system
 /home/<ubuntu-user># exit 
 ```
 Next we’ll install a deployment tool called Firmament.  Firmament downloads or builds the necessary Docker containers, exposes the necessary ports, kicks off the applications and various other tasks.
-```bash
+```
 ~$ git clone https://github.com/Sotera/firmament
 ~$ cd firmament/install-scripts
 ~$./prep-client.sh
@@ -83,7 +83,7 @@ This will build the necessary Docker containers for the project, checkout, build
 
 Restarting Containers
 The Docker containers will not automatically start up on system reboot.  You can either start them manually, or utilize a startup process manager.  For Ubuntu 14.04 you can use Upstart.  You will need to create two files (as root) in the /etc/init directory.  These files can be named whatever you like but must end in .conf.  I’d suggest datawake.conf and dw-mongo.conf.  Their contents should look like the following.
-```bash
+```
 Datawake.conf:
 description “Datawake container"
 author “Me”
