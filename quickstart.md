@@ -7,6 +7,7 @@ permalink: /quick-start/
 # Table of Contents
 - [Introduction](#introduction)
 - [Local Installation](#installation)
+- [Docker-based Installation](#docker)
 - [Development Installation](#devinstallation)
 
 # Introduction <a id="introduction"></a>
@@ -41,6 +42,75 @@ The Datawake application is now running on [localhost:3000](http://localhost:300
 
 Username: admin@admin.com  
 Password: admin  
+
+# Docker-based Datawake Installation <a id="docker"></a>
+This installation can work on any system where you have Docker installed and available.  However, it is recommended that this be run on a dedicated Ubuntu 14.04 system.  This can be anything from a local VM to an EC2 instance, local VM install being the easiest option.  Since the host operating system and its configuration options are varied, we will proceed with instructions for installing on Ubuntu.  You may adapt the process as desired if deploying to other operating systems.
+
+On the Ubuntu system, open a terminal window and perform the following:
+```bash
+~$ wget https://github.com/jreeme/firmament/raw/master/install-scripts/prep-ubuntu14.04.sh
+
+We need to change the permissions on this file to run it
+
+~$ sudo chmod 700 prep-ubuntu14.04.sh
+
+Now we add all necessary pre-reqs to the system
+
+~$ sudo su
+/home/<ubuntu-user>#  ./prep_ubuntu14.04.sh
+/home/<ubuntu-user># exit 
+```
+
+Next we’ll install a deployment tool called Firmament.  Firmament downloads or builds the necessary Docker containers, exposes the necessary ports, kicks off the applications and various other tasks.
+```bash
+~$ git clone https://github.com/Sotera/firmament
+~$ cd firmament/install-scripts
+~$./prep-client.sh
+~$ sudo su 
+/home/<ubuntu-user># usermod –aG docker ubuntu
+~$ exit
+
+close terminal and reopen to detect the changes made
+
+~$ cd firmament
+~/firmament$ f init
+
+This installs any missing dependencies Firmament needs to continue
+
+~/firmament$ f m b SUG-spr2016.json
+
+This will build the necessary Docker containers for the project, checkout, build & configure them, and start them up.  If for some reason the build process reports something went wrong…simply rerun the last step.  When complete, running ‘docker ps –a’ should show two containers running.
+```
+
+Restarting Containers
+The Docker containers will not automatically start up on system reboot.  You can either start them manually, or utilize a startup process manager.  For Ubuntu 14.04 you can use Upstart.  You will need to create two files (as root) in the /etc/init directory.  These files can be named whatever you like but must end in .conf.  I’d suggest datawake.conf and dw-mongo.conf.  Their contents should look like the following.
+```bash
+Datawake.conf:
+description “Datawake container"
+author “Me”
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  /usr/bin/docker start -a datawake-depot
+end script
+
+dw-mongo.conf:
+description “DW Mongo container"
+author “Me”
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  /usr/bin/docker start -a datawake-depot/mongo
+end script
+```
+
+The Datawake server is now running on localhost:3001. If you go to that page in Firefox, you will see a button on the bottom of the page “Get Datawake Plugin!”. Click on this button and follow the Firefox prompts to install the plugin.  Once the plugin is installed, click the ‘Login’ button in the toolbar.  This opens a new login page, type the credentials below, and log in.
+
+Username: admin@admin.com
+Password: admin
+
 
 # Development Installation <a id="devinstallation"></a>
 <span>__Download VM from S3 and Install in Virtualbox__</span>
