@@ -60,7 +60,6 @@ Now we add all necessary pre-reqs to the system
 /home/<ubuntu-user>#  ./prep_ubuntu14.04.sh
 /home/<ubuntu-user># exit 
 ```
-
 Next we’ll install a deployment tool called Firmament.  Firmament downloads or builds the necessary Docker containers, exposes the necessary ports, kicks off the applications and various other tasks.
 ```bash
 ~$ git clone https://github.com/Sotera/firmament
