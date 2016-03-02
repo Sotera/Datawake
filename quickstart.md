@@ -69,7 +69,7 @@ Next we’ll install a deployment tool called Firmament.  Firmament downloads or
 ~$ cd firmament/install-scripts
 ~$./prep-client.sh
 ~$ sudo su 
-/home/<ubuntu-user># usermod –aG docker ubuntu
+/home/<ubuntu-user># usermod –aG docker <ubuntu-user>
 ~$ exit
 
 close terminal and reopen to detect the changes made
