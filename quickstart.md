@@ -11,7 +11,7 @@ permalink: /quick-start/
 # Introduction <a id="introduction"></a>
 Datawake consists of a [Node.js](https://nodejs.org/en/) Express application, a [Firefox](https://www.mozilla.org/en-US/firefox/new/) plugin, and a [mongoDB](https://www.mongodb.org/) database.  Additionally, it utilizes a StanfordNER extractor and [Page Rancor](https://github.com/Sotera/PageRancor).
 
-_These instruction will assume that you have Docker running and that you are installing on a *nix based system._
+_These instructions will assume that you have Docker running and that you are installing on a *nix based system._
 
 # Local Docker-based Installation <a id="installation"></a>
 Open a terminal
