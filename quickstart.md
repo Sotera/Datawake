@@ -14,12 +14,14 @@ Datawake consists of a [Node.js](https://nodejs.org/en/) Express application, a 
 _These instructions will assume that you have Docker running and that you are installing on a *nix based system._
 
 # Local Docker-based Installation <a id="installation"></a>
-This installation will set up 5 Docker containers which include:
-  sotera/datawake-rancor _(page ranking/prefetch server)_
-  sotera/datawake-stanner _(StanfordNER extractor)_
-  sotera/datawake-strongloop _(Datawake application)_
-  sotera/datawake-mongo _(Mongo)_
-  sotera/data-container _(Mongo Data Container)_
+
+This installation will set up 5 Docker containers which include:<br/>
+*   sotera/datawake-rancor _(page ranking/prefetch server)_<br/>
+*   sotera/datawake-stanner _(StanfordNER extractor)_<br/>
+*   sotera/datawake-strongloop _(Datawake application)_<br/>
+*   sotera/datawake-mongo _(Mongo)_<br/>
+*   sotera/data-container _(Mongo Data Container)_<br/>
+
 There are two ways of utilizing this setup.  The first is in a demo mode.  This is the default setup.  In demo mode, data is NOT persisted when the containers or system is restarted.  This works well for demo'ing the tool where you want a fresh setup each time.   The second mode is more a "production" mode.  In this setup data from trailing and configuration changes are persisted even when containers or the system is restarted.  YOU MUST RUN DATAWAKEDOCKER.SH THE FIRST TIME UNMODIFIED.  This is necessary to setup the data container itself.  However, after the first run, you can modify the shell script by commenting out certain lines as described in the file.  Then simply rerun the shell script and from that point forward data will be persisted to the local file system and be available after restarts.
 
 Open a terminal
